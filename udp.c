@@ -8,8 +8,9 @@
 #include <unistd.h>
 #include <semaphore.h>       //sem_t
 #include <dirent.h>
-#define CommonH
-#include "common.h"
+
+#define _LIB_QSA_DEF_H
+#include "libqsa_common.h"
 
 //UDP
 int SndBufLen = 1024 * 128;
@@ -75,7 +76,7 @@ int Init_Udp_Send_Task(void) {
 	pthread_attr_destroy(&attr);
 	if (multi_send_thread == 0) {
 		printf("don't create UDP send thread. \n");
-		return FALSE;
+		return _FALSE;
 	}
 }
 
@@ -373,22 +374,18 @@ void UdpVideoRcvThread(void)
 		}
 		buff[len] = '\0';
 #ifdef _DEBUG
-		sprintf(Local.DebugInfo, "&&& RECV VIDEO &&& len=%d addr=%s:%d", len,
-				inet_ntoa(c_addr.sin_addr), ntohs(c_addr.sin_port));
 		if ((buff[8] != 0x0B) && (buff[8] != 0x08)) {
-			printf(Local.DebugInfo);
+			printf("&&& RECV VIDEO &&& len=%d addr=%s:%d\n", len,
+				inet_ntoa(c_addr.sin_addr), ntohs(c_addr.sin_port));
 		}
-		sprintf(Local.DebugInfo,
-				"&&& RECV VIDEO &&& [6]%02X, [7]%02X, [8]%02X, [32]%02X, [33]%02X, [34]%02X, [35]%02X",
+		if ((buff[8] != 0x0B) && (buff[8] != 0x08)) {
+			printf("&&& RECV VIDEO &&& [6]%02X, [7]%02X, [8]%02X, [32]%02X, [33]%02X, [34]%02X, [35]%02X\n",
 				buff[6], buff[7], buff[8], buff[32], buff[33], buff[34],
 				buff[35]);
-		if ((buff[8] != 0x0B) && (buff[8] != 0x08)) {
-			printf(Local.DebugInfo);
 		}
 #endif
 		strcpy(FromIP, inet_ntoa(c_addr.sin_addr));
-		//if(DebugMode == 1)
-		//   printf("FromIP is %s\n",FromIP);
+
 		if ((buff[0] == UdpPackageHead[0]) && (buff[1] == UdpPackageHead[1])
 				&& (buff[2] == UdpPackageHead[2])
 				&& (buff[3] == UdpPackageHead[3])
@@ -508,15 +505,13 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 											//recv_Line_Use(1);
 										}
 
-										if (DebugMode == 1) {
-											sprintf(Local.DebugInfo,
-													"receive reply of lineuse i = %d,%d.%d.%d.%d\n",
-													i, recv_buf[53],
-													recv_buf[54], recv_buf[55],
-													recv_buf[56]);
-											printf(Local.DebugInfo);
-										}
-										break;
+                                        if (DebugMode == 1) {
+                                            printf("receive reply of lineuse i = %d,%d.%d.%d.%d\n",
+                                                    i, recv_buf[53],
+                                                    recv_buf[54], recv_buf[55],
+                                                    recv_buf[56]);
+                                        }
+                                        break;
 									}
 								}
 							}
@@ -556,7 +551,7 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 												RemoteIP) == 0) {
 											Multi_Udp_Buff[i].isValid = 0;
 											//  printf("Remote.DenNum = %d, Remote.isDirect = %d\n", Remote.DenNum, Remote.isDirect);
-											if (LocalCfg.Addr[0] == 'S') {
+											if (device_config.address[0] == 'S') {
 												Ip_Int = inet_addr(cFromIP);
 												memcpy(Remote.DenIP, &Ip_Int,
 														4);
@@ -574,16 +569,12 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 											Local.OnlineNum = 0;
 											Local.OnlineFlag = 1;
 
-											sprintf(Local.DebugInfo,
-													"Local.Status = %d\n",
+											printf("Local.Status = %d\n",
 													Local.Status);
-											printf(Local.DebugInfo);
-											sprintf(Local.DebugInfo,
-													"receive reply of call, i = %d, %d.%d.%d.%d\n",
+											printf("receive reply of call, i = %d, %d.%d.%d.%d\n",
 													i, recv_buf[53],
 													recv_buf[54], recv_buf[55],
 													recv_buf[56]);
-											printf(Local.DebugInfo);
 											break;
 										}
 									}
@@ -603,10 +594,8 @@ void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {
 	int sendlength;
 	int RemotePort;
 
-	sprintf(Local.DebugInfo,
-			"Local.Status: %d, recv_buf[7]: %d, Remote.DenNum = %d, Remote.isDirect = %d\n",
+	printf("Local.Status: %d, recv_buf[7]: %d, Remote.DenNum = %d, Remote.isDirect = %d\n",
 			Local.Status, recv_buf[7], Remote.DenNum, Remote.isDirect);
-	printf(Local.DebugInfo);
 
 	if (((Local.Status == 1) || (Local.Status == 7) || (Local.Status == 9))
 			&& (recv_buf[7] == ASK)) {
@@ -713,8 +702,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 #endif
 		TalkEnd_ClearStatus();
 #ifdef _DEBUG
-		sprintf(Local.DebugInfo, "other end talk, %s\n", cFromIP);
-		printf(Local.DebugInfo);
+		printf("other end talk, %s\n", cFromIP);
 #endif
 	} else {
 		Local.OnlineFlag = 0;
@@ -755,8 +743,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 //-----------------------------------------------------------------------
 void TalkEnd_ClearStatus(void) {
 #ifdef _DEBUG
-	sprintf(Local.DebugInfo, "Local.Status=%d\n", Local.Status);
-	printf(Local.DebugInfo);
+	printf("Local.Status=%d\n", Local.Status);
 #endif
 	DropMultiGroup(m_VideoSocket, NULL);
 	switch (Remote.Addr[0][0]) {
@@ -848,7 +835,6 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
 			|| (Local.Status == 6) || (Local.Status == 7) || (Local.Status == 8)
 			|| (Local.Status == 9) || (Local.Status == 10)) //״̬Ϊ�Խ�
 			{
-		//printf(Local.DebugInfo, "&&&&&& recv_buf[61] = %d \n", recv_buf[61]);
 		switch (recv_buf[61]) {
 		case 1:
 #if 0
@@ -930,8 +916,8 @@ void ForceIFrame_Func(void)
 			Multi_Udp_Buff[i].buf[7] = ASK;
 			Multi_Udp_Buff[i].buf[8] = FORCEIFRAME;
 
-			memcpy(Multi_Udp_Buff[i].buf + 9, LocalCfg.Addr, 20);
-			memcpy(Multi_Udp_Buff[i].buf + 29, LocalCfg.IP, 4);
+			memcpy(Multi_Udp_Buff[i].buf + 9, device_config.address, 20);
+			memcpy(Multi_Udp_Buff[i].buf + 29, device_config.ip, 4);
 			memcpy(Multi_Udp_Buff[i].buf + 33, Remote.Addr[0], 20);
 			memcpy(Multi_Udp_Buff[i].buf + 53, Remote.IP[0], 4);
 
@@ -959,10 +945,9 @@ void ExitGroup(unsigned char *buf)
 		for (j = 0; j < Remote.DenNum; j++) {
 			Remote.Added[j] = 0;
 			if (DebugMode == 1) {
-				sprintf(Local.DebugInfo, "%d.%d.%d.%d  %d.%d.%d.%d\n",
+				printf("%d.%d.%d.%d  %d.%d.%d.%d\n",
 						Remote.IP[j][0], Remote.IP[j][1], Remote.IP[j][2],
 						Remote.IP[j][3], buf[53], buf[54], buf[55], buf[56]);
-				printf(Local.DebugInfo);
 			}
 
 			if ((Remote.IP[j][0] == buf[53]) && (Remote.IP[j][1] == buf[54])
@@ -979,10 +964,8 @@ void ExitGroup(unsigned char *buf)
 					if ((strcmp(Multi_Udp_Buff[i].RemoteHost, tmp_ip) == 0)
 							&& (Multi_Udp_Buff[i].buf[8] == LEAVEGROUP)) {
 						isIP = 1;
-						sprintf(Local.DebugInfo,
-								"exit command of multicast group in buffer, %s\n",
+						printf("exit command of multicast group in buffer, %s\n",
 								tmp_ip);
-						printf(Local.DebugInfo);
 						break;
 					}
 				}
@@ -1010,10 +993,8 @@ void ExitGroup(unsigned char *buf)
 						}
 						Multi_Udp_Buff[i].RemotePort = RemotePort;
 						if (DebugMode == 1) {
-							sprintf(Local.DebugInfo,
-									"requiring exit multicast group, Multi_Udp_Buff[i].RemoteHost is %s\n",
+                            printf("requiring exit multicast group, Multi_Udp_Buff[i].RemoteHost is %s\n",
 									Multi_Udp_Buff[i].RemoteHost);
-							printf(Local.DebugInfo);
 						}
 						//ͷ��
 						memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
@@ -1022,9 +1003,9 @@ void ExitGroup(unsigned char *buf)
 						// ������
 						Multi_Udp_Buff[i].buf[8] = LEAVEGROUP;
 
-						memcpy(Multi_Udp_Buff[i].buf + 9, LocalCfg.Addr, 20);
-						memcpy(Multi_Udp_Buff[i].buf + 29, LocalCfg.IP, 4);
-						memcpy(Multi_Udp_Buff[i].buf + 33, Remote.Addr[j], 20);
+                        memcpy(Multi_Udp_Buff[i].buf + 9, device_config.address, 20);
+                        memcpy(Multi_Udp_Buff[i].buf + 29, device_config.ip, 4);
+                        memcpy(Multi_Udp_Buff[i].buf + 33, Remote.Addr[j], 20);
 						memcpy(Multi_Udp_Buff[i].buf + 53, Remote.IP[j], 4);
 
 						Multi_Udp_Buff[i].buf[57] = Remote.GroupIP[0];

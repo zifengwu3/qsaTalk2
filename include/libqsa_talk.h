@@ -4,9 +4,9 @@
 #define _LIB_QSA_TALK_H
 /*
  * Method:    init_param_task(struct dev_config *);
- * Back:      void
+ * Back:      int
  */
-void init_param_task(struct dev_config * q_config);
+int init_param_task(struct dev_config * q_config);
 
 /*
  * Method:    start_call

@@ -1,9 +1,13 @@
 #include <netdb.h> 
 #include <stdio.h>
+#include <stdlib.h>
+#include <malloc.h>
 #include <signal.h>
 #include <netinet/ip.h> 
 #include <linux/if_ether.h>
 #include <unistd.h>
+#include <string.h>
+#include <pthread.h>
 
 #define ETH_HW_ADDR_LEN 6
 #define IP_ADDR_LEN 4
@@ -14,8 +18,8 @@
 #define OP_ARP_QUEST 1
 #define DEFAULT_DEVICE "eth0"
 
-//#define CommonH
-#include "common.h"
+#define _LIB_QSA_DEF_H
+#include "libqsa_common.h"
 
 struct arp_packet
 {
@@ -34,12 +38,13 @@ struct arp_packet
     u_char padding[18];
 };
 
-int InitArpSocket(void);
+int init_arp_socket(void);
+
 void SendFreeArp(void);
 int ArpSendBuff(void);
 void CloseArpSocket(void);
 
-int InitArpSocket(void)
+int init_arp_socket(void)
 {
     ARP_Socket = socket(AF_INET, SOCK_PACKET, htons(ETH_P_RARP));
     if (ARP_Socket < 0)
@@ -75,10 +80,10 @@ int ArpSendBuff(void)
     pkt.rcpt_hw_addr[4] = 0x00;
     pkt.rcpt_hw_addr[5] = 0x00;
 
-    memcpy(pkt.src_hw_addr, LocalCfg.Mac_Addr, 6);
-    memcpy(pkt.sndr_hw_addr, LocalCfg.Mac_Addr, 6);
-    memcpy(pkt.sndr_ip_addr, LocalCfg.IP, IP_ADDR_LEN);
-    memcpy(pkt.rcpt_ip_addr, LocalCfg.IP, IP_ADDR_LEN);
+    memcpy(pkt.src_hw_addr, device_config.mac + 6, 6);
+    memcpy(pkt.sndr_hw_addr, device_config.mac + 6, 6);
+    memcpy(pkt.sndr_ip_addr, device_config.ip, IP_ADDR_LEN);
+    memcpy(pkt.rcpt_ip_addr, device_config.ip, IP_ADDR_LEN);
     bzero(pkt.padding,18);
     strcpy(sa.sa_data, DEFAULT_DEVICE);
 

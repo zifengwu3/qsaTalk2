@@ -12,7 +12,11 @@
 #include <time.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "common.h"
+#include <string.h>
+#include <pthread.h>
+
+#define _LIB_QSA_DEF_H
+#include "libqsa_common.h"
 
 void OnlineCheckFunc(void);
 void TalkCtrlFunc(void);
@@ -100,8 +104,8 @@ void OnlineCheckFunc(void)
 
 			send_b[7] = ASK;
 			send_b[8] = CALLCONFIRM;
-			memcpy(send_b + 9, LocalCfg.Addr, 20);
-			memcpy(send_b + 29, LocalCfg.IP, 4);
+			memcpy(send_b + 9, device_config.address, 20);
+			memcpy(send_b + 29, device_config.ip, 4);
 			//memcpy(send_b + 33, Remote.Addr[0], 20);
 			//memcpy(send_b + 53, Remote.IP[0], 4);
 			send_b[57] = (Local.OnlineNum & 0xFF000000) >> 24;
@@ -144,9 +148,7 @@ void TalkCtrlFunc(void)
                     Talk_Call_End_Task();
                     //recv_Call_End(1);
                     Local.OnlineFlag = 0;
-                    if (DebugMode == 1) {
-                        printf("talk timeout \n");
-                    }
+                    printf("talk timeout \n");
                 }
                 break;
             default:

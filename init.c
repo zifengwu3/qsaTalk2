@@ -1,47 +1,52 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <dirent.h>
-
-#include <assert.h>
-#include <fcntl.h>
-#include <linux/fb.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-//#include <linux/videodev.h>
+#include <string.h>
 #include <arpa/inet.h>
 
-#include "common.h"
+#include "libqsa_common.h"
 
-int DebugMode = 0;
-pthread_mutex_t audio_open_lock;
-pthread_mutex_t audio_close_lock;
-pthread_mutex_t audio_lock;
+extern void Init_Timer();
+extern void init_arp_socket();
 
-extern int InitArpSocket(void);
-extern int CloseArpSocket(void);
-extern void SendFreeArp(void);
+int init_param_task(struct dev_config * _config);
+void init_config_null(struct dev_config * _config);
 
-extern int Init_Timer(void);
-extern int Uninit_Timer(void);
+int init_param_task(struct dev_config * _config) {
+    
+    int i;
+    int Ip_Int;
 
-extern void AddMultiGroup(int m_Socket, char *McastAddr);
-extern void InitRecVideo(void);
+    init_config_null(_config);
 
-extern int InitUdpSocket(short lPort);
-extern void CloseUdpSocket(void);
-extern int Init_Udp_Send_Task(void);
-extern int Uninit_Udp_Send_Task(void);
+	RemoteVideoPort = 8302;
+	strcpy(RemoteHost, "192.168.0.88");
+	LocalVideoPort = 8302;
 
-int qsa_init_main_task(void);
-void qsa_init_audio_task(void);
-void qsa_init_udp_task(void);
-void GetCfg(void);
+    strcpy(UdpPackageHead, "QIUSHI");
+	for (i = 0; i < 20; i++) {
+		NullAddr[i] = '0';
+	}
+	NullAddr[20] = '\0';
 
-//int init_param_task(struct dev_config * _config);
-//int init_param_task(struct dev_config * _config)
+    Ip_Int = inet_addr("192.168.0.5");
+	memcpy(Remote.IP, &Ip_Int, 4);
+	memcpy(Remote.Addr[0], NullAddr, 20);
+	memcpy(Remote.Addr[0], "S00010101010", 12);
 
+	init_arp_socket();
+	qsa_init_udp_task();
+	Init_Timer();
+
+	return (0);
+}
+
+void init_config_null(struct dev_config * _config) {
+    memset(_config, 0x00, configlen);
+    return;
+}
+
+/*
 int qsa_init_main_task(void) {
 	int i;
 	uint32_t Ip_Int;
@@ -85,42 +90,5 @@ int qsa_init_main_task(void) {
 
 	return (0);
 }
-
-void qsa_init_audio_task(void) {
-
-    /*
-    if (TempAudioNode_h == NULL) {
-		TempAudioNode_h = (TempAudioNode1 *) init_audionode();
-	}
-
-	InitAudioParam();
-	InitRecVideo();
-     */
-}
-
-void qsa_uninit_task(void) {
-
-	Uninit_Timer();
-
-    Uninit_Udp_Send_Task();
-
-	CloseArpSocket();
-	CloseUdpSocket();
-}
-
-void qsa_init_udp_task(void) {
-
-	if (InitUdpSocket(LocalVideoPort) == 0) {
-		printf("can't create video socket.\n\r");
-	}
-
-	Init_Udp_Send_Task();
-	SendFreeArp();
-}
-
-void GetCfg(void) {
-	memcpy(LocalCfg.Addr, NullAddr, 20);
-	memcpy(LocalCfg.Addr, "M00010100000", 12);
-	LocalCfg.ReportTime = 10;
-}
+*/
 

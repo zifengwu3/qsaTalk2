@@ -1,968 +1,716 @@
-
-
 #include <inttypes.h>
 #include <signal.h>
 #include <semaphore.h>       //sem_t
-#include <string.h>
-#include <stdlib.h>
+#include <sys/stat.h>
 #include <pthread.h>
 #include "sndtools.h"
-//#include "image.h"
 
-//#define _REMOTECALLTEST  //Ô¶ï¿½Ìºï¿½ï¿½Ð²ï¿½ï¿½ï¿½
+#define LIFT 110
 
-//#define cfg_name "./door26cfg"
-#define cfg_name "/system/door26cfg"
-#define info_name "/mnt/mtd/config/info"
-#define wavini_name "/mnt/sddisk/homewav/wavini"
-#define movieini_name "/mnt/sddisk/homemovie/movieini"
-#define mtdexe_name "/mnt/mtd/door26"
-#define mtdimage_name "/mdoor26pImage"
+#define _DEBUG           //µ÷ÊÔÄ£Ê½
 
-#define FLAGTEXT "hikdsdkkkkdfdsIMAGE"
+//#define _TESTNSSERVER        //²âÊÔ·þÎñÆ÷½âÎöÄ£Ê½
+//#define _TESTTRANS           //²âÊÔÊÓÆµÖÐ×ªÄ£Ê½
 
+#define SOFTWAREVER "1.00.00"    
 
-#define _SND_RECORD_
-#define _SND_PLAY_
+#define NSMULTIADDR  "238.9.9.1"//"192.168.10.255"  //NS×é²¥µØÖ·
+#define LFTMULTIADDR  "238.9.9.2"//"192.168.10.255"  //NS×é²¥µØÖ·
 
-#define FALSE 0
-#define TRUE 1
+#define ZOOMMAXTIME 2000   //·Å´óËõÐ¡ÑÓ³Ù´¦ÀíÊ±¼ä
+#define TOUCHMAXTIME 300   //´¥ÃþÆÁ´¦ÀíÑÓ³Ù´¦ÀíÊ±¼ä
 
-//#define _MULTI_MACHINE_SUPPORT  //ï¿½ï¿½Ö»ï¿½Ö§ï¿½ï¿½
+#define INTRTIME 50       //Ïß³Ì50ms
+#define INTRPERSEC 20       //Ã¿Ãë20´ÎÏß³Ì
+#define BUFFER_SIZE 1024
+#define FRAMEBUFFERMAX  4
+#define COMMMAX 1024     //´®¿Ú»º³åÇø×î´óÖµ
 
-#define _DEBUG           //ï¿½ï¿½ï¿½ï¿½Ä£Ê½
+#define INFOROWLEN   32    //ÐÅÏ¢Ã¿ÐÐ³¤¶È
+#define MAXROW  12          //×î´óÐÐÊý
+#define PAGEPERROW  3          //Ò³ÐÐÊý
+//#define PAGEPERROW  4          //Ò³ÐÐÊý
+//
+#define WATCHTIMEOUT  30*(1000/INTRTIME)    //¼àÊÓ×î³¤Ê±¼ä
+#define CALLTIMEOUT  25*(1000/INTRTIME)     //ºô½Ð×î³¤Ê±¼ä
+#define TALKTIMEOUT  130*(1000/INTRTIME)//30*20     //Í¨»°×î³¤Ê±¼ä
+#define PREPARETIMEOUT  10*(1000/INTRTIME)     //ÁôÓ°ÁôÑÔÔ¤±¸×î³¤Ê±¼ä
+#define RECORDTIMEOUT  30*(1000/INTRTIME)     //ÁôÓ°ÁôÑÔ×î³¤Ê±¼ä
 
-//#define _CAPTUREPIC_TO_CENTER  //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//#define _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
+#define FORBIDTIMEOUT (1000/INTRTIME)
+//ÃüÁî ¹ÜÀíÖÐÐÄ
+#define ALARM         1    //±¨¾¯
+#define CANCELALARM   2    //È¡Ïû±¨¾¯
+#define SENDMESSAGE   3   //·¢ËÍÐÅÏ¢
+#define REPORTSTATUS  4   //Éè±¸¶¨Ê±±¨¸æ×´Ì¬
+#define QUERYSTATUS   5   //¹ÜÀíÖÐÐÄ²éÑ¯Éè±¸×´Ì¬
+#define ALARMHANDLE   111
+#define CHECKTIME     7
+///////////paul0415
+#define SENDPICINFO   6
+#define PICINFONUM    8
+//////////paul0812////////////////////////////
+#define CHECKMAC	161
+#define SETPARAM 	162
+#define MAKEOLD		163
+#define READMAC		164
+#define MCUUPDATE	165
+////////////////////
+#define REMOTEDEFENCE   20   //Ô¶³Ì²¼·À
+#define RESETPASS       30   //¸´Î»ÃÜÂë
+#define WRITEADDRESS   40   //Ð´µØÖ·ÉèÖÃ
+#define READADDRESS    41   //¶ÁµØÖ·ÉèÖÃ
+#define WRITEROOMSETUP     44   //Ð´ÊÒÄÚ»ú¹¤³ÌÉèÖÃ
+#define READROOMSETUP      45   //¶ÁÊÒÄÚ»ú¹¤³ÌÉèÖÃ
+#define WRITESETUP     52   //Ð´µ¥ÔªÃÅ¿Ú»ú¡¢Î§Ç½»úÉèÖÃÐÅÏ¢
+#define READSETUP      53   //¶Áµ¥ÔªÃÅ¿Ú»ú¡¢Î§Ç½»úÉèÖÃÐÅÏ¢
+//¶Ô½²
+#define VIDEOTALK      150 //¾ÖÓòÍø¿ÉÊÓ¶Ô½²
+#define VIDEOTALKTRANS 151 //¾ÖÓòÍø¿ÉÊÓ¶Ô½²ÖÐ×ª·þÎñ
+#define VIDEOWATCH     152 //¾ÖÓòÍø¼à¿Ø
+#define VIDEOWATCHTRANS   153 //¾ÖÓòÍø¼à¿ØÖÐ×ª·þÎñ
+#define NSORDER        154 //Ö÷»úÃû½âÎö£¨×ÓÍøÄÚ¹ã²¥£©
+#define NSSERVERORDER  155 //Ö÷»úÃû½âÎö(NS·þÎñÆ÷)
+#define FINDEQUIP      170 //²éÕÒÉè±¸
 
-//ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½×ªÄ£Ê½
-//#define _TESTTRANSMODE
+#define ASK              1     //ÃüÁîÀàÐÍ Ö÷½Ð
+#define REPLY            2     //ÃüÁîÀàÐÍ Ó¦´ð
 
-//#define _MESSAGE_SUPPORT  //ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+#define CALL             1     //ºô½Ð
+#define LINEUSE          2     //Õ¼Ïß
+#define QUERYFAIL        3      //Í¨ÐÅÊ§°Ü
+#define CALLANSWER       4     //ºô½ÐÓ¦´ð
+#define CALLSTART        6     //¿ªÊ¼Í¨»°
 
-#define HARDWAREVER "M-HW VER 3.1"    //Ó²ï¿½ï¿½ï¿½æ±¾
-#define SOFTWAREVER "M-SW VER 3.2"    //ï¿½ï¿½ï¿½ï¿½æ±¾
-#define SERIALNUM "20110917"    //ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Ðºï¿½
-#define WAVFILEMAX 10
+#define CALLUP           7     //Í¨»°Êý¾Ý1£¨Ö÷½Ð·½->±»½Ð·½£©
+#define CALLDOWN         8     //Í¨»°Êý¾Ý2£¨±»½Ð·½->Ö÷½Ð·½£©
+#define CALLCONFIRM      9     //Í¨»°ÔÚÏßÈ·ÈÏ£¨½ÓÊÕ·½·¢ËÍ£¬ÒÔ±ã·¢ËÍ·½È·ÈÏÔÚÏß£©
+#define REMOTEOPENLOCK   10     //Ô¶³Ì¿ªËø
 
-#define ZOOMMAXTIME 2000   //ï¿½Å´ï¿½ï¿½ï¿½Ð¡ï¿½Ó³Ù´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
-#define TOUCHMAXTIME 300   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó³Ù´ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+#define FORCEIFRAME      11     //Ç¿ÖÆIÖ¡ÇëÇó
+#define ZOOMOUT          15     //·Å´ó(720*480)
+#define ZOOMIN           16     //ËõÐ¡(352*288)
+#define OPENLOCK         17
+#define CALLEND          30     //Í¨»°½áÊø
+#define REMOTECALLLIFT   20
+#define REMOTELIFT		 30
+#define MAINPICNUM  24      //Ê×Ò³Í¼Æ¬ÊýÁ¿
+#define MAINLABELNUM  2     //Ê×Ò³LabelÊýÁ¿
+#define DOWNLOAD  220      //ÏÂÔØ
+#define ASK  1
+#define REPLY  2
 
-#define INTRTIME 50       //ï¿½ß³ï¿½50ms
-#define INTRPERSEC 20       //Ã¿ï¿½ï¿½20ï¿½ï¿½ï¿½ß³ï¿½
+#define SAVEMAX  50     //FLASH´æ´¢»º³å×î´óÖµ
+#define UDPSENDMAX  50  //UDP¶à´Î·¢ËÍ»º³å×î´óÖµ
+#define COMMSENDMAX  10  //COMM¶à´Î·¢ËÍ»º³å×î´óÖµ
+#define MAXSENDNUM  6  //×î´ó·¢ËÍ´ÎÊý
 
-#define NSMULTIADDR  "238.9.9.1"  //NSï¿½é²¥ï¿½ï¿½Ö·
-#define MULTITTL   5      //ï¿½à²¥TTLÖµ
+//°´Å¥Ñ¹ÏÂÊ±¼ä
+#define DELAYTIME  200
+//°´Å¥ÊýÁ¿
+#define InfoButtonMax  16
+//¶ÌÐÅÏ¢////////////paul
+#define INFOTYPENUM  4 //4    //¶ÌÐÅÏ¢ÀàÐÍ
+#define INFOMAXITEM  50 //200    //¶ÌÐÅÏ¢×î´óÌõÊý
+#define INFOMAXSIZE  400 //¶ÌÐÅÏ¢ÄÚÈÝ×î´óÈÝÁ¿
+#define INFONUMPERPAGE 3  //Ò»Ò³ÏÔÊ¾ÐÅÏ¢Êý
 
-#define COMMMAX 1024     //ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-#define SCRWIDTH  800
-#define SCRHEIGHT  480
-#define D1_W  720
-#define D1_H  480
-#define CIF_W 352
-#define CIF_H 240
-#define REFRESH  1
-#define NOREFRESH 0
-#define SHOW  0
-#define HIDE  1
-#define UMOUNT  0
-#define MOUNT   1
-#define HILIGHT  2
-#define IMAGEUP  0
-#define IMAGEDOWN  1
+#define NMAX 512*64  //AUDIOBLK*64  //ÒôÆµ»·ÐÎ»º³åÇø´óÐ¡
+#define G711NUM  64*512/AUDIOBLK       //ÒôÆµ½ÓÊÕ»º³åÇø¸öÊý Î´½âÂë   10
 
-#define DIRECTCALLTIME  600                 //Ö±ï¿½Óºï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ê±ï¿½ï¿½
-#define TRANSCALLTIME  800                  //ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½Ê±ï¿½ï¿½
-#define WATCHTIMEOUT  60*INTRPERSEC//30*20    //ï¿½ï¿½ï¿½ï¿½ï¿½î³¤Ê±ï¿½ï¿½
-#define CALLTIMEOUT  30*INTRPERSEC     //ï¿½ï¿½ï¿½ï¿½ï¿½î³¤Ê±ï¿½ï¿½
-//#define CALLTIMEOUT  300*INTRPERSEC     //ï¿½ï¿½ï¿½ï¿½ï¿½î³¤Ê±ï¿½ï¿½
-#define TALKTIMEOUT  240*INTRPERSEC//30*20     //Í¨ï¿½ï¿½ï¿½î³¤Ê±ï¿½ï¿½
-#define PREPARETIMEOUT  10*INTRPERSEC     //ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ï¿½î³¤Ê±ï¿½ï¿½
-#define RECORDTIMEOUT  30*INTRPERSEC     //ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½î³¤Ê±ï¿½ï¿½
-
-
-//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-#define ALARM  1
-#define SENDMESSAGE   3   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-#define REPORTSTATUS  4   //ï¿½è±¸ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½×´Ì¬
-#define QUERYSTATUS   5   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä²ï¿½Ñ¯ï¿½è±¸×´Ì¬
-#define SENDCOMMSRV   7   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½
-#define SEARCHNOTLOGIN   9   //ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸
-#define WRITEADDRESS   40   //Ð´ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½
-#define READADDRESS    41   //ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½
-#define WRITECOMMMENU   42   //Ð´ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½Ëµï¿½
-#define READCOMMMENU   43   //ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½Ëµï¿½
-#define WRITEHELP   50   //Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-#define READHELP    51   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-#define WRITESETUP     52   //Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-#define READSETUP      53   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-
-#ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
- #define _IDCARDHAVEADDR      //IDï¿½ï¿½ï¿½ï¿½ï¿½Ö·
- #define IDCARDMAXNUM  100000  //IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- #ifdef _IDCARDHAVEADDR      //IDï¿½ï¿½ï¿½ï¿½ï¿½Ö·
-  #define CARDPERPACK  50    //Ã¿ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  #define BYTEPERSN    24    //Ã¿ï¿½ï¿½SN Õ¼ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
- #else
-  #define CARDPERPACK  350  //Ã¿ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  #define BYTEPERSN    4     //Ã¿ï¿½ï¿½SN Õ¼ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
- #endif
- #define IDCARDBRUSHNUM 10000 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- 
- #define WRITEIDCARD    54   //Ð´IDï¿½ï¿½ï¿½ï¿½Ï¢
- #define READIDCARD     55   //ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½Ï¢
- #define BRUSHIDCARD     56   //Ë¢IDï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-#endif
-
-#ifdef _CAPTUREPIC_TO_CENTER  //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- #define tmp_pic_file  "/tmp/capture_pic.jpg"
- #define MAX_CAPTUREPIC_NUM   20
- #define CAPTUREPIC_SEND_START     60   //ï¿½ï¿½Ôªï¿½Å¿Ú»ï¿½Î§Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿Ú»ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½Æ¬->ï¿½ï¿½ï¿½Í¿ï¿½Ê¼
- #define CAPTUREPIC_SEND_DATA      61   //ï¿½ï¿½Ôªï¿½Å¿Ú»ï¿½Î§Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿Ú»ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½Æ¬->ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- #define CAPTUREPIC_SEND_SUCC      62   //ï¿½ï¿½Ôªï¿½Å¿Ú»ï¿½Î§Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿Ú»ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½Æ¬->ï¿½ï¿½ï¿½Í½ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½
- #define CAPTUREPIC_SEND_FAIL      63   //ï¿½ï¿½Ôªï¿½Å¿Ú»ï¿½Î§Ç½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿Ú»ï¿½ï¿½Íºï¿½ï¿½ï¿½ï¿½ï¿½Æ¬->ï¿½ï¿½ï¿½Í½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½
-#endif
-
-//ï¿½Ô½ï¿½
-#define VIDEOTALK      150 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶Ô½ï¿½
-#define VIDEOTALKTRANS 151 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¶Ô½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
-#define VIDEOWATCH     152 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-#define VIDEOWATCHTRANS   153 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½
-#define NSORDER        154 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¹ã²¥ï¿½ï¿½
-#define NSSERVERORDER  155 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(NSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
-
-
-#define ASKALLOCSERVER  160 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
-#define BEGINTRANS      161 //ï¿½ï¿½Ê¼ï¿½ï¿½Æµï¿½ï¿½×ª(ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
-#define ENDTRANS        162 //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½×ª(ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
-
-#define DOWNLOADFILE  224    //ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã³ï¿½ï¿½ï¿½
-#define DOWNLOADIMAGE  225    //ï¿½ï¿½ï¿½ï¿½ÏµÍ³Ó³ï¿½ï¿½
-#define STARTDOWN  1       //ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
-#define DOWN       2       //ï¿½ï¿½ï¿½ï¿½
-#define DOWNFINISHONE       3  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½
-#define STOPDOWN       10      //Í£Ö¹ï¿½ï¿½ï¿½ï¿½
-#define DOWNFINISHALL       20 //È«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-#define DOWNFAIL         21 //ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½  ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-
-#define REMOTEDEBUGINFO      253   //ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-
-#ifdef _REMOTECALLTEST  //Ô¶ï¿½Ìºï¿½ï¿½Ð²ï¿½ï¿½ï¿½
- #define REMOTETEST      200   //ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ìºï¿½ï¿½Ð²ï¿½ï¿½ï¿½
- #define STARTTEST  1    //ï¿½ï¿½Ê¼
-#endif
-
-#define ERASEFLASH  31    //ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½Flash
-#define WRITEFLASH  32    //ï¿½ï¿½ï¿½ï¿½Ð´Flash
-#define CHECKFLASH  33    //ï¿½ï¿½ï¿½ï¿½Ð£ï¿½ï¿½Flash
-#define ENDFLASH  34      //ï¿½ï¿½ï¿½Ð´Image
-#define ERRORFLASH  35      //ï¿½ï¿½ï¿½ï¿½ImageÊ§ï¿½ï¿½
-
-#define ASK              1     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-#define REPLY            2     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ó¦ï¿½ï¿½
-
-#define CALL             1     //ï¿½ï¿½ï¿½ï¿½
-#define LINEUSE          2     //Õ¼ï¿½ï¿½
-#define QUERYFAIL        3      //Í¨ï¿½ï¿½Ê§ï¿½ï¿½
-#define CALLANSWER       4     //ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½
-#define CALLSTART        6     //ï¿½ï¿½Ê¼Í¨ï¿½ï¿½
-
-#define CALLUP           7     //Í¨ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½
-#define CALLDOWN         8     //Í¨ï¿½ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½
-#define CALLCONFIRM      9     //Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½Ï£ï¿½ï¿½ï¿½ï¿½Õ·ï¿½ï¿½ï¿½ï¿½Í£ï¿½ï¿½Ô±ã·¢ï¿½Í·ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½
-#define REMOTEOPENLOCK   10     //Ô¶ï¿½Ì¿ï¿½ï¿½ï¿½
-#define FORCEIFRAME      11     //Ç¿ï¿½ï¿½IÖ¡ï¿½ï¿½ï¿½ï¿½
-#define ZOOMOUT          15     //ï¿½Å´ï¿½(720*480)
-#define ZOOMIN           16     //ï¿½ï¿½Ð¡(352*288)
-
-#define PREPARERECORD    20     //ï¿½ï¿½Ê¼ï¿½ï¿½Ó°Ô¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½Ó¦ï¿½ï¿½
-#define RECORD           21     //ï¿½ï¿½Ê¼ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½Ó¦ï¿½ï¿½
-#define JOINGROUP        22     //ï¿½ï¿½ï¿½ï¿½ï¿½é²¥ï¿½é£¨ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½Ó¦ï¿½ï¿½
-#define LEAVEGROUP       23     //ï¿½Ë³ï¿½ï¿½é²¥ï¿½é£¨ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½Ó¦ï¿½ï¿½
-#define TURNTALK         24     //×ªï¿½Ó£ï¿½ï¿½ï¿½ï¿½Ð·ï¿½->ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½Ó¦ï¿½ï¿½
-
-#define CALLEND          30     //Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-
-#define SAVEMAX  10     //FLASHï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-#define UDPSENDMAX  50  //UDPï¿½ï¿½Î·ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-#define COMMSENDMAX  20  //COMMï¿½ï¿½Î·ï¿½ï¿½Í»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-#define DISPARTMAX  10   //ï¿½ï¿½Ö°ï¿½ï¿½Í»ï¿½ï¿½ï¿½
-#define MAXCOMMSENDNUM  3
-#define MAXSENDNUM  6  //ï¿½ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½
-
-#define SEARCHALLEQUIP  252  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½
-#define WRITEEQUIPADDR      254  //Ð´ï¿½è±¸ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½
-
-#define TALK_IO            15   //ï¿½ï¿½ï¿½Ð¼ï¿½
-#define CENTER_IO            14   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½
-#define OPENLOCK_IO          92   //ï¿½ï¿½ï¿½ï¿½     GPIO2 28
-
-#define WATCHDOG_IO_EN       93       //Watchdog ï¿½ï¿½0 ï¿½ï¿½ï¿½ï¿½    ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½   GPIO2 29
-#define WATCHDOG_IO_CLEAR    9        //ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½WatchDog         GPIO0  9
-
-#define LCD_LIGHT_IO               2        //PWM GPIO0  2
-#define PWM_IO               3        //PWM GPIO0  3
-
-#define _M8_WATCHDOG_START  0x82
-#define _M8_WATCHDOG_END  0x83
-
-//ï¿½ï¿½Å¥Ñ¹ï¿½ï¿½Ê±ï¿½ï¿½
-#define DELAYTIME  300
-
-
-#define USER_DEV_NAME  "/dev/user_apply"
-
-#define _INIT_GPIO  0
-#define _SET_GPIO_OUTPUT_HIGH  1
-#define _SET_GPIO_OUTPUT_LOW   2
-#define _SET_GPIO_HIGH  3
-#define _SET_GPIO_LOW   4
-#define _SET_GPIO_INPUT  5
-#define _GET_GPIO_VALUE  6
-
-
-//ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½
-#define cWhite  1
-#define cYellow 2
-#define cCyan   3
-#define cGreen  4
-#define cMagenta  5
-#define cRed      6
-#define cBlue     7
-#define cBlack    8
-#define	FB_DEV	"/dev/fb0"
-#define MAXPIXELS (1280*1024)  /* Maximum size of final image */
-#define VIDEO_PICTURE_QUEUE_SIZE_MAX 20
-
-#define CONFLICTARP  0x8950
-#define FLCD_GET_DATA_SEP   0x46db
-#define FLCD_GET_DATA       0x46dc
-#define FLCD_SET_FB_NUM     0x46dd
-#define FLCD_SWITCH_MODE    0x46de
-#define FLCD_CLOSE_PANEL    0x46df
-#define FLCD_BYPASS    0x46e0
-#define FLCD_OPEN	0x46fa
-#define FLCD_CLOSE	0x46fb
-
-
-//20071210 ï¿½ï¿½ï¿½SDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½×´Ì¬
-#define DEVICE_SD                "/dev/cpesda"
-#define CHECK_SD_STATUS  0x2222
-//20080401 ï¿½ï¿½ï¿½ï¿½PMUï¿½ï¿½ï¿½Ø±Õ²ï¿½ï¿½Ãµï¿½Ê±ï¿½ï¿½
-#define CLOSE_PMU1  0x2255
-#define CLOSE_PMU2  0x2256
-
-#define NMAX (512*48*2)  //ï¿½ï¿½Æµï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
-#define G711NUM  (48*512*2)/AUDIOBLK         //ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Î´ï¿½ï¿½ï¿½ï¿½   10
-
+//#define VIDEOMAX 720*480
 #define VIDEOMAX 720*576
-#define VNUM  3         //ï¿½ï¿½Æµï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡
-#define VPLAYNUM  10         //ï¿½ï¿½Æµï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡         6
-#define MP4VNUM  10         //ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Î´ï¿½ï¿½ï¿½ï¿½   10
-#define PACKDATALEN  1200   //ï¿½ï¿½Ý°ï¿½ï¿½Ð¡
-#define MAXPACKNUM  100     //Ö¡ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½
+#define VNUM  3         //ÊÓÆµ²É¼¯»º³åÇø´óÐ¡
+#define VPLAYNUM  10         //ÊÓÆµ²¥·Å»º³åÇø´óÐ¡         6
+#define MP4VNUM  20         //ÊÓÆµ½ÓÊÕ»º³åÇø¸öÊý Î´½âÂë   10
+#define PACKDATALEN  1200   //Êý¾Ý°ü´óÐ¡
+#define MAXPACKNUM  100     //Ö¡×î´óÊý¾Ý°üÊýÁ¿
 
-#define MAXRECWAV  30   //ï¿½î³¤ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
-struct TimeStamp1{
-    unsigned int OldCurrVideo;     //ï¿½ï¿½Ò»ï¿½Îµï¿½Ç°ï¿½ï¿½ÆµÊ±ï¿½ï¿½
+//////////////FOR UPDATE//////////////
+struct downfile1
+{
+   char FlagText[20];     //±êÖ¾×Ö·û´®
+   char FileName[20];
+   unsigned int Filelen;            //ÎÄ¼þ´óÐ¡
+   unsigned short TotalPackage;      //×Ü°üÊý
+   unsigned short CurrPackage;       //µ±Ç°°üÊý
+   unsigned short Datalen;           //Êý¾Ý³¤¶È
+}__attribute__ ((packed));
+//////////////////////////////////////
+
+struct TimeStamp1
+{
+    unsigned int OldCurrVideo;     //ÉÏÒ»´Îµ±Ç°ÊÓÆµÊ±¼ä
     unsigned int CurrVideo;
-    unsigned int OldCurrAudio;     //ï¿½ï¿½Ò»ï¿½Îµï¿½Ç°ï¿½ï¿½ÆµÊ±ï¿½ï¿½
+    unsigned int OldCurrAudio;     //ÉÏÒ»´Îµ±Ç°ÒôÆµÊ±¼ä
     unsigned int CurrAudio;
-   };
-//ï¿½ï¿½Æµï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½
+};
+//ÊÓÆµ²É¼¯»º³å
 struct videobuf1
- {
-  int iput; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-  int iget; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°È¡ï¿½ï¿½Î»ï¿½ï¿½
-  int n; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  uint32_t timestamp[VNUM]; //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno[VNUM];   //Ö¡ï¿½ï¿½ï¿½
-  unsigned char *buffer_y[VNUM];//[VIDEOMAX];
-  unsigned char *buffer_u[VNUM];//[VIDEOMAX/4];
-  unsigned char *buffer_v[VNUM];//[VIDEOMAX/4];
- };
-//ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½  Î´ï¿½ï¿½ï¿½ï¿½
+{
+    int iput; // »·ÐÎ»º³åÇøµÄµ±Ç°·ÅÈëÎ»ÖÃ
+    int iget; // »º³åÇøµÄµ±Ç°È¡³öÎ»ÖÃ
+    int n; // »·ÐÎ»º³åÇøÖÐµÄÔªËØ×ÜÊýÁ¿
+    uint32_t timestamp[VNUM]; //Ê±¼ä´Á
+    uint32_t frameno[VNUM];   //Ö¡ÐòºÅ
+    unsigned char *buffer_y[VNUM];//[VIDEOMAX];
+    unsigned char *buffer_u[VNUM];//[VIDEOMAX/4];
+    unsigned char *buffer_v[VNUM];//[VIDEOMAX/4];
+};
+//ÊÓÆµ½ÓÊÕ»º³å  Î´½âÂë
 struct tempvideobuf1
- {
-//  int iput;                     // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-//  int iget;                     // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°È¡ï¿½ï¿½Î»ï¿½ï¿½
-//  int n;                        // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  uint32_t timestamp;  //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno;       //Ö¡ï¿½ï¿½ï¿½
-  short TotalPackage;     //ï¿½Ü°ï¿½ï¿½ï¿½
-  uint8_t CurrPackage[MAXPACKNUM]; //ï¿½ï¿½Ç°ï¿½ï¿½   1 ï¿½Ñ½ï¿½ï¿½ï¿½  0 Î´ï¿½ï¿½ï¿½ï¿½
-  int Len;                //Ö¡ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
-  uint8_t isFull;                  //ï¿½ï¿½Ö¡ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½È«
-  unsigned char buffer[VIDEOMAX];
-  unsigned char frame_flag;             //Ö¡ï¿½ï¿½Ö¾ ï¿½ï¿½ÆµÖ¡ IÖ¡ PÖ¡
- };                            //     [MP4VNUM]
-//ï¿½ï¿½Æµï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½
+{
+//  int iput;                     // »·ÐÎ»º³åÇøµÄµ±Ç°·ÅÈëÎ»ÖÃ
+//  int iget;                     // »º³åÇøµÄµ±Ç°È¡³öÎ»ÖÃ
+//  int n;                        // »·ÐÎ»º³åÇøÖÐµÄÔªËØ×ÜÊýÁ¿
+    uint32_t timestamp;  //Ê±¼ä´Á
+    uint32_t frameno;       //Ö¡ÐòºÅ
+    short TotalPackage;     //×Ü°üÊý
+    uint8_t CurrPackage[MAXPACKNUM]; //µ±Ç°°ü   1 ÒÑ½ÓÊÕ  0 Î´½ÓÊÕ
+    int Len;                //Ö¡Êý¾Ý³¤¶È
+    uint8_t isFull;                  //¸ÃÖ¡ÒÑ½ÓÊÕÍêÈ«
+    unsigned char *buffer;//[VIDEOMAX];
+    unsigned char frame_flag;             //Ö¡±êÖ¾ ÒôÆµÖ¡ IÖ¡ PÖ¡
+};                            //     [MP4VNUM]
+//////////////paul0416
+
+typedef struct temppicinfobuf1
+{
+    uint32_t frameno;       //Ö¡ÐòºÅ
+    short TotalPackage;     //×Ü°üÊý
+    uint8_t CurrPackage[MAXPACKNUM]; //µ±Ç°°ü   1 ÒÑ½ÓÊÕ  0 Î´½ÓÊÕ
+    int Len;                //Ö¡Êý¾Ý³¤¶È
+    uint8_t isFull;                  //¸ÃÖ¡ÒÑ½ÓÊÕÍêÈ«
+    unsigned char *buffer;//[VIDEOMAX];
+    unsigned char frame_flag;             //1 for private 2 for common 3 for alarm 4 for picture
+} TempPicInfoBuff1 ;
+////////////////////////
+
+//ÊÓÆµ½ÓÊÕ»º³å Á´±í
+typedef struct node2
+{
+    struct tempvideobuf1 Content;
+    struct node2 *llink, *rlink;
+}TempVideoNode1;
+//ÊÓÆµ²¥·Å»º³å
 struct videoplaybuf1
- {
-  uint8_t isUse;     //ï¿½ï¿½Ö¡ï¿½Ñ½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  uint32_t timestamp; //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno;   //Ö¡ï¿½ï¿½ï¿½
-  unsigned char *buffer;//[VIDEOMAX];
-  unsigned char frame_flag;             //Ö¡ï¿½ï¿½Ö¾ ï¿½ï¿½ÆµÖ¡ IÖ¡ PÖ¡
- };
-//Í¬ï¿½ï¿½ï¿½ï¿½ï¿½Å½á¹¹
+{
+    uint8_t isUse;     //¸ÃÖ¡ÒÑ½âÂëÎ´²¥·Å,»º³åÇø²»¿ÉÓÃ
+    uint32_t timestamp; //Ê±¼ä´Á
+    uint32_t frameno;   //Ö¡ÐòºÅ
+    unsigned char *buffer;//[VIDEOMAX];
+    unsigned char frame_flag;             //Ö¡±êÖ¾ ÒôÆµÖ¡ IÖ¡ PÖ¡
+};
+//Í¬²½²¥·Å½á¹¹
 struct _SYNC
- {
-  pthread_cond_t cond;       //Í¬ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  pthread_condattr_t cond_attr;
-  pthread_mutex_t lock;      //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  pthread_mutex_t audio_rec_lock;//[VPLAYNUM];//ï¿½ï¿½ÆµÂ¼ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½
-  pthread_mutex_t audio_play_lock;//[VPLAYNUM];//ï¿½ï¿½Æµï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½
-  pthread_mutex_t video_rec_lock;//[VPLAYNUM];//ï¿½ï¿½ÆµÂ¼ï¿½Æ»ï¿½ï¿½ï¿½ï¿½ï¿½
-  pthread_mutex_t video_play_lock;//[VPLAYNUM];//ï¿½ï¿½Æµï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½ï¿½ï¿½
-  pthread_mutex_t audio_lock;
-  unsigned int count;        //ï¿½ï¿½ï¿½ï¿½
-  uint8_t isDecodeVideo;     //ï¿½ï¿½Æµï¿½Ñ½ï¿½ï¿½ï¿½Ò»Ö¡  ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½-->Í¬ï¿½ï¿½ï¿½ß³ï¿½
-  uint8_t isPlayVideo;       //ï¿½ï¿½Æµï¿½Ñ²ï¿½ï¿½ï¿½Ò»Ö¡  ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½-->Í¬ï¿½ï¿½ï¿½ß³ï¿½
-  uint8_t isDecodeAudio;     //ï¿½ï¿½Æµï¿½Ñ½ï¿½ï¿½ï¿½Ò»Ö¡  ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½-->Í¬ï¿½ï¿½ï¿½ß³ï¿½
-  uint8_t isPlayAudio;       //ï¿½ï¿½Æµï¿½Ñ²ï¿½ï¿½ï¿½Ò»Ö¡  ï¿½ï¿½ï¿½ï¿½ï¿½ß³ï¿½-->Í¬ï¿½ï¿½ï¿½ß³ï¿½
- };
+{
+    pthread_cond_t cond;       //Í¬²½Ïß³ÌÌõ¼þ±äÁ¿
+    pthread_condattr_t cond_attr;
+    pthread_mutex_t lock;      //»¥³âËø
+    pthread_mutex_t audio_rec_lock;//[VPLAYNUM];//ÒôÆµÂ¼ÖÆ»¥³âËø
+    pthread_mutex_t audio_play_lock;//[VPLAYNUM];//ÒôÆµ²¥·Å»¥³âËø
+    pthread_mutex_t video_rec_lock;//[VPLAYNUM];//ÊÓÆµÂ¼ÖÆ»¥³âËø
+    pthread_mutex_t video_play_lock;//[VPLAYNUM];//ÊÓÆµ²¥·Å»¥³âËø
+    pthread_mutex_t lmovie_lock;////added from door///paul0326//////
+    unsigned int count;        //¼ÆÊý
+    uint8_t isDecodeVideo;     //ÊÓÆµÒÑ½âÂëÒ»Ö¡  ½âÂëÏß³Ì-->Í¬²½Ïß³Ì
+    uint8_t isPlayVideo;       //ÊÓÆµÒÑ²¥·ÅÒ»Ö¡  ²¥·ÅÏß³Ì-->Í¬²½Ïß³Ì
+    uint8_t isDecodeAudio;     //ÒôÆµÒÑ½âÂëÒ»Ö¡  ½âÂëÏß³Ì-->Í¬²½Ïß³Ì
+    uint8_t isPlayAudio;       //ÒôÆµÒÑ²¥·ÅÒ»Ö¡  ²¥·ÅÏß³Ì-->Í¬²½Ïß³Ì
+};
 
-//ï¿½Ó»ï¿½ï¿½ï¿½ï¿½ï¿½?
+//¼Ó»º³åËø?
 struct audiobuf1
- {
-  int iput; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-  int iget; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°È¡ï¿½ï¿½Î»ï¿½ï¿½
-  int i_echo;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-  int n; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  uint32_t timestamp[NMAX/AUDIOBLK]; //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno[NMAX/AUDIOBLK];   //Ö¡ï¿½ï¿½ï¿½
-  unsigned char buffer[NMAX];
-  #ifdef _ECHO_STATE_SUPPORT  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-   uint32_t echo_timestamp[NMAX/AUDIOBLK]; //Ê±ï¿½ï¿½ï¿½
-  #endif
- };
-struct WavFileBuf1 {
-     int isValid;
-     char wname[80];
-     int PlayFlag;     //0 ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½  1 Ñ­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-     };
-/*struct tempbuf1
- {
-  int iput; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-  int iget; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°È¡ï¿½ï¿½Î»ï¿½ï¿½
-  int n; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  uint32_t timestamp[NMAX/AUDIOBLK]; //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno[NMAX/AUDIOBLK];   //Ö¡ï¿½ï¿½ï¿½
-  unsigned char buffer[NMAX];
- }; */
-//ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½  Î´ï¿½ï¿½ï¿½ï¿½
+{
+    int iput; // »·ÐÎ»º³åÇøµÄµ±Ç°·ÅÈëÎ»ÖÃ
+    int iget; // »º³åÇøµÄµ±Ç°È¡³öÎ»ÖÃ
+    int n; // »·ÐÎ»º³åÇøÖÐµÄÔªËØ×ÜÊýÁ¿
+    uint32_t timestamp[NMAX/AUDIOBLK]; //Ê±¼ä´Á
+    uint32_t frameno[NMAX/AUDIOBLK];   //Ö¡ÐòºÅ
+    unsigned char buffer[NMAX];
+};
+
+//ÒôÆµ½ÓÊÕ»º³å  Î´½âÂë
 struct tempaudiobuf1
- {
-  uint32_t timestamp;  //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno;       //Ö¡ï¿½ï¿½ï¿½
-  short TotalPackage;     //ï¿½Ü°ï¿½ï¿½ï¿½
-  uint8_t CurrPackage[MAXPACKNUM]; //ï¿½ï¿½Ç°ï¿½ï¿½   1 ï¿½Ñ½ï¿½ï¿½ï¿½  0 Î´ï¿½ï¿½ï¿½ï¿½
-  int Len;                //Ö¡ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
-  uint8_t isFull;                  //ï¿½ï¿½Ö¡ï¿½Ñ½ï¿½ï¿½ï¿½ï¿½ï¿½È«
-  unsigned char *buffer;//[AUDIOBLK];
-  unsigned char frame_flag;             //Ö¡ï¿½ï¿½Ö¾ ï¿½ï¿½ÆµÖ¡ IÖ¡ PÖ¡
- };                            //     [MP4VNUM]
-//ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
-typedef struct node3{
-               struct tempaudiobuf1 Content;
-               struct node3 *llink, *rlink;
-}TempAudioNode1; 
+{
+    uint32_t timestamp;  //Ê±¼ä´Á
+    uint32_t frameno;       //Ö¡ÐòºÅ
+    short TotalPackage;     //×Ü°üÊý
+    uint8_t CurrPackage[MAXPACKNUM]; //µ±Ç°°ü   1 ÒÑ½ÓÊÕ  0 Î´½ÓÊÕ
+    int Len;                //Ö¡Êý¾Ý³¤¶È
+    uint8_t isFull;                  //¸ÃÖ¡ÒÑ½ÓÊÕÍêÈ«
+    unsigned char *buffer;//[AUDIOBLK];
+    unsigned char frame_flag;             //Ö¡±êÖ¾ ÒôÆµÖ¡ IÖ¡ PÖ¡
+};                            //     [MP4VNUM]
+//ÒôÆµ½ÓÊÕ»º³å Á´±í
+typedef struct node3
+{
+    struct tempaudiobuf1 Content;
+    struct node3 *llink, *rlink;
+}TempAudioNode1;
 
-//ï¿½ï¿½Æµï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½
+//ÒôÆµ²¥·Å»º³å
 struct audioplaybuf1
- {
-  uint8_t isUse;     //ï¿½ï¿½Ö¡ï¿½Ñ½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  uint32_t timestamp; //Ê±ï¿½ï¿½ï¿½
-  uint32_t frameno;   //Ö¡ï¿½ï¿½ï¿½
-  unsigned char *buffer;//[VIDEOMAX];
- };
+{
+    uint8_t isUse;     //¸ÃÖ¡ÒÑ½âÂëÎ´²¥·Å,»º³åÇø²»¿ÉÓÃ
+    uint32_t timestamp; //Ê±¼ä´Á
+    uint32_t frameno;   //Ö¡ÐòºÅ
+    unsigned char *buffer;//[VIDEOMAX];
+};
 
-//ï¿½ï¿½Í¥ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
+//¼ÒÍ¥ÁôÑÔ»º³å
 struct wavbuf1
- {
-  int iput; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-  int iget; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°È¡ï¿½ï¿½Î»ï¿½ï¿½
-  int n; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  unsigned char *buffer;
- };
+{
+    int iput; // »·ÐÎ»º³åÇøµÄµ±Ç°·ÅÈëÎ»ÖÃ
+    int iget; // »º³åÇøµÄµ±Ç°È¡³öÎ»ÖÃ
+    int n; // »·ÐÎ»º³åÇøÖÐµÄÔªËØ×ÜÊýÁ¿
+    unsigned char *buffer;
+};
 
 struct WaveFileHeader
 {
- char chRIFF[4];
- uint32_t dwRIFFLen;
- char chWAVE[4];
+    char chRIFF[4];
+    uint32_t dwRIFFLen;
+    char chWAVE[4];
 
- char chFMT[4];
- uint32_t dwFMTLen;
- uint16_t wFormatTag;
- uint16_t nChannels;
- uint32_t nSamplesPerSec;
- uint32_t nAvgBytesPerSec;
- uint16_t nBlockAlign;
- uint16_t wBitsPerSample;
+    char chFMT[4];
+    uint32_t dwFMTLen;
+    uint16_t wFormatTag;
+    uint16_t nChannels;
+    uint32_t nSamplesPerSec;
+    uint32_t nAvgBytesPerSec;
+    uint16_t nBlockAlign;
+    uint16_t wBitsPerSample;
 
- char chFACT[4];
- uint32_t dwFACTLen;
+    char chFACT[4];
+    uint32_t dwFACTLen;
 
- char chDATA[4];
- uint32_t dwDATALen;
+    char chDATA[4];
+    uint32_t dwDATALen;
 };
 
-
-typedef struct _parameters {
-//  char *jpegformatstr;
-  char jpegformatstr[10];
-  uint32_t begin;       /* the video frame start */
-  int32_t numframes;   /* -1 means: take all frames */
-//  y4m_ratio_t framerate;
-//  y4m_ratio_t aspect_ratio;
-  int interlace;   /* will the YUV4MPEG stream be interlaced? */
-  int interleave;  /* are the JPEG frames field-interleaved? */
-  int verbose; /* the verbosity of the program (see mjpeg_logging.h) */
-
-  int width;
-  int height;
-  int colorspace;
-  int loop;
-  int rescale_YUV;
-} parameters_t;
-
-/*typedef */struct fcap_frame_buff
+////////////copy from sound/////paul0326//////////////
+/*struct flcd_data
 {
-    unsigned int phyAddr;
-    unsigned int mmapAddr;   //length per dma buffer
+    unsigned int buf_len;
+    unsigned int uv_offset;
     unsigned int frame_no;
+    unsigned int mp4_map_dma[VIDEO_PICTURE_QUEUE_SIZE_MAX];
+};*/
+
+struct Local1 {
+    int Status;
+    //×´Ì¬ 0 ¿ÕÏÐ 1 Ö÷½Ð¶Ô½²  2 ±»½Ð¶Ô½²  3 ¼àÊÓ  4 ±»¼àÊÓ  5 Ö÷½ÐÍ¨»°
+    //6 ±»½ÐÍ¨»°
+	int RecordPic;  //ÁôÕÕÆ¬  0 ²»Áô  1 ºô½ÐÁôÕÕÆ¬  2 Í¨»°ÁôÕÕÆ¬
+    unsigned char IP_Group[4];  //×é²¥µØÖ·
+
+    int CallConfirmFlag; //ÔÚÏß±êÖ¾
+    int Timer1Num;  //¶¨Ê±Æ÷1¼ÆÊý
+    int OnlineFlag; //Ðè¼ì²éÔÚÏßÈ·ÈÏ
+    int OnlineNum;  //ÔÚÏßÈ·ÈÏÐòºÅ
+    int TimeOut;    //¼àÊÓ³¬Ê±,  Í¨»°³¬Ê±,  ºô½Ð³¬Ê±£¬ÎÞÈË½ÓÌý
+    int TalkTimeOut; //Í¨»°×î³¤Ê±¼ä
+
+    pthread_mutex_t udp_lock;//»¥³âËø
 };
 
-struct Local1{
-               int _Door_Disp_Type;     //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½  1 -- 800x480   2 -- 320x240
-               int Status;
-               int NSReplyFlag;  //NSÓ¦ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
-               //×´Ì¬ 0 ï¿½ï¿½ï¿½ï¿½ 1 ï¿½ï¿½ï¿½Ð¶Ô½ï¿½  2 ï¿½ï¿½ï¿½Ð¶Ô½ï¿½  3 ï¿½ï¿½ï¿½ï¿½  4 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  5 ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
-               //6 ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½  7 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½  8 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½ 9 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½
-               //10 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°ï¿½ï¿½ï¿½ï¿½   11 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó°   30 IP ï¿½ï¿½ï¿½
+/*
+struct Local1
+{
+    int Status;
+    //×´Ì¬ 0 ¿ÕÏÐ 1 Ö÷½Ð¶Ô½²  2 ±»½Ð¶Ô½²  3 ¼àÊÓ  4 ±»¼àÊÓ  5 Ö÷½ÐÍ¨»°
+    //6 ±»½ÐÍ¨»°
+    int KillStatus;
+	int RecordPic;  //ÁôÕÕÆ¬  0 ²»Áô  1 ºô½ÐÁôÕÕÆ¬  2 Í¨»°ÁôÕÕÆ¬
+    int IFrameCount; //IÖ¡¼ÆÊý
+    int IFrameNo;    //ÁôµÚ¼¸¸öIÖ¡
+    unsigned char yuv[2][D1_W*D1_H*3/2];
+    /////unsigned char yuv[2][CIF_W*CIF_H*3/2];
+    int HavePicRecorded;  //ÓÐÕÕÆ¬ÒÑÂ¼ÖÆ
+    struct tm *recpic_tm_t; //ÁôÕÕÆ¬Ê±¼ä
 
-               int LoginServer;     //ï¿½Ç·ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½<<ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½Â¼ï¿½Ç¼ï¿½Ê±ï¿½ï¿½ï¿½Óµï¿½Â¼ï¿½ï¿½Î´ï¿½ï¿½Â¼ï¿½ï¿½ï¿½Ð¶ï¿½3ï¿½ï¿½>>
-                              
-               int CallConfirmFlag; //ï¿½ï¿½ï¿½ß±ï¿½Ö¾
-               int Timer1Num;  //ï¿½ï¿½Ê±ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½
-               int OnlineFlag; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½
-               int OnlineNum;  //ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½
-               int TimeOut;    //ï¿½ï¿½ï¿½Ó³ï¿½Ê±,  Í¨ï¿½ï¿½ï¿½ï¿½Ê±,  ï¿½ï¿½ï¿½Ð³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ë½ï¿½ï¿½ï¿½
-               int RecPicSize;  //ï¿½ï¿½Æµï¿½ï¿½Ð¡  1  352*288   2  720*480
-               int PlayPicSize;  //ï¿½ï¿½Æµï¿½ï¿½Ð¡  1  352*288   2  720*480
-               pthread_mutex_t save_lock;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               pthread_mutex_t udp_lock;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               pthread_mutex_t comm_lock;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               #ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-                pthread_mutex_t idcard_lock;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-                pthread_mutex_t dispart_send_lock;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               #endif
-               int isSDInsert;  //SDï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
-               int isSDProtect; //SDï¿½ï¿½Ð´ï¿½ï¿½ï¿½ï¿½
-               int isSDMounted;  //SDï¿½ï¿½Mountï¿½É¹ï¿½
-               int SD_Status;  //SDï¿½ï¿½ï¿½ï¿½×° 0 -- ï¿½ï¿½  1--ï¿½ï¿½  2--Ð´ï¿½ï¿½ï¿½ï¿½  3--ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½  4--ï¿½Ç°ï¿½È«ï¿½ï¿½ï¿½ï¿½
-               int DefenceDelayFlag;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ö¾
-               int DefenceDelayTime;   //ï¿½ï¿½ï¿½ï¿½
-               int PassLen;            //ï¿½ï¿½ï¿½ë³¤ï¿½ï¿½
-               int SingleFortifyFlag;    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ö¾
-               int SingleFortifyTime;   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               int ForceIFrame;    //1 Ç¿ï¿½ï¿½IÖ¡
-               int LMovieTime;     //ï¿½ï¿½Ó°ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½
-               int CalibratePos;   //Ð£×¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê®ï¿½ï¿½Î»ï¿½ï¿½ 0 1 2 3
-               int CalibrateSucc;  //Ð£×¼ï¿½É¹ï¿½
-               int CurrFbPage; //ï¿½ï¿½Ç°FbÒ³
-               char ClockText[20];  //ï¿½ï¿½Ç°Ê±ï¿½ï¿½
-               int InputMax;       //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó³¤¶ï¿½  Î§Ç½ï¿½ï¿½  10Î»  ï¿½ï¿½Ôªï¿½Å¿Ú»ï¿½  4Î»
-               int ModiPassInputNum; //ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               char FirstPass[20];   //ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               unsigned char IP_Group[4];  //ï¿½é²¥ï¿½ï¿½Ö·
-               unsigned char Weather[3];   //ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½
+///////////////////////paul////////////////////////////////////////
+    int again;
+	char Center[2];
+	char udporder;//the current order from udp
+    char commorder;
+    char FromIP[20];
+    unsigned char udpsend_buf[1520];
+    unsigned char commsend_buf[100];
+    char Addr[20];
+	unsigned char infoAddr[20];
+	unsigned char picAddr[4];//ÁôÓ°
+	int alarmAddr[2];
+	unsigned char OldAddr[20];
+	char takepic;
+	unsigned char VideoAddr[20];
+	unsigned char AudioAddr[20];
+	unsigned char KillRemote[20];
+	unsigned char KillAddr[20];
+	unsigned char KillIP[4];
+	char interrupted;
+    char updatemcu; 
+	int Floor;
+	int Room;
 
-               #ifdef _CAPTUREPIC_TO_CENTER  //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-                int RecordPic;
-                int IFrameCount; //Ö¡ï¿½ï¿½ï¿½ï¿½
-                int IFrameNo;    //ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½ï¿½IÖ¡
-                int Pic_Size;                
-                int Pic_Width;
-                int Pic_Height;
-                unsigned char yuv[D1_W*D1_H];
-                int HavePicRecorded;  //ï¿½ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½Â¼ï¿½ï¿½
-                struct tm *recpic_tm_t; //ï¿½ï¿½ï¿½ï¿½Æ¬Ê±ï¿½ï¿½
-                char RemoteAddr[21];  //Ô¶ï¿½Ëµï¿½Ö·
-                int SendToCetnering;  //ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-                int ConnectCentered;   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
-               #endif               
+//	char MaxFloor;
+//	char MaxRoom;
+/////////////////////////////////////////////////////////////
+    ///////////////0326//////////from door/////////////
+    int DoorNo;
+    char ClockText[20];
+    int InputMax;
+    int OpenDoorFlag;
+    int OpenDoorTime;
 
-               int AddrLen;          //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½  S 12  B 6 M 8 H 6
+    ////////////
+    struct tm *call_tm_t; //±»ºô½ÐÊ±¼ä
 
-               int isHost;           //'0' ï¿½ï¿½ï¿½ï¿½ '1' ï¿½ï¿½ï¿½ï¿½ '2' ...
-               int DenNum;             //Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½
-               unsigned char DenIP[10][4];    //ï¿½ï¿½ï¿½ï¿½IP
-               char DenAddr[10][21];         //ï¿½ï¿½ï¿½ï¿½Addr
+    int CallConfirmFlag; //ÔÚÏß±êÖ¾
+    int Timer1Num;  //¶¨Ê±Æ÷1¼ÆÊý
+    int OnlineFlag; //Ðè¼ì²éÔÚÏßÈ·ÈÏ
+    int OnlineNum;  //ÔÚÏßÈ·ÈÏÐòºÅ
+    int TimeOut;    //¼àÊÓ³¬Ê±,  Í¨»°³¬Ê±,  ºô½Ð³¬Ê±£¬ÎÞÈË½ÓÌý
+    int TalkTimeOut; //Í¨»°×î³¤Ê±¼ä
+    int RecPicSize;  //ÊÓÆµ´óÐ¡  1  352*288   2  720*480
+    int PlayPicSize;  //ÊÓÆµ´óÐ¡  1  352*288   2  720*480
+    ///////////mj
+	int ForbTimeOut;
+	pthread_mutex_t save_lock;//»¥³âËø
+    pthread_mutex_t udp_lock;//»¥³âËø
+    pthread_mutex_t comm_lock;//»¥³âËø
+    int PrevWindow;      //ÉÏÒ»¸ö´°¿Ú±àºÅ
+    int TmpWindow;       //ÔÝ´æ´°¿Ú±àºÅ ÓÃÓÚµ¯³ö´°¿ÚÊ±
+    int CurrentWindow;   //µ±Ç°´°¿Ú±àºÅ
+    int DefenceDelayFlag;    //²¼·ÀÑÓÊ±±êÖ¾
+    int DefenceDelayTime;   //¼ÆÊý
+    int PassLen;            //ÃÜÂë³¤¶È
+    int AlarmDelayFlag[2];    //±¨¾¯ÑÓÊ±±êÖ¾
+    int AlarmDelayTime[2];   //¼ÆÊý
 
-               unsigned char IP_VideoServer[4];  //ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+    int ForceIFrame;    //1 Ç¿ÖÆIÖ¡
+    int CalibratePos;   //Ð£×¼´¥ÃþÆÁÊ®×ÖÎ»ÖÃ 0 1 2 3
+    int CalibrateSucc;  //Ð£×¼³É¹¦
+    int CurrFbPage; //µ±Ç°FbÒ³
+    unsigned char IP_Group[4];  //×é²¥µØÖ·
+    unsigned char Weather[3];   //ÌìÆøÔ¤±¨
 
-               int NetStatus;   //ï¿½ï¿½ï¿½ï¿½×´Ì¬ 1 ï¿½Ï¿ï¿½  0 ï¿½ï¿½Í¨
-               int OldNetSpeed;  //ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶ï¿½
+    int AddrLen;          //µØÖ·³¤¶È  S 12  B 6 M 8 H 6
 
-               int ReportSend;  //ï¿½è±¸ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Ñ·ï¿½ï¿½ï¿½
-               int RandReportTime; //ï¿½è±¸ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
-               int ReportTimeNum;  //ï¿½ï¿½Ê±
+    int isHost;           //'0' Ö÷»ú '1' ¸±»ú '2' ...
+    int ConnToHost;       //ÓëÖ÷»úÁ¬½ÓÕý³£ 1 Õý³£ 0 ²»Õý³£
+    unsigned char HostIP[4]; //Ö÷»úIP
+    unsigned char HostAddr[21]; //Ö÷»úAddr
+    int DenNum;             //Ä¿±êÊýÁ¿  ¸±»ú
+    unsigned char DenIP[10][4];    //¸±»úIP
+    char DenAddr[10][21];         //¸±»úAddr
 
-               int LcdLightFlag; //LCDï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
-               int LcdLightTime; //Ê±ï¿½ï¿½
+    int NetStatus;   //ÍøÂç×´Ì¬ 1 ¶Ï¿ª  0 ½ÓÍ¨
+    int OldNetSpeed;  //ÍøÂçËÙ¶È
+    int NoBreak;     //ÃâÈÅ×´Ì¬ 1 ÃâÈÅ  0 Õý³£
 
-                                 //ï¿½ï¿½GPIOï¿½ß³ï¿½ï¿½Ð²ï¿½Ñ¯ï¿½ï¿½ï¿½ß³ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½
-               int Key_Press_Run_Flag;
-               int Save_File_Run_Flag;
-               #ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-                int Dispart_Send_Run_Flag;
-               #endif 
-               int Multi_Send_Run_Flag;
-               int Multi_Comm_Send_Run_Flag;
+    int ReportSend;  //Éè±¸¶¨Ê±±¨¸æ×´Ì¬ÒÑ·¢ËÍ
+    int RandReportTime; //Éè±¸¶¨Ê±±¨¸æ×´Ì¬Ëæ»úÊ±¼ä
+    int ReportTimeNum;  //¼ÆÊ±
+    //ÔÚGPIOÏß³ÌÖÐ²éÑ¯¸÷Ïß³ÌÊÇ·ñÔËÐÐ
+    int Key_Press_Run_Flag;
+    int Save_File_Run_Flag;
+    int Dispart_Send_Run_Flag;
+    int Multi_Send_Run_Flag;
+    int Multi_Comm_Send_Run_Flag;
 
-               int PlayLMovieTipFlag; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ö¾
+    int MenuIndex;     //µ±Ç°°´Å¥Ë÷Òý
+    int MaxIndex;      //±¾½çÃæ×î´óË÷Òý
+    int MainMenuIndex;     //Ö÷½çÃæ°´Å¥Ë÷Òý
 
-               int ResetPlayRingFlag;  //ï¿½ï¿½Î»Audio Play flag
+    int OsdOpened;  //OSD´ò¿ª±êÖ¾
 
-               int nowvideoframeno;   //ï¿½ï¿½Ç°ï¿½ï¿½ÆµÖ¡ï¿½ï¿½ï¿½
-               int nowaudioframeno;   //ï¿½ï¿½Ç°ï¿½ï¿½ÆµÖ¡ï¿½ï¿½ï¿½
+    int LcdLightFlag; //LCD±³¹â±êÖ¾
+    int LcdLightTime; //Ê±¼ä
 
-               int ForceEndWatch;  //ï¿½Ðºï¿½ï¿½ï¿½Ê±ï¿½ï¿½Ç¿ï¿½Æ¹Ø¼ï¿½ï¿½ï¿½
-               int ZoomInOutFlag;  //ï¿½ï¿½ï¿½Ú·Å´ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½
-               uint32_t newzoomtime;
-               uint32_t oldzoomtime;
-               uint32_t newtouchtime;
-               uint32_t oldtouchtime;    //ï¿½ï¿½Ò»ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
+	//int NewINfo;
+    int NewInfo[FLOOR][ROOM];  //ÓÐÐÂÐÅÏ¢
 
-               int _TESTNSSERVER;        //ï¿½ï¿½ï¿½Ô·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£Ê½
-               int _TESTTRANS;           //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½×ªÄ£Ê½
+    int ResetPlayRingFlag;  //¸´Î»Audio Play flag
 
-               int SearchAllNo;  //ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½
-               int DownProgramOK; //ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               int download_image_flag; //ï¿½ï¿½ï¿½ï¿½ÏµÍ³Ó³ï¿½ï¿½
+    int nowvideoframeno;   //µ±Ç°ÊÓÆµÖ¡±àºÅ
+    int nowaudioframeno;   //µ±Ç°ÒôÆµÖ¡±àºÅ
 
-               char DebugInfo[1024];
-               char DebugIP[20];
-               int RemoteDebugInfo;  //ï¿½ï¿½ï¿½ï¿½Ô¶ï¿½Ìµï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
+    int ForceEndWatch;  //ÓÐºô½ÐÊ±£¬Ç¿ÖÆ¹Ø¼àÊÓ
+    int ZoomInOutFlag;  //ÕýÔÚ·Å´óËõÐ¡ÖÐ
+    uint32_t newzoomtime;
+    uint32_t oldzoomtime;
+    uint32_t newtouchtime;
+    uint32_t oldtouchtime;    //ÉÏÒ»´Î´¥ÃþÆÁ´¦ÀíÊ±¼ä
+};
+*/
 
-               int CaptureVideoStartFlag;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½Ê¼ï¿½ï¿½Ö¾     20101109  xu
-               int CaptureVideoStartTime;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
+struct LocalCfg1
+{
+    char Addr[20];             //µØÖ·±àÂë
+    unsigned char BuildAddr[2];
+	unsigned char Mac_Addr[6]; //Íø¿¨µØÖ·
+    unsigned char IP[4];       //IPµØÖ·
+    unsigned char IP_Mask[4];  //×ÓÍøÑÚÂë
+    unsigned char IP_Gate[4];  //Íø¹ØµØÖ·
+    unsigned char IP_NS[4];    //NS£¨Ãû³Æ½âÎö£©·þÎñÆ÷µØÖ·
+    unsigned char IP_Server[4];  //Ö÷·þÎñÆ÷µØÖ·£¨ÓëNS·þÎñÆ÷¿ÉÎªÍ¬Ò»¸ö£©
+    unsigned char IP_Broadcast[4];  //¹ã²¥µØÖ·
 
-               char cLockFlg;								//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	add by lcx
-              };
-struct LocalCfg1{
-               char Addr[20];             //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½
-               unsigned char Mac_Addr[6]; //ï¿½ï¿½ï¿½Ö·
-               unsigned char IP[4];       //IPï¿½ï¿½Ö·
-               unsigned char IP_Mask[4];  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               unsigned char IP_Gate[4];  //ï¿½ï¿½Øµï¿½Ö·
-               unsigned char IP_NS[4];    //NSï¿½ï¿½ï¿½ï¿½Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
-               unsigned char IP_Server[4];  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½NSï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÍ¬Ò»ï¿½ï¿½ï¿½ï¿½
-               unsigned char IP_Broadcast[4];  //ï¿½ã²¥ï¿½ï¿½Ö·
+    int ReportTime;      //Éè±¸¶¨Ê±±¨¸æ×´Ì¬Ê±¼ä
+    unsigned char DefenceStatus;       //²¼·À×´Ì¬
+    unsigned char DefenceNum;          //·ÀÇøÄ£¿é¸öÊý
+    unsigned char DefenceInfo[32][10]; //·ÀÇøÐÅÏ¢
 
-               int ReportTime;      //ï¿½è±¸ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½×´Ì¬Ê±ï¿½ï¿½
+    char EngineerPass[10];             //¹¤³ÌÃÜÂë
+    char OpenLockPass[10];
 
-               unsigned char LockType;   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  0 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½  1 ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
-               unsigned char OpenLockTime;   //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ 0 ï¿½Dï¿½D100ms  1ï¿½Dï¿½D200ms
-                                             //          ï¿½ï¿½ï¿½ï¿½ï¿½ 0 ï¿½Dï¿½D5s  1ï¿½Dï¿½D10s
+    int In_DelayTime;                //½øÈëÑÓÊ±
+    int Out_DelayTime;               //Íâ³öÑÓÊ±
+    int Alarm_DelayTime;               //±¨¾¯ÑÓÊ±
 
-               unsigned char DelayLockTime;   //ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½  0 0s  1 3s  2 5s  3 10s
-               unsigned char PassOpenLock;   //ï¿½ï¿½ï¿½ë¿ªï¿½ï¿½
-               unsigned char CardOpenLock;   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               unsigned char CardComm;       //Ë¢ï¿½ï¿½Í¨ï¿½ï¿½
-               unsigned char DoorDetect;       //ï¿½Å´Å¼ï¿½ï¿½
-               unsigned char RoomType;        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  0 ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  1  ï¿½Ö·ï¿½ï¿½ï¿½
-               unsigned char CallWaitRing;        //ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½  0 ï¿½ï¿½Í¨ï¿½ï¿½  1  ï¿½ï¿½Í¨ï¿½ï¿½  2  Ò¡ï¿½ï¿½ï¿½ï¿½   3  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+/////////////////////////0326////////////////from door/////////
+    unsigned char OpenLockTime;
+    unsigned char DelayLockTime;
+    unsigned char PassOpenLock;
+    unsigned char CardOpenLock;
 
-               char EngineerPass[10];           //ï¿½ï¿½×°ï¿½ï¿½ï¿½ï¿½
-               char OpenLockPass[10];             //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               char HelpInfo[200];
+    unsigned char bit_rate;
+    ///////////////////////////////////////////////////
+    int Ts_X0;                   //´¥ÃþÆÁ
+    int Ts_Y0;
+    int Ts_deltaX;
+    int Ts_deltaY;
+};
 
-               unsigned char VoiceHint;         //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾  0 ï¿½Ø±ï¿½  1  ï¿½ï¿½
-               unsigned char KeyVoice;          //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    0 ï¿½Ø±ï¿½  1  ï¿½ï¿½
-               
-               int Ts_X0;                   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               int Ts_Y0;
-               int Ts_deltaX;
-               int Ts_deltaY;
-              };
+struct Remote1
+{
+    int DenNum;             //Ä¿±êÊýÁ¿  Ö÷»ú+¸±»ú
+    unsigned char DenIP[4]; //¶Ô·½IP»òÊÓÆµ·þÎñÆ÷IP
+    unsigned char GroupIP[4]; //GroupIP
+    unsigned char IP[10][4];    //¶Ô·½IP
+    int Added[10];                //ÒÑ¼ÓÈë×é
+    char Addr[10][21];         //¶Ô·½Addr
+    int isDirect;       //ÊÇ·ñÖ±Í¨  0 Ö±Í¨  1 ÖÐ×ª
+};
 
-#ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-//IDï¿½ï¿½ï¿½ï¿½Ï¢
-struct IDCardNo1{
-               int Num;        //ï¿½ï¿½ï¿½ï¿½
-               unsigned char SN[IDCARDMAXNUM*BYTEPERSN]; //IDï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½10ï¿½ï¿½ï¿½ï¿½
-               uint32_t serialnum;     //ï¿½ï¿½ï¿½
-              };
-//Ð´IDï¿½ï¿½ï¿½ï¿½Ï¢
-struct RecvIDCardNo1{
-               int isNewWriteFlag;  //ï¿½ï¿½Ð´ï¿½ï¿½Ö¾
-               int Num;             //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               int PackNum;         //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               int PackIsRecved[IDCARDMAXNUM/CARDPERPACK + 1];  //ï¿½ï¿½ï¿½Ñ½ï¿½ï¿½Õ±ï¿½Ö¾
-               unsigned char SN[IDCARDMAXNUM*BYTEPERSN]; //IDï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½10ï¿½ï¿½ï¿½ï¿½
-               uint32_t serialnum;     //ï¿½ï¿½ï¿½
-              };
-//Ë¢IDï¿½ï¿½ï¿½ï¿½Ï¢
-struct BrushIDCard1{
-               int Num;        //ï¿½ï¿½ï¿½ï¿½
-               unsigned char Info[IDCARDBRUSHNUM*11]; //IDï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½ï¿½
-               //Ç°4ï¿½Ö½Ú¿ï¿½ï¿½Å£ï¿½ï¿½ï¿½7ï¿½Ö½ï¿½Ê±ï¿½ï¿½
-              };
-//ï¿½ï¿½Ð´IDï¿½ï¿½ï¿½ï¿½Ý½á¹¹
-struct iddata1
-  {
-   #ifdef _IDCARDHAVEADDR      //IDï¿½ï¿½ï¿½ï¿½ï¿½Ö·
-    char Addr[20];       //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½
-   #endif 
-   unsigned int serialnum;  //ï¿½ï¿½ï¿½
-   unsigned int  Num;          //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   unsigned int  CurrNum;           //ï¿½ï¿½Ç°ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ï¿½ï¿½
-   unsigned int  TotalPackage;      //ï¿½Ü°ï¿½ï¿½ï¿½
-   unsigned int  CurrPackage;       //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
-  }__attribute__ ((packed));              
-#endif
-#ifdef _CAPTUREPIC_TO_CENTER  //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
- struct Capture_Pic_Center1{
-                int isVilid;             //
-                char RemoteAddr[21];
-                int jpegsize;
-                unsigned char *jpeg_pic; //ï¿½ï¿½Æ¬JPGï¿½ï¿½ï¿½
-                struct tm *recpic_tm_t; //ï¿½ï¿½ï¿½ï¿½Æ¬Ê±ï¿½ï¿½
-               };
-#endif
+struct Info1
+{
+    int MaxNum;   //×î´óÐÅÏ¢Êý
+    int TotalNum; //ÐÅÏ¢×ÜÊý
+    int NoReadedNum; //Î´¶ÁÐÅÏ¢×ÜÊý
+    int TotalInfoPage;   //×ÜÐÅÏ¢Ò³Êý
+    int CurrentInfoPage; //µ±Ç°ÐÅÏ¢Ò³
+    int CurrNo;    //µ±Ç°ÐÅÏ¢ÐòºÅ
+    int CurrPlayNo;  //µ±Ç°²¥·ÅÐòºÅ
+    int TimeNum;    //¼ÆÊý
+};
 
-//LCDï¿½ï¿½Ä»ï¿½ï¿½Ê¾
-struct LCD_Display1{
-                    int isFinished;   //ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½
-                    int ShowFlag[4];   //0  ï¿½ï¿½  1  ï¿½ï¿½ï¿½ï¿½
-                    int PrevShowFlag[4];
-                    char PrevText[4][20];  //ï¿½ï¿½Ò»ï¿½ï¿½
-                    char CurrText[4][20];  //ï¿½ï¿½Ç°ï¿½ï¿½
-                    int MaxRow;  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½Ðºï¿½
-                   };
-struct DefenceCfg1{
-               unsigned char DefenceStatus;       //ï¿½ï¿½ï¿½ï¿½×´Ì¬
-               unsigned char DefenceNum;          //ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
-               unsigned char DefenceInfo[32][10]; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
-              };
-//ï¿½ï¿½ï¿½Ú½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½
-struct commbuf1
- {
-  int iput; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
-  int iget; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½Ç°È¡ï¿½ï¿½Î»ï¿½ï¿½
-  int n; // ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½Ôªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  unsigned char buffer[COMMMAX];
- };
-//×´Ì¬ï¿½ï¿½Ê¾ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
-//Type
-//          11 -- ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-//          12 -- ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½
-//          13 -- ï¿½ï¿½ï¿½ï¿½
-//          14 -- ï¿½ï¿½ï¿½ï¿½ï¿½
-//          15 -- ï¿½é¿´ï¿½ï¿½Ó°
-//          16 -- ï¿½Ô½ï¿½Í¼ï¿½ñ´°¿ï¿½
+//µ¥ÌõÐÅÏ¢ÄÚÈÝ½á¹¹Ìå
+struct InfoContent1
+{
+    uint8_t isValid;  //ÓÐÐ§£¬Î´É¾³ý±êÖ¾   1
+    uint8_t isReaded; //ÒÑ¶Á±êÖ¾    1
+    uint8_t isLocked; //Ëø¶¨±êÖ¾    1
+    char Time[32];    //½ÓÊÕÊ±¼ä    32
+    uint8_t Type;     //ÀàÐÍ        1    ÐÅÏ¢ÀàÐÍ»òÊÂ¼þÀàÐÍ
+    uint32_t Sn;      //ÐòºÅ        4
+    int Length;       //³¤¶È        4
+    char Content[INFOMAXSIZE];//ÄÚÈÝ  400  ÄÚÈÝ»òÊÂ¼þ¶ÔÏó
+    //char Event[20];         //ÊÂ¼þ
+    char FileName[50];
+};                               //ÄÚ´æ·ÖÅäÎª444
 
-struct Remote1{
-               int DenNum;             //Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  ï¿½ï¿½ï¿½ï¿½+ï¿½ï¿½ï¿½ï¿½
-               unsigned char DenIP[4]; //ï¿½Ô·ï¿½IPï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½IP
-               unsigned char GroupIP[4]; //GroupIP
-               unsigned char IP[10][4];    //ï¿½Ô·ï¿½IP
-               int Added[10];                //ï¿½Ñ¼ï¿½ï¿½ï¿½ï¿½ï¿½
-               char Addr[10][21];         //ï¿½Ô·ï¿½Addr
-               int isDirect;       //ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ö±Í¨  0 Ö±Í¨  1 ï¿½ï¿½×ª
-           //    int isAssiDirect;       //ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ö±Í¨  0 Ö±Í¨  1 ï¿½ï¿½×ª
-              };
+//////////////////paul0509
+struct AlarmInfoContent1
+{
+    uint8_t isValid;  //ÓÐÐ§£¬Î´É¾³ý±êÖ¾   1
+    uint8_t isReaded; //ÒÑ¶Á±êÖ¾    1
+    uint8_t isLocked; //Ëø¶¨±êÖ¾    1
+    char Time[32];    //½ÓÊÕÊ±¼ä    32
+    uint8_t Type;     //ÀàÐÍ        1    ÐÅÏ¢ÀàÐÍ»òÊÂ¼þÀàÐÍ
+//    uint32_t Sn;      //ÐòºÅ        4
+//    int Length;       //³¤¶È        4
+//    char Content[INFOMAXSIZE];//ÄÚÈÝ  400  ÄÚÈÝ»òÊÂ¼þ¶ÔÏó
+    //char Event[20];         //ÊÂ¼þ
+//    char FileName[50];
+//	char AlarmInfo[20]; ///paul0509±¨¾¯ÐÅÏ¢
+}; 
+////////////////////////////////////////////
+//µ±Ç°ÐÅÏ¢´°¿Ú×´Ì¬
+struct InfoStatus1
+{
+    int CurrType;  //µ±Ç°ÐÅÏ¢ÀàÐÍ
+    int CurrWin;   //µ±Ç°ÐÅÏ¢´°¿Ú  0 ÐÅÏ¢ÁÐ±í  1  ÐÅÏ¢ÄÚÈÝ
+    int CurrNo;    //µ±Ç°ÐÅÏ¢ÐòºÅ
+};
+//ÐÅÏ¢Á´±í
+typedef struct node
+{
+    struct InfoContent1 Content;
+    struct node *llink, *rlink;
+}InfoNode1;
+///////////////paul0509
+typedef struct alarmnode
+{
+	struct AlarmInfoContent1 Content;
+	struct alarmnode *llink,*rlink;
+}AlarmInfoNode1;
+////////////////////////////////////////////////////////////////
+//´æ´¢ÎÄ¼þµ½FLASH¶ÓÁÐ Êý¾Ý½á¹¹ ÓÉÓÚ´æ´¢FLASHËÙ¶È½ÏÂý ÓÃÏß³ÌÀ´²Ù×÷
+struct Save_File_Buff1
+{
+    int isValid; //ÊÇ·ñÓÐÐ§
+    int Type;    //´æ´¢ÀàÐÍ 1£­Ò»ÀàÐÅÏ¢  2£­µ¥¸öÐÅÏ¢  3£­ÎïÒµ·þÎñ  4£­±¾µØÉèÖÃ
+    int InfoType;   //ÐÅÏ¢ÀàÐÍ
+    int InfoNo;     //ÐÅÏ¢Î»ÖÃ
+    InfoNode1 *Info_Node; //ÐÅÏ¢½áµã
+};
 
+//UDPÖ÷¶¯ÃüÁîÊý¾Ý·¢ËÍ½á¹¹
+struct Multi_Udp_Buff1
+{
+    int isValid; //ÊÇ·ñÓÐÐ§
+    int SendNum; //µ±Ç°·¢ËÍ´ÎÊý
+    int CurrOrder;//µ±Ç°ÃüÁî×´Ì¬,VIDEOTALK VIDEOTALKTRANS VIDEOWATCH VIDEOWATCHTRANS
+    //Ö÷ÒªÓÃÓÚÐè½âÎöÊ±£¬Èçµ¥´ÎÃüÁîÖÃÎª0
+    int m_Socket;
+    char RemoteHost[20];
+    unsigned char buf[1500];
+    int DelayTime;  //µÈ´ýÊ±¼ä
+    int SendDelayTime;
+    int nlength;
+};
 
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½
-struct LeaveWord1{
-               uint8_t isValid;  //ï¿½ï¿½Ð§ï¿½ï¿½Î´É¾ï¿½ï¿½ï¿½Ö¾   1
-               uint8_t isReaded; //ï¿½Ñ¶ï¿½ï¿½ï¿½Ö¾    1
-               uint8_t isLocked; //ï¿½ï¿½ï¿½Ö¾    1
-               char Time[32];    //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½    32
-               uint8_t Type;     //ï¿½ï¿½ï¿½ï¿½        1   1--ï¿½ï¿½ï¿½ï¿½  2 --ï¿½ç»°
-               uint32_t Sn;      //ï¿½ï¿½ï¿½        4
-               int Length;       //ï¿½ï¿½ï¿½ï¿½        4
-              };
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-typedef struct leavewordnode{
-               struct LeaveWord1 LWord;
-               struct node *llink, *rlink;
-}LeaveWordNode1;                                       //ï¿½Ú´ï¿½ï¿½ï¿½ï¿½Îª444
+//COMMÖ÷¶¯ÃüÁîÊý¾Ý·¢ËÍ½á¹¹
+struct Multi_Comm_Buff1
+{
+    int isValid; //ÊÇ·ñÓÐÐ§
+    int SendNum; //µ±Ç°·¢ËÍ´ÎÊý
+    int m_Comm;
+    unsigned char buf[1500];
+    int nlength;
+//	int udporder;
+//	int commorder;
+};
 
-//ï¿½æ´¢ï¿½Ä¼ï¿½ï¿½ï¿½FLASHï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ý½á¹¹ ï¿½ï¿½ï¿½Ú´æ´¢FLASHï¿½Ù¶È½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ß³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-struct Save_File_Buff1{
-               int isValid; //ï¿½Ç·ï¿½ï¿½ï¿½Ð§
-               int Type;    //ï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ 1ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ï¢  2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢  3ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½  4ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-               int InfoType;   //ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
-               int InfoNo;     //ï¿½ï¿½Ï¢Î»ï¿½ï¿½
-               char cFromIP[15];   //ï¿½ï¿½ï¿½Ú¶ï¿½IDï¿½ï¿½Ó¦ï¿½ï¿½
-              };
-
-//UDPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í½á¹¹
-struct Multi_Udp_Buff1{
-               int isValid; //ï¿½Ç·ï¿½ï¿½ï¿½Ð§
-               int SendNum; //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½
-               int CurrOrder;//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½×´Ì¬,VIDEOTALK VIDEOTALKTRANS VIDEOWATCH VIDEOWATCHTRANS
-                             //ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½çµ¥ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0
-               int m_Socket;
-               char RemoteHost[20];
-               char RemoteIP[20];               
-               char DenIP[20]; //Ä¿ï¿½ï¿½ï¿½Ö·
-               int RemotePort;
-               unsigned char buf[1500];
-               int DelayTime;  //ï¿½È´ï¿½Ê±ï¿½ï¿½
-               int SendDelayTime; //ï¿½ï¿½ï¿½ÍµÈ´ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½  20101112
-               int nlength;
-              };
-//COMMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½Í½á¹¹
-struct Multi_Comm_Buff1{
-               int isValid; //ï¿½Ç·ï¿½ï¿½ï¿½Ð§
-               int SendNum; //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½
-               int m_Comm;
-               unsigned char buf[1500];
-               int nlength;
-              };
-//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-struct Call_Input1{
-               int Len; //ï¿½Ç·ï¿½ï¿½ï¿½Ð§
-               char buf[20];
-              };
-//Í¨ï¿½ï¿½ï¿½ï¿½Ý½á¹¹
+//Í¨»°Êý¾Ý½á¹¹
 struct talkdata1
-  {
-//   unsigned char Order;     //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   char HostAddr[20];       //ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½Ö·
-   unsigned char HostIP[4]; //ï¿½ï¿½ï¿½Ð·ï¿½IPï¿½ï¿½Ö·
-   char AssiAddr[20];       //ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½Ö·
-   unsigned char AssiIP[4]; //ï¿½ï¿½ï¿½Ð·ï¿½IPï¿½ï¿½Ö·
-   unsigned int timestamp;  //Ê±ï¿½ï¿½ï¿½
-   unsigned short DataType;          //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   unsigned short Frameno;           //Ö¡ï¿½ï¿½ï¿½
-   unsigned int Framelen;            //Ö¡ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
-   unsigned short TotalPackage;      //ï¿½Ü°ï¿½ï¿½ï¿½
-   unsigned short CurrPackage;       //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
-   unsigned short Datalen;           //ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
-   unsigned short PackLen;       //ï¿½ï¿½Ý°ï¿½ï¿½ï¿½ó³¤¶ï¿½
-//   char HeadSpace[9];
-   }__attribute__ ((packed));
-//ï¿½ï¿½Ï¢ï¿½ï¿½Ý½á¹¹
+{
+    char HostAddr[20];       //Ö÷½Ð·½ØÖ·
+    unsigned char HostIP[4]; //Ö÷½Ð·½IPµØÖ·
+    char AssiAddr[20];       //±»½Ð·½µØÖ·
+    unsigned char AssiIP[4]; //±»½Ð·½IPµØÖ·
+    unsigned int timestamp;  //Ê±¼ä´Á
+    unsigned short DataType;          //Êý¾ÝÀàÐÍ
+    unsigned short Frameno;           //Ö¡ÐòºÅ
+    unsigned int Framelen;            //Ö¡Êý¾Ý³¤¶È
+    unsigned short TotalPackage;      //×Ü°üÊý
+    unsigned short CurrPackage;       //µ±Ç°°üÊý
+    unsigned short Datalen;           //Êý¾Ý³¤¶È
+    unsigned short PackLen;       //Êý¾Ý°ü´óÐ¡
+}__attribute__ ((packed));
+//ÐÅÏ¢Êý¾Ý½á¹¹
 struct infodata1
-  {
-   char Addr[20];       //ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½
-   unsigned short Type; //ï¿½ï¿½ï¿½ï¿½
-   unsigned int  Sn;         //ï¿½ï¿½ï¿½
-   unsigned short Length;   //ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
-  }__attribute__ ((packed));
+{
+    char Addr[20];       //µØÖ·±àÂë
+    unsigned short Type; //ÀàÐÍ
+//  	unsigned char Type;
+	unsigned int  Sn;         //ÐòºÅ
+    unsigned short Length;   //Êý¾Ý³¤¶È
+}__attribute__ ((packed));
 
-struct downfile1
-  {
-   char FlagText[20];     //ï¿½ï¿½Ö¾ï¿½Ö·ï¿½
-   char FileName[20];
-   unsigned int Filelen;            //ï¿½Ä¼ï¿½ï¿½ï¿½Ð¡
-   unsigned short TotalPackage;      //ï¿½Ü°ï¿½ï¿½ï¿½
-   unsigned short CurrPackage;       //ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½
-   unsigned short Datalen;           //ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
-  }__attribute__ ((packed));  
 #ifndef CommonH
 #define CommonH
+int DebugMode;           //µ÷ÊÔÄ£Ê½
+int DeltaLen;  //Êý¾Ý°üÓÐÐ§Êý¾ÝÆ«ÒÆÁ¿
+struct tm *curr_tm_t;
+struct TimeStamp1 TimeStamp;  //½ÓÊÕÊ±¼äÓë²¥·ÅÊ±¼ä£¬Í¬²½ÓÃ
+int temp_video_n;      //ÊÓÆµ½ÓÊÕ»º³å¸öÊý
+TempVideoNode1 *TempVideoNode_h;    //ÊÓÆµ½ÓÊÕ»º³åÁÐ±í
+int temp_audio_n;      //ÒôÆµ½ÓÊÕ»º³å¸öÊý
+TempAudioNode1 *TempAudioNode_h;    //ÒôÆµ½ÓÊÕ»º³åÁÐ±í
 
-  extern int DebugMode;
+//ÏµÍ³³õÊ¼»¯±êÖ¾
+int InitSuccFlag;
+//±¾»ú×´Ì¬ÉèÖÃ
+struct Local1 Local;
+struct LocalCfg1 LocalCfg;
 
-  struct TimeStamp1 TimeStamp;  //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ë²¥ï¿½ï¿½Ê±ï¿½ä£¬Í¬ï¿½ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½
-  struct WavFileBuf1 WavFileBuf[WAVFILEMAX];
-  int DeltaLen;  //ï¿½ï¿½Ý°ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½
-  char wavFile[80];
-  struct tm *curr_tm_t;
-  int temp_audio_n;      //ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  TempAudioNode1 *TempAudioNode_h;    //ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
-    
-  //ÏµÍ³ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ö¾
-  int InitSuccFlag;
-  //ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½
-  struct Local1 Local;
-  struct LocalCfg1 LocalCfg;
+//Ô¶¶ËµØÖ·
+struct Remote1 Remote;
+char NullAddr[21];   //¿Õ×Ö·û´®
+//Ãâ·ÑARP
+int ARP_Socket;
+//¼ì²âÍøÂçÁ¬½Ó
+int m_EthSocket;
+//UDP
+int m_DataSocket;
+int m_VideoSocket;
 
-  #ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-   //IDï¿½ï¿½ï¿½ï¿½Ï¢
-   struct IDCardNo1 IDCardNo;
-   //Ë¢IDï¿½ï¿½ï¿½ï¿½Ï¢
-   struct BrushIDCard1 BrushIDCard;
-   //Ð´IDï¿½ï¿½ï¿½ï¿½Ï¢
-   struct RecvIDCardNo1 RecvIDCardNo;
-  #endif
-  #ifdef _CAPTUREPIC_TO_CENTER  //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   int Capture_Pic_Num;
-   struct Capture_Pic_Center1 Capture_Pic_Center[MAX_CAPTUREPIC_NUM];
-   int Capture_Total_Package;
-   unsigned char Capture_Send_Flag[2000];
-  #endif
-    
-  //ï¿½ï¿½ï¿½ï¿½×´Ì¬
-  struct DefenceCfg1 DefenceCfg;
+int LocalDataPort;   //ÃüÁî¼°Êý¾ÝUDP¶Ë¿Ú
+int LocalVideoPort;  //ÒôÊÓÆµUDP¶Ë¿Ú
 
-  //Ô¶ï¿½Ëµï¿½Ö·
-  struct Remote1 Remote;
-  char NullAddr[21];   //ï¿½ï¿½ï¿½Ö·ï¿½
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  struct Call_Input1 Call_Input;
-  //COMM
-  int Comm2fd;  //ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½
-  int Comm3fd;  //ï¿½ï¿½ï¿½ï¿½3ï¿½ï¿½ï¿½
-  int Comm4fd;  //ï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½ï¿½
-  //I2C
-  int i2c_fd;
-  //ï¿½ï¿½ï¿½ARP
-  int ARP_Socket;
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  int m_EthSocket;
-  //UDP
-  int m_DataSocket;
-  int m_VideoSocket;
-  int LocalDataPort;   //ï¿½ï¿½ï¿½î¼°ï¿½ï¿½ï¿½UDPï¿½Ë¿ï¿½
-  int LocalVideoPort;  //ï¿½ï¿½ï¿½ï¿½ÆµUDPï¿½Ë¿ï¿½
-  int RemoteDataPort;
-  int RemoteVideoPort;
-  int RemoteVideoServerPort;  //ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆµUDPï¿½Ë¿ï¿½
-  char RemoteHost[20];
-  char sPath[80];
-  char currpath[80];   //ï¿½Ô¶ï¿½ï¿½ï¿½Â·ï¿½ï¿½
-  char wavPath[80];
-  char UdpPackageHead[15];
-  //FLASHï¿½æ´¢ï¿½ß³ï¿½
-  int save_file_flag;
-  pthread_t save_file_thread;
-  void save_file_thread_func(void);
-  sem_t save_file_sem;
-  struct Save_File_Buff1 Save_File_Buff[SAVEMAX]; //FLASHï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
+int RemoteDataPort;
+int RemoteVideoPort;
+char RemoteHost[20];
+char sPath[80];
+char currpath[80];   //×Ô¶¨ÒåÂ·¾¶
+char wavPath[80];
+char UdpPackageHead[15];
 
-  #ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-   //ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ß³ï¿½    ï¿½ï¿½ï¿½IDï¿½ï¿½Ó¦ï¿½ï¿½Ê±
-   int dispart_send_flag;
-   pthread_t dispart_send_thread;
-   void dispart_send_thread_func(void);
-   sem_t dispart_send_sem;
-   struct Save_File_Buff1 Dispart_Send_Buff[DISPARTMAX]; //ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-  #endif 
+//Ö÷¶¯ÃüÁîÊý¾Ý·¢ËÍÏß³Ì£ºÖÕ¶ËÖ÷¶¯·¢ËÍÃüÁî£¬ÈçÑÓÊ±Ò»¶ÎÃ»ÊÕµ½»ØÓ¦£¬Ôò¶à´Î·¢ËÍ
+//ÓÃÓÚUDPºÍCommÍ¨ÐÅ
+int multi_send_flag;
+pthread_t multi_send_thread;
+void multi_send_thread_func(void);
+sem_t multi_send_sem;
+struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10¸öUDPÖ÷¶¯·¢ËÍ»º³å
 
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½Õ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½Ê±Ò»ï¿½ï¿½Ã»ï¿½Õµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½UDPï¿½ï¿½CommÍ¨ï¿½ï¿½
-  int multi_send_flag;
-  pthread_t multi_send_thread;
-  void multi_send_thread_func(void);
-  sem_t multi_send_sem;
-  struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10ï¿½ï¿½UDPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
-
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½Õ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½Ê±Ò»ï¿½ï¿½Ã»ï¿½Õµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½UDPï¿½ï¿½CommÍ¨ï¿½ï¿½
-  int multi_comm_send_flag;
-  pthread_t multi_comm_send_thread;
-  void multi_comm_send_thread_func(void);
-  sem_t multi_comm_send_sem;
-  struct Multi_Comm_Buff1 Multi_Comm_Buff[COMMSENDMAX]; //10ï¿½ï¿½COMMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
 #else
+extern int DebugMode;           //µ÷ÊÔÄ£Ê½
+extern int DeltaLen;  //Êý¾Ý°üÓÐÐ§Êý¾ÝÆ«ÒÆÁ¿
+extern struct tm *curr_tm_t;
+extern struct TimeStamp1 TimeStamp;  //½ÓÊÕÊ±¼äÓë²¥·ÅÊ±¼ä£¬Í¬²½ÓÃ
+extern int temp_video_n;      //ÊÓÆµ½ÓÊÕ»º³å¸öÊý
+extern TempVideoNode1 *TempVideoNode_h;    //ÊÓÆµ½ÓÊÕ»º³åÁÐ±í
+extern int temp_audio_n;      //ÒôÆµ½ÓÊÕ»º³å¸öÊý
+extern TempAudioNode1 *TempAudioNode_h;    //ÒôÆµ½ÓÊÕ»º³åÁÐ±í
 
-  extern int DebugMode;           //ï¿½ï¿½ï¿½ï¿½Ä£Ê½
-  extern struct TimeStamp1 TimeStamp;  //ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ë²¥ï¿½ï¿½Ê±ï¿½ä£¬Í¬ï¿½ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å»ï¿½ï¿½ï¿½
-  extern struct WavFileBuf1 WavFileBuf[WAVFILEMAX];
-  extern int DeltaLen;  //ï¿½ï¿½Ý°ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½Æ«ï¿½ï¿½ï¿½ï¿½
+//ÏµÍ³³õÊ¼»¯±êÖ¾
+extern int InitSuccFlag;
+//±¾»ú×´Ì¬ÉèÖÃ
+extern struct Local1 Local;
+extern struct LocalCfg1 LocalCfg;
 
-  extern char wavFile[80];
+//Ô¶¶ËµØÖ·
+extern struct Remote1 Remote;
+extern char NullAddr[21];   //¿Õ×Ö·û´®
+//Ãâ·ÑARP
+extern int ARP_Socket;
+//¼ì²âÍøÂçÁ¬½Ó
+extern int m_EthSocket;
+//UDP
+extern int m_DataSocket;
+extern int m_VideoSocket;
 
-  extern struct tm *curr_tm_t;
+extern int LocalDataPort;   //ÃüÁî¼°Êý¾ÝUDP¶Ë¿Ú
+extern int LocalVideoPort;  //ÒôÊÓÆµUDP¶Ë¿Ú
 
-  extern int temp_audio_n;      //ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  extern TempAudioNode1 *TempAudioNode_h;    //ï¿½ï¿½Æµï¿½ï¿½ï¿½Õ»ï¿½ï¿½ï¿½ï¿½Ð±ï¿½
-  //ÏµÍ³ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ö¾
-  extern int InitSuccFlag;  
-  //ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½
-  extern struct Local1 Local;
-  extern struct LocalCfg1 LocalCfg;
-  
-  #ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-   //IDï¿½ï¿½ï¿½ï¿½Ï¢
-   extern struct IDCardNo1 IDCardNo;
-   //Ë¢IDï¿½ï¿½ï¿½ï¿½Ï¢
-   extern struct BrushIDCard1 BrushIDCard;
-   //Ð´IDï¿½ï¿½ï¿½ï¿½Ï¢
-   extern struct RecvIDCardNo1 RecvIDCardNo;
-  #endif
+extern int RemoteDataPort;
+extern int RemoteVideoPort;
+extern char RemoteHost[20];
+extern char sPath[80];
+extern char currpath[80];   //×Ô¶¨ÒåÂ·¾¶
+extern char wavPath[80];
+extern char UdpPackageHead[15];
 
-  #ifdef _CAPTUREPIC_TO_CENTER  //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   //ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-   extern int Capture_Pic_Num;
-   extern struct Capture_Pic_Center1 Capture_Pic_Center[MAX_CAPTUREPIC_NUM];
-   extern int Capture_Total_Package;
-   extern unsigned char Capture_Send_Flag[2000];
-  #endif
-    
-  //ï¿½ï¿½ï¿½ï¿½×´Ì¬
-  extern struct DefenceCfg1 DefenceCfg;
-  //Ô¶ï¿½Ëµï¿½Ö·
-  extern struct Remote1 Remote;
-  extern char NullAddr[21];   //ï¿½ï¿½ï¿½Ö·ï¿½
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  extern struct Call_Input1 Call_Input;  
-  //COMM
-  extern int Comm2fd;  //ï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½ï¿½
-  extern int Comm3fd;  //ï¿½ï¿½ï¿½ï¿½3ï¿½ï¿½ï¿½
-  extern int Comm4fd;  //ï¿½ï¿½ï¿½ï¿½4ï¿½ï¿½ï¿½
-  //I2C
-  extern int i2c_fd;
-  //ï¿½ï¿½ï¿½ARP
-  extern int ARP_Socket;
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-  extern int m_EthSocket;
-  //UDP
-  extern int m_DataSocket;
-  extern int m_VideoSocket;
-  extern int LocalDataPort;   //ï¿½ï¿½ï¿½î¼°ï¿½ï¿½ï¿½UDPï¿½Ë¿ï¿½
-  extern int LocalVideoPort;  //ï¿½ï¿½ï¿½ï¿½ÆµUDPï¿½Ë¿ï¿½
-  extern int RemoteDataPort;
-  extern int RemoteVideoPort;
-  extern int RemoteVideoServerPort;  //ï¿½ï¿½Æµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆµUDPï¿½Ë¿ï¿½
-  extern char RemoteHost[20];
-  extern char sPath[80];
-  extern char currpath[80];   //ï¿½Ô¶ï¿½ï¿½ï¿½Â·ï¿½ï¿½
-  extern char wavPath[80];
-  extern char UdpPackageHead[15];
-  //FLASHï¿½æ´¢ï¿½ß³ï¿½
-  extern int save_file_flag;
-  extern pthread_t save_file_thread;
-  extern void save_file_thread_func(void);
-  extern sem_t save_file_sem;
-  extern struct Save_File_Buff1 Save_File_Buff[SAVEMAX]; //FLASHï¿½æ´¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-
-  #ifdef _BRUSHIDCARD_SUPPORT   //Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö§ï¿½ï¿½
-   //ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ß³ï¿½    ï¿½ï¿½ï¿½IDï¿½ï¿½Ó¦ï¿½ï¿½Ê±
-   extern int dispart_send_flag;
-   extern pthread_t dispart_send_thread;
-   extern void dispart_send_thread_func(void);
-   extern sem_t dispart_send_sem;
-   extern struct Save_File_Buff1 Dispart_Send_Buff[DISPARTMAX]; //ï¿½ï¿½Ö°ï¿½ï¿½ï¿½ï¿½ï¿½Öµ
-  #endif 
-
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½Õ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½Ê±Ò»ï¿½ï¿½Ã»ï¿½Õµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½UDPï¿½ï¿½CommÍ¨ï¿½ï¿½
-  extern int multi_send_flag;
-  extern pthread_t multi_send_thread;
-  extern void multi_send_thread_func(void);
-  extern sem_t multi_send_sem;
-  extern struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10ï¿½ï¿½UDPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý·ï¿½ï¿½ï¿½ï¿½ß³Ì£ï¿½ï¿½Õ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½î£¬ï¿½ï¿½ï¿½ï¿½Ê±Ò»ï¿½ï¿½Ã»ï¿½Õµï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½Î·ï¿½ï¿½ï¿½
-  //ï¿½ï¿½ï¿½ï¿½UDPï¿½ï¿½CommÍ¨ï¿½ï¿½
-  extern int multi_comm_send_flag;
-  extern pthread_t multi_comm_send_thread;
-  extern void multi_comm_send_thread_func(void);
-  extern sem_t multi_comm_send_sem;
-  extern struct Multi_Comm_Buff1 Multi_Comm_Buff[COMMSENDMAX]; //10ï¿½ï¿½COMMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í»ï¿½ï¿½ï¿½
+//Ö÷¶¯ÃüÁîÊý¾Ý·¢ËÍÏß³Ì£ºÖÕ¶ËÖ÷¶¯·¢ËÍÃüÁî£¬ÈçÑÓÊ±Ò»¶ÎÃ»ÊÕµ½»ØÓ¦£¬Ôò¶à´Î·¢ËÍ
+//ÓÃÓÚUDPÍ¨ÐÅ
+extern int multi_send_flag;
+extern pthread_t multi_send_thread;
+extern void multi_send_thread_func(void);
+extern sem_t multi_send_sem;
+extern struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10¸öUDPÖ÷¶¯·¢ËÍ»º³å
 #endif
