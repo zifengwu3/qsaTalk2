@@ -1,0 +1,599 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AFRAMETIME	include/sndtools.h	26;"	d
+ALARM	include/common.h	42;"	d
+ALARM	include/libqsa_def.h	47;"	d
+ALARMHANDLE	include/common.h	47;"	d
+AR	Makefile	/^AR      = ar$/;"	m
+ARP_FRAME_TYPE	arp.c	14;"	d	file:
+ARP_Socket	include/common.h	/^int ARP_Socket;$/;"	v
+ARP_Socket	include/libqsa_common.h	/^int ARP_Socket;$/;"	v
+ASK	include/common.h	100;"	d
+ASK	include/common.h	76;"	d
+ASK	include/libqsa_def.h	61;"	d
+AUDIOBLK	include/sndtools.h	24;"	d
+AUDIODSP	include/sndtools.h	6;"	d
+AUDIODSP1	include/sndtools.h	7;"	d
+AUDIOPLAYBLK	include/sndtools.h	21;"	d
+AUDIORECBLK	include/sndtools.h	20;"	d
+AddMultiGroup	udp.c	/^void AddMultiGroup(int m_Socket, char *McastAddr)$/;"	f
+Added	include/common.h	/^    int Added[10];                \/\/“—º”»Î◊È$/;"	m	struct:Remote1
+Added	include/libqsa_def.h	/^    int Added[10];                \/\/Â∑≤Âä†ÂÖ•ÁªÑ$/;"	m	struct:Remote1
+Addr	include/common.h	/^    char Addr[10][21];         \/\/∂‘∑ΩAddr$/;"	m	struct:Remote1
+Addr	include/common.h	/^    char Addr[20];             \/\/µÿ÷∑±‡¬Î$/;"	m	struct:LocalCfg1
+Addr	include/common.h	/^    char Addr[20];       \/\/µÿ÷∑±‡¬Î$/;"	m	struct:infodata1
+Addr	include/libqsa_def.h	/^    char Addr[10][21];         \/\/ÂØπÊñπAddr$/;"	m	struct:Remote1
+AlarmInfoContent1	include/common.h	/^struct AlarmInfoContent1$/;"	s
+AlarmInfoNode1	include/common.h	/^}AlarmInfoNode1;$/;"	t	typeref:struct:alarmnode
+Alarm_DelayTime	include/common.h	/^    int Alarm_DelayTime;               \/\/±®æØ—” ±$/;"	m	struct:LocalCfg1
+ArpSendBuff	arp.c	/^int ArpSendBuff(void)$/;"	f
+AssiAddr	include/common.h	/^    char AssiAddr[20];       \/\/±ªΩ–∑Ωµÿ÷∑$/;"	m	struct:talkdata1
+AssiIP	include/common.h	/^    unsigned char AssiIP[4]; \/\/±ªΩ–∑ΩIPµÿ÷∑$/;"	m	struct:talkdata1
+AudioMuteFlag	udp.c	/^int AudioMuteFlag;$/;"	v
+BUFFER_SIZE	include/common.h	25;"	d
+BuildAddr	include/common.h	/^    unsigned char BuildAddr[2];$/;"	m	struct:LocalCfg1
+CALL	include/common.h	79;"	d
+CALL	include/libqsa_def.h	64;"	d
+CALLANSWER	include/common.h	82;"	d
+CALLANSWER	include/libqsa_def.h	67;"	d
+CALLCONFIRM	include/common.h	87;"	d
+CALLCONFIRM	include/libqsa_def.h	72;"	d
+CALLDOWN	include/common.h	86;"	d
+CALLDOWN	include/libqsa_def.h	71;"	d
+CALLEND	include/common.h	94;"	d
+CALLEND	include/libqsa_def.h	79;"	d
+CALLSTART	include/common.h	83;"	d
+CALLSTART	include/libqsa_def.h	68;"	d
+CALLTIMEOUT	include/common.h	35;"	d
+CALLTIMEOUT	include/libqsa_def.h	39;"	d
+CALLUP	include/common.h	85;"	d
+CALLUP	include/libqsa_def.h	70;"	d
+CANCELALARM	include/common.h	43;"	d
+CANCELALARM	include/libqsa_def.h	48;"	d
+CB_ACK_TIMEOUT	include/libqsa_def.h	/^	CB_ACK_TIMEOUT      \/\/ÂèëÈÄÅ6Ê¨°Êú™ÂõûÂ§ç$/;"	e	enum:__anon1
+CB_CALL_BUSY	include/libqsa_def.h	/^	CB_CALL_BUSY,       \/\/ÂΩìÂâçÊ≠£ÂøôÂõûÂ§ç$/;"	e	enum:__anon1
+CB_CALL_OK	include/libqsa_def.h	/^	CB_CALL_OK = 0,     \/\/ÂëºÂè´ÊàêÂäüÂõûÂ§ç$/;"	e	enum:__anon1
+CB_CALL_TIMEOUT	include/libqsa_def.h	/^	CB_CALL_TIMEOUT,    \/\/ÂëºÂè´30ÁßíÊú™ÂõûÂ§ç$/;"	e	enum:__anon1
+CB_OPEN_LOCK	include/libqsa_def.h	/^	CB_OPEN_LOCK,       \/\/ÂºÄÈîÅÂõûÂ§ç$/;"	e	enum:__anon1
+CB_TALK_OK	include/libqsa_def.h	/^	CB_TALK_OK,         \/\/ÂØπËÆ≤ÂºÄÂßãÂëΩ‰ª§ÂõûÂ§ç$/;"	e	enum:__anon1
+CB_TALK_STOP	include/libqsa_def.h	/^	CB_TALK_STOP,       \/\/ÂÆ§ÂÜÖÊú∫ÊåÇÊú∫ÂëΩ‰ª§$/;"	e	enum:__anon1
+CB_TYPE_AUDIO	include/libqsa_def.h	/^      CB_TYPE_AUDIO = 0$/;"	e	enum:__anon2
+CC	Makefile	/^CC      := gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS  := -g -Wall -O3 $(DEFINES) $(INCLUDE)$/;"	m
+CHECKMAC	include/common.h	53;"	d
+CHECKTIME	include/common.h	48;"	d
+COMMMAX	include/common.h	27;"	d
+COMMSENDMAX	include/common.h	105;"	d
+CXXFLAGS	Makefile	/^CXXFLAGS:= $(CFLAGS) -DHAVE_CONFIG_H$/;"	m
+CallConfirmFlag	include/common.h	/^    int CallConfirmFlag; \/\/‘⁄œﬂ±Í÷æ$/;"	m	struct:Local1
+CallConfirmFlag	include/libqsa_def.h	/^    int CallConfirmFlag; \/\/Âú®Á∫øÊ†áÂøó$/;"	m	struct:Local1
+CardOpenLock	include/common.h	/^    unsigned char CardOpenLock;$/;"	m	struct:LocalCfg1
+CloseArpSocket	arp.c	/^void CloseArpSocket(void)$/;"	f
+CloseUdpSocket	udp.c	/^void CloseUdpSocket(void) {$/;"	f
+CommonH	include/common.h	625;"	d
+Content	include/common.h	/^	struct AlarmInfoContent1 Content;$/;"	m	struct:alarmnode	typeref:struct:alarmnode::AlarmInfoContent1
+Content	include/common.h	/^    char Content[INFOMAXSIZE];\/\/ƒ⁄»›  400  ƒ⁄»›ªÚ ¬º˛∂‘œÛ$/;"	m	struct:InfoContent1
+Content	include/common.h	/^    struct InfoContent1 Content;$/;"	m	struct:node	typeref:struct:node::InfoContent1
+Content	include/common.h	/^    struct tempaudiobuf1 Content;$/;"	m	struct:node3	typeref:struct:node3::tempaudiobuf1
+Content	include/common.h	/^    struct tempvideobuf1 Content;$/;"	m	struct:node2	typeref:struct:node2::tempvideobuf1
+CreateUdpVideoRcvThread	udp.c	/^void CreateUdpVideoRcvThread() {$/;"	f
+CurrAudio	include/common.h	/^    unsigned int CurrAudio;$/;"	m	struct:TimeStamp1
+CurrNo	include/common.h	/^    int CurrNo;    \/\/µ±«∞–≈œ¢–Ú∫≈$/;"	m	struct:Info1
+CurrNo	include/common.h	/^    int CurrNo;    \/\/µ±«∞–≈œ¢–Ú∫≈$/;"	m	struct:InfoStatus1
+CurrOrder	include/common.h	/^    int CurrOrder;\/\/µ±«∞√¸¡Ó◊¥Ã¨,VIDEOTALK VIDEOTALKTRANS VIDEOWATCH VIDEOWATCHTRANS$/;"	m	struct:Multi_Udp_Buff1
+CurrOrder	include/libqsa_def.h	/^    int CurrOrder;\/\/ÂΩìÂâçÂëΩ‰ª§Áä∂ÊÄÅ,VIDEOTALK VIDEOTALKTRANS VIDEOWATCH VIDEOWATCHTRANS$/;"	m	struct:Multi_Udp_Buff1
+CurrPackage	include/common.h	/^    uint8_t CurrPackage[MAXPACKNUM]; \/\/µ±«∞∞¸   1 “—Ω” ’  0 Œ¥Ω” ’$/;"	m	struct:tempaudiobuf1
+CurrPackage	include/common.h	/^    uint8_t CurrPackage[MAXPACKNUM]; \/\/µ±«∞∞¸   1 “—Ω” ’  0 Œ¥Ω” ’$/;"	m	struct:temppicinfobuf1
+CurrPackage	include/common.h	/^    uint8_t CurrPackage[MAXPACKNUM]; \/\/µ±«∞∞¸   1 “—Ω” ’  0 Œ¥Ω” ’$/;"	m	struct:tempvideobuf1
+CurrPackage	include/common.h	/^    unsigned short CurrPackage;       \/\/µ±«∞∞¸ ˝$/;"	m	struct:talkdata1
+CurrPackage	include/common.h	/^   unsigned short CurrPackage;       \/\/µ±«∞∞¸ ˝$/;"	m	struct:downfile1
+CurrPlayNo	include/common.h	/^    int CurrPlayNo;  \/\/µ±«∞≤•∑≈–Ú∫≈$/;"	m	struct:Info1
+CurrType	include/common.h	/^    int CurrType;  \/\/µ±«∞–≈œ¢¿‡–Õ$/;"	m	struct:InfoStatus1
+CurrVideo	include/common.h	/^    unsigned int CurrVideo;$/;"	m	struct:TimeStamp1
+CurrWin	include/common.h	/^    int CurrWin;   \/\/µ±«∞–≈œ¢¥∞ø⁄  0 –≈œ¢¡–±Ì  1  –≈œ¢ƒ⁄»›$/;"	m	struct:InfoStatus1
+CurrentInfoPage	include/common.h	/^    int CurrentInfoPage; \/\/µ±«∞–≈œ¢“≥$/;"	m	struct:Info1
+DEFAULT_DEVICE	arp.c	19;"	d	file:
+DEFINES	Makefile	/^DEFINES :=$/;"	m
+DELAYTIME	include/common.h	109;"	d
+DIRECTCALLTIME	include/libqsa_def.h	31;"	d
+DOWNLOAD	include/common.h	99;"	d
+DataType	include/common.h	/^    unsigned short DataType;          \/\/ ˝æ›¿‡–Õ$/;"	m	struct:talkdata1
+Datalen	include/common.h	/^    unsigned short Datalen;           \/\/ ˝æ›≥§∂»$/;"	m	struct:talkdata1
+Datalen	include/common.h	/^   unsigned short Datalen;           \/\/ ˝æ›≥§∂»$/;"	m	struct:downfile1
+DebugMode	include/common.h	/^int DebugMode;           \/\/µ˜ ‘ƒ£ Ω$/;"	v
+DefenceInfo	include/common.h	/^    unsigned char DefenceInfo[32][10]; \/\/∑¿«¯–≈œ¢$/;"	m	struct:LocalCfg1
+DefenceNum	include/common.h	/^    unsigned char DefenceNum;          \/\/∑¿«¯ƒ£øÈ∏ˆ ˝$/;"	m	struct:LocalCfg1
+DefenceStatus	include/common.h	/^    unsigned char DefenceStatus;       \/\/≤º∑¿◊¥Ã¨$/;"	m	struct:LocalCfg1
+DelayLockTime	include/common.h	/^    unsigned char DelayLockTime;$/;"	m	struct:LocalCfg1
+DelayTime	include/common.h	/^    int DelayTime;  \/\/µ»¥˝ ±º‰$/;"	m	struct:Multi_Udp_Buff1
+DelayTime	include/libqsa_def.h	/^    int DelayTime;  \/\/Á≠âÂæÖÊó∂Èó¥$/;"	m	struct:Multi_Udp_Buff1
+DeltaLen	include/common.h	/^int DeltaLen;  \/\/ ˝æ›∞¸”––ß ˝æ›∆´“∆¡ø$/;"	v
+DenIP	include/common.h	/^    unsigned char DenIP[4]; \/\/∂‘∑ΩIPªÚ ”∆µ∑˛ŒÒ∆˜IP$/;"	m	struct:Remote1
+DenIP	include/libqsa_def.h	/^    char DenIP[20];$/;"	m	struct:Multi_Udp_Buff1
+DenIP	include/libqsa_def.h	/^    unsigned char DenIP[4]; \/\/ÂØπÊñπIPÊàñËßÜÈ¢ëÊúçÂä°Âô®IP$/;"	m	struct:Remote1
+DenNum	include/common.h	/^    int DenNum;             \/\/ƒø±Í ˝¡ø  ÷˜ª˙+∏±ª˙$/;"	m	struct:Remote1
+DenNum	include/libqsa_def.h	/^    int DenNum;             \/\/ÁõÆÊ†áÊï∞Èáè  ‰∏ªÊú∫+ÂâØÊú∫$/;"	m	struct:Remote1
+DropMultiGroup	udp.c	/^void DropMultiGroup(int m_Socket, char *McastAddr)$/;"	f
+ETHER_HW_TYPE	arp.c	15;"	d	file:
+ETH_HW_ADDR_LEN	arp.c	12;"	d	file:
+EngineerPass	include/common.h	/^    char EngineerPass[10];             \/\/π§≥Ã√‹¬Î$/;"	m	struct:LocalCfg1
+ExitGroup	udp.c	/^void ExitGroup(unsigned char *buf)$/;"	f
+FINDEQUIP	include/common.h	74;"	d
+FINDEQUIP	include/libqsa_def.h	59;"	d
+FMT16BITS	include/sndtools.h	10;"	d
+FMT16K	include/sndtools.h	13;"	d
+FMT22K	include/sndtools.h	14;"	d
+FMT44K	include/sndtools.h	15;"	d
+FMT8BITS	include/sndtools.h	9;"	d
+FMT8K	include/sndtools.h	12;"	d
+FORBIDTIMEOUT	include/common.h	40;"	d
+FORCEIFRAME	include/common.h	90;"	d
+FORCEIFRAME	include/libqsa_def.h	75;"	d
+FRAMEBUFFERMAX	include/common.h	26;"	d
+FileName	include/common.h	/^    char FileName[50];$/;"	m	struct:InfoContent1
+FileName	include/common.h	/^   char FileName[20];$/;"	m	struct:downfile1
+Filelen	include/common.h	/^   unsigned int Filelen;            \/\/Œƒº˛¥Û–°$/;"	m	struct:downfile1
+FlagText	include/common.h	/^   char FlagText[20];     \/\/±Í÷æ◊÷∑˚¥Æ$/;"	m	struct:downfile1
+ForceIFrame_Func	udp.c	/^void ForceIFrame_Func(void)$/;"	f
+Framelen	include/common.h	/^    unsigned int Framelen;            \/\/÷° ˝æ›≥§∂»$/;"	m	struct:talkdata1
+Frameno	include/common.h	/^    unsigned short Frameno;           \/\/÷°–Ú∫≈$/;"	m	struct:talkdata1
+G711NUM	include/common.h	119;"	d
+GroupIP	include/common.h	/^    unsigned char GroupIP[4]; \/\/GroupIP$/;"	m	struct:Remote1
+GroupIP	include/libqsa_def.h	/^    unsigned char GroupIP[4]; \/\/GroupIP$/;"	m	struct:Remote1
+HostAddr	include/common.h	/^    char HostAddr[20];       \/\/÷˜Ω–∑Ωÿ÷∑$/;"	m	struct:talkdata1
+HostIP	include/common.h	/^    unsigned char HostIP[4]; \/\/÷˜Ω–∑ΩIPµÿ÷∑$/;"	m	struct:talkdata1
+INCLUDE	Makefile	/^INCLUDE := -I.\/include\/$/;"	m
+INFOMAXITEM	include/common.h	114;"	d
+INFOMAXSIZE	include/common.h	115;"	d
+INFONUMPERPAGE	include/common.h	116;"	d
+INFOROWLEN	include/common.h	29;"	d
+INFOTYPENUM	include/common.h	113;"	d
+INTRPERSEC	include/common.h	24;"	d
+INTRPERSEC	include/libqsa_def.h	34;"	d
+INTRTIME	include/common.h	23;"	d
+INTRTIME	include/libqsa_def.h	33;"	d
+IP	include/common.h	/^    unsigned char IP[10][4];    \/\/∂‘∑ΩIP$/;"	m	struct:Remote1
+IP	include/common.h	/^    unsigned char IP[4];       \/\/IPµÿ÷∑$/;"	m	struct:LocalCfg1
+IP	include/libqsa_def.h	/^    unsigned char IP[10][4];    \/\/ÂØπÊñπIP$/;"	m	struct:Remote1
+IP_ADDR_LEN	arp.c	13;"	d	file:
+IP_Broadcast	include/common.h	/^    unsigned char IP_Broadcast[4];  \/\/π„≤•µÿ÷∑$/;"	m	struct:LocalCfg1
+IP_Gate	include/common.h	/^    unsigned char IP_Gate[4];  \/\/Õ¯πÿµÿ÷∑$/;"	m	struct:LocalCfg1
+IP_Group	include/common.h	/^    unsigned char IP_Group[4];  \/\/◊È≤•µÿ÷∑$/;"	m	struct:Local1
+IP_Group	include/libqsa_def.h	/^    unsigned char IP_Group[4];  \/\/ÁªÑÊí≠Âú∞ÂùÄ$/;"	m	struct:Local1
+IP_Mask	include/common.h	/^    unsigned char IP_Mask[4];  \/\/◊”Õ¯—⁄¬Î$/;"	m	struct:LocalCfg1
+IP_NS	include/common.h	/^    unsigned char IP_NS[4];    \/\/NS£®√˚≥∆Ω‚Œˆ£©∑˛ŒÒ∆˜µÿ÷∑$/;"	m	struct:LocalCfg1
+IP_PROTO_TYPE	arp.c	16;"	d	file:
+IP_Server	include/common.h	/^    unsigned char IP_Server[4];  \/\/÷˜∑˛ŒÒ∆˜µÿ÷∑£®”ÎNS∑˛ŒÒ∆˜ø…Œ™Õ¨“ª∏ˆ£©$/;"	m	struct:LocalCfg1
+In_DelayTime	include/common.h	/^    int In_DelayTime;                \/\/Ω¯»Î—” ±$/;"	m	struct:LocalCfg1
+Info1	include/common.h	/^struct Info1$/;"	s
+InfoButtonMax	include/common.h	111;"	d
+InfoContent1	include/common.h	/^struct InfoContent1$/;"	s
+InfoNo	include/common.h	/^    int InfoNo;     \/\/–≈œ¢Œª÷√$/;"	m	struct:Save_File_Buff1
+InfoNode1	include/common.h	/^}InfoNode1;$/;"	t	typeref:struct:node
+InfoStatus1	include/common.h	/^struct InfoStatus1$/;"	s
+InfoType	include/common.h	/^    int InfoType;   \/\/–≈œ¢¿‡–Õ$/;"	m	struct:Save_File_Buff1
+Info_Node	include/common.h	/^    InfoNode1 *Info_Node; \/\/–≈œ¢Ω·µ„$/;"	m	struct:Save_File_Buff1
+InitSuccFlag	include/common.h	/^int InitSuccFlag;$/;"	v
+InitUdpSocket	udp.c	/^int InitUdpSocket(short lPort) {$/;"	f
+Init_Timer	timer.c	/^int Init_Timer(void) {$/;"	f
+Init_Udp_Send_Task	udp.c	/^int Init_Udp_Send_Task(void) {$/;"	f
+LDFLAGS	Makefile	/^LDFLAGS :=$/;"	m
+LFTMULTIADDR	include/common.h	18;"	d
+LFTMULTIADDR	include/libqsa_def.h	45;"	d
+LIBS	Makefile	/^LIBS    :=$/;"	m
+LIFT	include/common.h	8;"	d
+LINEUSE	include/common.h	80;"	d
+LINEUSE	include/libqsa_def.h	65;"	d
+Len	include/common.h	/^    int Len;                \/\/÷° ˝æ›≥§∂»$/;"	m	struct:tempaudiobuf1
+Len	include/common.h	/^    int Len;                \/\/÷° ˝æ›≥§∂»$/;"	m	struct:temppicinfobuf1
+Len	include/common.h	/^    int Len;                \/\/÷° ˝æ›≥§∂»$/;"	m	struct:tempvideobuf1
+Length	include/common.h	/^    int Length;       \/\/≥§∂»        4$/;"	m	struct:InfoContent1
+Length	include/common.h	/^    unsigned short Length;   \/\/ ˝æ›≥§∂»$/;"	m	struct:infodata1
+Local	include/common.h	/^struct Local1 Local;$/;"	v	typeref:struct:Local1
+Local	include/libqsa_common.h	/^struct Local1 Local;$/;"	v	typeref:struct:Local1
+Local1	include/common.h	/^struct Local1 {$/;"	s
+Local1	include/libqsa_def.h	/^struct Local1 {$/;"	s
+LocalCfg	include/common.h	/^struct LocalCfg1 LocalCfg;$/;"	v	typeref:struct:LocalCfg1
+LocalCfg1	include/common.h	/^struct LocalCfg1$/;"	s
+LocalDataPort	include/common.h	/^int LocalDataPort;   \/\/√¸¡Óº∞ ˝æ›UDP∂Àø⁄$/;"	v
+LocalDataPort	include/libqsa_common.h	/^int LocalDataPort;   \/\/ÂëΩ‰ª§ÂèäÊï∞ÊçÆUDPÁ´ØÂè£$/;"	v
+LocalVideoPort	include/common.h	/^int LocalVideoPort;  \/\/“Ù ”∆µUDP∂Àø⁄$/;"	v
+LocalVideoPort	include/libqsa_common.h	/^int LocalVideoPort;  \/\/Èü≥ËßÜÈ¢ëUDPÁ´ØÂè£$/;"	v
+MAINLABELNUM	include/common.h	98;"	d
+MAINPICNUM	include/common.h	97;"	d
+MAKEOLD	include/common.h	55;"	d
+MAXPACKNUM	include/common.h	127;"	d
+MAXROW	include/common.h	30;"	d
+MAXSENDNUM	include/common.h	106;"	d
+MAXSENDNUM	include/libqsa_def.h	36;"	d
+MCUUPDATE	include/common.h	57;"	d
+MONO	include/sndtools.h	17;"	d
+MP4VNUM	include/common.h	125;"	d
+Mac_Addr	include/common.h	/^	unsigned char Mac_Addr[6]; \/\/Õ¯ø®µÿ÷∑$/;"	m	struct:LocalCfg1
+MaxNum	include/common.h	/^    int MaxNum;   \/\/◊Ó¥Û–≈œ¢ ˝$/;"	m	struct:Info1
+Multi_Comm_Buff1	include/common.h	/^struct Multi_Comm_Buff1$/;"	s
+Multi_Udp_Buff	include/common.h	/^struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; \/\/10∏ˆUDP÷˜∂Ø∑¢ÀÕª∫≥Â$/;"	v	typeref:struct:Multi_Udp_Buff1
+Multi_Udp_Buff	include/libqsa_common.h	/^struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; \/\/10‰∏™UDP‰∏ªÂä®ÂèëÈÄÅÁºìÂÜ≤$/;"	v	typeref:struct:Multi_Udp_Buff1
+Multi_Udp_Buff1	include/common.h	/^struct Multi_Udp_Buff1$/;"	s
+Multi_Udp_Buff1	include/libqsa_def.h	/^struct Multi_Udp_Buff1$/;"	s
+NMAX	include/common.h	118;"	d
+NSMULTIADDR	include/common.h	17;"	d
+NSMULTIADDR	include/libqsa_def.h	44;"	d
+NSORDER	include/common.h	72;"	d
+NSORDER	include/libqsa_def.h	57;"	d
+NSSERVERORDER	include/common.h	73;"	d
+NSSERVERORDER	include/libqsa_def.h	58;"	d
+NoReadedNum	include/common.h	/^    int NoReadedNum; \/\/Œ¥∂¡–≈œ¢◊‹ ˝$/;"	m	struct:Info1
+NullAddr	include/common.h	/^char NullAddr[21];   \/\/ø’◊÷∑˚¥Æ$/;"	v
+NullAddr	include/libqsa_common.h	/^char NullAddr[21];   \/\/Á©∫Â≠óÁ¨¶‰∏≤$/;"	v
+OBJS	Makefile	/^OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))$/;"	m
+OPENLOCK	include/common.h	93;"	d
+OPENLOCK	include/libqsa_def.h	78;"	d
+OP_ARP_QUEST	arp.c	18;"	d	file:
+OP_ARP_REQUEST	arp.c	17;"	d	file:
+OldCurrAudio	include/common.h	/^    unsigned int OldCurrAudio;     \/\/…œ“ª¥Œµ±«∞“Ù∆µ ±º‰$/;"	m	struct:TimeStamp1
+OldCurrVideo	include/common.h	/^    unsigned int OldCurrVideo;     \/\/…œ“ª¥Œµ±«∞ ”∆µ ±º‰$/;"	m	struct:TimeStamp1
+OnlineCheckFunc	timer.c	/^void OnlineCheckFunc(void)$/;"	f
+OnlineFlag	include/common.h	/^    int OnlineFlag; \/\/–ËºÏ≤È‘⁄œﬂ»∑»œ$/;"	m	struct:Local1
+OnlineFlag	include/libqsa_def.h	/^    int OnlineFlag; \/\/ÈúÄÊ£ÄÊü•Âú®Á∫øÁ°ÆËÆ§$/;"	m	struct:Local1
+OnlineNum	include/common.h	/^    int OnlineNum;  \/\/‘⁄œﬂ»∑»œ–Ú∫≈$/;"	m	struct:Local1
+OnlineNum	include/libqsa_def.h	/^    int OnlineNum;  \/\/Âú®Á∫øÁ°ÆËÆ§Â∫èÂè∑$/;"	m	struct:Local1
+OpenLockPass	include/common.h	/^    char OpenLockPass[10];$/;"	m	struct:LocalCfg1
+OpenLockTime	include/common.h	/^    unsigned char OpenLockTime;$/;"	m	struct:LocalCfg1
+Out_DelayTime	include/common.h	/^    int Out_DelayTime;               \/\/Õ‚≥ˆ—” ±$/;"	m	struct:LocalCfg1
+PACKDATALEN	include/common.h	126;"	d
+PAGEPERROW	include/common.h	31;"	d
+PICINFONUM	include/common.h	51;"	d
+PREPARETIMEOUT	include/common.h	37;"	d
+PREPARETIMEOUT	include/libqsa_def.h	41;"	d
+PackLen	include/common.h	/^    unsigned short PackLen;       \/\/ ˝æ›∞¸¥Û–°$/;"	m	struct:talkdata1
+PassOpenLock	include/common.h	/^    unsigned char PassOpenLock;$/;"	m	struct:LocalCfg1
+QUERYFAIL	include/common.h	81;"	d
+QUERYFAIL	include/libqsa_def.h	66;"	d
+QUERYSTATUS	include/common.h	46;"	d
+QUERYSTATUS	include/libqsa_def.h	51;"	d
+RANLIB	Makefile	/^RANLIB  = ranlib$/;"	m
+READADDRESS	include/common.h	62;"	d
+READMAC	include/common.h	56;"	d
+READROOMSETUP	include/common.h	64;"	d
+READSETUP	include/common.h	66;"	d
+RECORDTIMEOUT	include/common.h	38;"	d
+RECORDTIMEOUT	include/libqsa_def.h	42;"	d
+REMOTECALLLIFT	include/common.h	95;"	d
+REMOTECALLLIFT	include/libqsa_def.h	80;"	d
+REMOTEDEFENCE	include/common.h	59;"	d
+REMOTELIFT	include/common.h	96;"	d
+REMOTELIFT	include/libqsa_def.h	81;"	d
+REMOTEOPENLOCK	include/common.h	88;"	d
+REMOTEOPENLOCK	include/libqsa_def.h	73;"	d
+REPLY	include/common.h	101;"	d
+REPLY	include/common.h	77;"	d
+REPLY	include/libqsa_def.h	62;"	d
+REPORTSTATUS	include/common.h	45;"	d
+REPORTSTATUS	include/libqsa_def.h	50;"	d
+RESETPASS	include/common.h	60;"	d
+RcvBufLen	udp.c	/^int RcvBufLen = 1024 * 128;$/;"	v
+RecordPic	include/common.h	/^	int RecordPic;  \/\/¡Ù’’∆¨  0 ≤ª¡Ù  1 ∫ÙΩ–¡Ù’’∆¨  2 Õ®ª∞¡Ù’’∆¨$/;"	m	struct:Local1
+RecordPic	include/libqsa_def.h	/^	int RecordPic;  \/\/ÁïôÁÖßÁâá  0 ‰∏çÁïô  1 ÂëºÂè´ÁïôÁÖßÁâá  2 ÈÄöËØùÁïôÁÖßÁâá$/;"	m	struct:Local1
+RecvForceIFrame_Func	udp.c	/^void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Answer_Task	udp.c	/^void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Confirm_Task	udp.c	/^void Recv_Talk_Call_Confirm_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_End_Task	udp.c	/^void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Start_Task	udp.c	/^void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Task	udp.c	/^void Recv_Talk_Call_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_UpDown_Task	udp.c	/^void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,$/;"	f
+Recv_Talk_Line_Use_Task	udp.c	/^void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Open_Lock_Task	udp.c	/^void Recv_Talk_Open_Lock_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Remote	include/common.h	/^struct Remote1 Remote;$/;"	v	typeref:struct:Remote1
+Remote	include/libqsa_common.h	/^struct Remote1 Remote;$/;"	v	typeref:struct:Remote1
+Remote1	include/common.h	/^struct Remote1$/;"	s
+Remote1	include/libqsa_def.h	/^struct Remote1$/;"	s
+RemoteDataPort	include/common.h	/^int RemoteDataPort;$/;"	v
+RemoteDataPort	include/libqsa_common.h	/^int RemoteDataPort;$/;"	v
+RemoteHost	include/common.h	/^    char RemoteHost[20];$/;"	m	struct:Multi_Udp_Buff1
+RemoteHost	include/common.h	/^char RemoteHost[20];$/;"	v
+RemoteHost	include/libqsa_common.h	/^char RemoteHost[20];$/;"	v
+RemoteHost	include/libqsa_def.h	/^    char RemoteHost[20];$/;"	m	struct:Multi_Udp_Buff1
+RemoteIP	include/libqsa_def.h	/^    char RemoteIP[20];               $/;"	m	struct:Multi_Udp_Buff1
+RemotePort	include/libqsa_def.h	/^    int RemotePort;$/;"	m	struct:Multi_Udp_Buff1
+RemoteVideoPort	include/common.h	/^int RemoteVideoPort;$/;"	v
+RemoteVideoPort	include/libqsa_common.h	/^int RemoteVideoPort;$/;"	v
+ReportTime	include/common.h	/^    int ReportTime;      \/\/…Ë±∏∂® ±±®∏Ê◊¥Ã¨ ±º‰$/;"	m	struct:LocalCfg1
+SAVEMAX	include/common.h	103;"	d
+SENDMESSAGE	include/common.h	44;"	d
+SENDMESSAGE	include/libqsa_def.h	49;"	d
+SENDPICINFO	include/common.h	50;"	d
+SETPARAM	include/common.h	54;"	d
+SMALLESTSIZE	udp.c	267;"	d	file:
+SNDTOOLS_H	include/sndtools.h	2;"	d
+SOFTWAREVER	include/common.h	15;"	d
+SOURCE	Makefile	/^SOURCE  := $(wildcard *.c) $(wildcard *.cpp)$/;"	m
+STERO	include/sndtools.h	18;"	d
+Save_File_Buff1	include/common.h	/^struct Save_File_Buff1$/;"	s
+SendDelayTime	include/common.h	/^    int SendDelayTime;$/;"	m	struct:Multi_Udp_Buff1
+SendDelayTime	include/libqsa_def.h	/^    int SendDelayTime;$/;"	m	struct:Multi_Udp_Buff1
+SendFreeArp	arp.c	/^void SendFreeArp(void)$/;"	f
+SendNum	include/common.h	/^    int SendNum; \/\/µ±«∞∑¢ÀÕ¥Œ ˝$/;"	m	struct:Multi_Comm_Buff1
+SendNum	include/common.h	/^    int SendNum; \/\/µ±«∞∑¢ÀÕ¥Œ ˝$/;"	m	struct:Multi_Udp_Buff1
+SendNum	include/libqsa_def.h	/^    int SendNum; \/\/ÂΩìÂâçÂèëÈÄÅÊ¨°Êï∞$/;"	m	struct:Multi_Udp_Buff1
+Sn	include/common.h	/^	unsigned int  Sn;         \/\/–Ú∫≈$/;"	m	struct:infodata1
+Sn	include/common.h	/^    uint32_t Sn;      \/\/–Ú∫≈        4$/;"	m	struct:InfoContent1
+SndBufLen	udp.c	/^int SndBufLen = 1024 * 128;$/;"	v
+Status	include/common.h	/^    int Status;$/;"	m	struct:Local1
+Status	include/libqsa_def.h	/^    int Status;$/;"	m	struct:Local1
+TAIL	include/sndtools.h	25;"	d
+TALKTIMEOUT	include/common.h	36;"	d
+TALKTIMEOUT	include/libqsa_def.h	40;"	d
+TARGET	Makefile	/^TARGET  := $(TARGET_PATH)\/libqsa_talk.a$/;"	m
+TARGET_PATH	Makefile	/^TARGET_PATH := libs$/;"	m
+TOUCHMAXTIME	include/common.h	21;"	d
+TalkCtrlFunc	timer.c	/^void TalkCtrlFunc(void)$/;"	f
+TalkEnd_ClearStatus	udp.c	/^void TalkEnd_ClearStatus(void) {$/;"	f
+TalkTimeOut	include/common.h	/^    int TalkTimeOut; \/\/Õ®ª∞◊Ó≥§ ±º‰$/;"	m	struct:Local1
+TalkTimeOut	include/libqsa_def.h	/^    int TalkTimeOut; \/\/ÈÄöËØùÊúÄÈïøÊó∂Èó¥$/;"	m	struct:Local1
+Talk_Call_TimeOut_Task	talk.c	/^void Talk_Call_TimeOut_Task(void) {$/;"	f
+TempAudioNode1	include/common.h	/^}TempAudioNode1;$/;"	t	typeref:struct:node3
+TempAudioNode_h	include/common.h	/^TempAudioNode1 *TempAudioNode_h;    \/\/“Ù∆µΩ” ’ª∫≥Â¡–±Ì$/;"	v
+TempPicInfoBuff1	include/common.h	/^} TempPicInfoBuff1 ;$/;"	t	typeref:struct:temppicinfobuf1
+TempVideoNode1	include/common.h	/^}TempVideoNode1;$/;"	t	typeref:struct:node2
+TempVideoNode_h	include/common.h	/^TempVideoNode1 *TempVideoNode_h;    \/\/ ”∆µΩ” ’ª∫≥Â¡–±Ì$/;"	v
+Time	include/common.h	/^    char Time[32];    \/\/Ω” ’ ±º‰    32$/;"	m	struct:AlarmInfoContent1
+Time	include/common.h	/^    char Time[32];    \/\/Ω” ’ ±º‰    32$/;"	m	struct:InfoContent1
+TimeNum	include/common.h	/^    int TimeNum;    \/\/º∆ ˝$/;"	m	struct:Info1
+TimeOut	include/common.h	/^    int TimeOut;    \/\/º‡ ”≥¨ ±,  Õ®ª∞≥¨ ±,  ∫ÙΩ–≥¨ ±£¨Œﬁ»ÀΩ”Ã˝$/;"	m	struct:Local1
+TimeOut	include/libqsa_def.h	/^    int TimeOut;    \/\/ÁõëËßÜË∂ÖÊó∂,  ÈÄöËØùË∂ÖÊó∂,  ÂëºÂè´Ë∂ÖÊó∂ÔºåÊó†‰∫∫Êé•Âê¨$/;"	m	struct:Local1
+TimeStamp	include/common.h	/^struct TimeStamp1 TimeStamp;  \/\/Ω” ’ ±º‰”Î≤•∑≈ ±º‰£¨Õ¨≤Ω”√$/;"	v	typeref:struct:TimeStamp1
+TimeStamp1	include/common.h	/^struct TimeStamp1$/;"	s
+Timer1Num	include/common.h	/^    int Timer1Num;  \/\/∂® ±∆˜1º∆ ˝$/;"	m	struct:Local1
+Timer1Num	include/libqsa_def.h	/^    int Timer1Num;  \/\/ÂÆöÊó∂Âô®1ËÆ°Êï∞$/;"	m	struct:Local1
+TotalInfoPage	include/common.h	/^    int TotalInfoPage;   \/\/◊‹–≈œ¢“≥ ˝$/;"	m	struct:Info1
+TotalNum	include/common.h	/^    int TotalNum; \/\/–≈œ¢◊‹ ˝$/;"	m	struct:Info1
+TotalPackage	include/common.h	/^    short TotalPackage;     \/\/◊‹∞¸ ˝$/;"	m	struct:tempaudiobuf1
+TotalPackage	include/common.h	/^    short TotalPackage;     \/\/◊‹∞¸ ˝$/;"	m	struct:temppicinfobuf1
+TotalPackage	include/common.h	/^    short TotalPackage;     \/\/◊‹∞¸ ˝$/;"	m	struct:tempvideobuf1
+TotalPackage	include/common.h	/^    unsigned short TotalPackage;      \/\/◊‹∞¸ ˝$/;"	m	struct:talkdata1
+TotalPackage	include/common.h	/^   unsigned short TotalPackage;      \/\/◊‹∞¸ ˝$/;"	m	struct:downfile1
+Ts_X0	include/common.h	/^    int Ts_X0;                   \/\/¥•√˛∆¡$/;"	m	struct:LocalCfg1
+Ts_Y0	include/common.h	/^    int Ts_Y0;$/;"	m	struct:LocalCfg1
+Ts_deltaX	include/common.h	/^    int Ts_deltaX;$/;"	m	struct:LocalCfg1
+Ts_deltaY	include/common.h	/^    int Ts_deltaY;$/;"	m	struct:LocalCfg1
+Type	include/common.h	/^    int Type;    \/\/¥Ê¥¢¿‡–Õ 1£≠“ª¿‡–≈œ¢  2£≠µ•∏ˆ–≈œ¢  3£≠ŒÔ“µ∑˛ŒÒ  4£≠±æµÿ…Ë÷√$/;"	m	struct:Save_File_Buff1
+Type	include/common.h	/^    uint8_t Type;     \/\/¿‡–Õ        1    –≈œ¢¿‡–ÕªÚ ¬º˛¿‡–Õ$/;"	m	struct:AlarmInfoContent1
+Type	include/common.h	/^    uint8_t Type;     \/\/¿‡–Õ        1    –≈œ¢¿‡–ÕªÚ ¬º˛¿‡–Õ$/;"	m	struct:InfoContent1
+Type	include/common.h	/^    unsigned short Type; \/\/¿‡–Õ$/;"	m	struct:infodata1
+UDPSENDMAX	include/common.h	104;"	d
+UDPSENDMAX	include/libqsa_def.h	35;"	d
+UdpPackageHead	include/common.h	/^char UdpPackageHead[15];$/;"	v
+UdpPackageHead	include/libqsa_common.h	/^char UdpPackageHead[15];$/;"	v
+UdpRecvFlag	udp.c	/^short UdpRecvFlag;$/;"	v
+UdpSendBuff	udp.c	/^int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,$/;"	f
+UdpVideoRcvThread	udp.c	/^void UdpVideoRcvThread(void)$/;"	f
+Uninit_Timer	timer.c	/^int Uninit_Timer(void) {$/;"	f
+Uninit_Udp_Send_Task	udp.c	/^int Uninit_Udp_Send_Task(void) {$/;"	f
+VIDEOMAX	include/common.h	122;"	d
+VIDEOTALK	include/common.h	68;"	d
+VIDEOTALK	include/libqsa_def.h	53;"	d
+VIDEOTALKTRANS	include/common.h	69;"	d
+VIDEOTALKTRANS	include/libqsa_def.h	54;"	d
+VIDEOWATCH	include/common.h	70;"	d
+VIDEOWATCH	include/libqsa_def.h	55;"	d
+VIDEOWATCHTRANS	include/common.h	71;"	d
+VIDEOWATCHTRANS	include/libqsa_def.h	56;"	d
+VNUM	include/common.h	123;"	d
+VPLAYNUM	include/common.h	124;"	d
+WATCHTIMEOUT	include/common.h	34;"	d
+WATCHTIMEOUT	include/libqsa_def.h	38;"	d
+WRITEADDRESS	include/common.h	61;"	d
+WRITEROOMSETUP	include/common.h	63;"	d
+WRITESETUP	include/common.h	65;"	d
+WaveFileHeader	include/common.h	/^struct WaveFileHeader$/;"	s
+ZOOMIN	include/common.h	92;"	d
+ZOOMIN	include/libqsa_def.h	77;"	d
+ZOOMMAXTIME	include/common.h	20;"	d
+ZOOMOUT	include/common.h	91;"	d
+ZOOMOUT	include/libqsa_def.h	76;"	d
+_CB_STATUS	include/libqsa_def.h	/^} _CB_STATUS;$/;"	v	typeref:enum:__anon1
+_CB_TYPE_DATA	include/libqsa_def.h	/^} _CB_TYPE_DATA;$/;"	v	typeref:enum:__anon2
+_DEBUG	include/common.h	10;"	d
+_FALSE	include/libqsa_def.h	28;"	d
+_LIB_QSA_DEF_H	arp.c	21;"	d	file:
+_LIB_QSA_DEF_H	include/libqsa_common.h	11;"	d
+_LIB_QSA_DEF_H	talk.c	6;"	d	file:
+_LIB_QSA_DEF_H	timer.c	18;"	d	file:
+_LIB_QSA_DEF_H	udp.c	12;"	d	file:
+_LIB_QSA_TALK_H	include/libqsa_talk.h	4;"	d
+_SOFTWARE_MULTIPLE	include/sndtools.h	33;"	d
+_SOFTWARE_REC_MULTIPLE	include/sndtools.h	31;"	d
+_SYNC	include/common.h	/^struct _SYNC$/;"	s
+_TRUE	include/libqsa_def.h	29;"	d
+_cb_data	include/libqsa_callback.h	/^typedef void ( * _cb_data)(void *, int, int);$/;"	t
+_cb_function	include/libqsa_callback.h	/^static struct _cb_function {$/;"	s
+_cb_info	include/libqsa_callback.h	/^typedef void ( * _cb_info)(const char *, const char *, int);$/;"	t
+_cb_status	include/libqsa_callback.h	/^typedef void ( * _cb_status)(int, int);$/;"	t
+address	include/libqsa_def.h	/^	unsigned char address[20];			\/\/M0101010000100000000$/;"	m	struct:dev_config
+alarmnode	include/common.h	/^typedef struct alarmnode$/;"	s
+alaw_to_s16	include/g711common.h	/^static inline int alaw_to_s16(unsigned char a_val)$/;"	f
+arp_packet	arp.c	/^struct arp_packet$/;"	s	file:
+audio_play_lock	include/common.h	/^    pthread_mutex_t audio_play_lock;\/\/[VPLAYNUM];\/\/“Ù∆µ≤•∑≈ª•≥‚À¯$/;"	m	struct:_SYNC
+audio_rec_lock	include/common.h	/^    pthread_mutex_t audio_rec_lock;\/\/[VPLAYNUM];\/\/“Ù∆µ¬º÷∆ª•≥‚À¯$/;"	m	struct:_SYNC
+audiobuf1	include/common.h	/^struct audiobuf1$/;"	s
+audioplaybuf1	include/common.h	/^struct audioplaybuf1$/;"	s
+bit_rate	include/common.h	/^    unsigned char bit_rate;$/;"	m	struct:LocalCfg1
+buf	include/common.h	/^    unsigned char buf[1500];$/;"	m	struct:Multi_Comm_Buff1
+buf	include/common.h	/^    unsigned char buf[1500];$/;"	m	struct:Multi_Udp_Buff1
+buf	include/libqsa_def.h	/^    unsigned char buf[1500];$/;"	m	struct:Multi_Udp_Buff1
+buffer	include/common.h	/^    unsigned char *buffer;$/;"	m	struct:wavbuf1
+buffer	include/common.h	/^    unsigned char *buffer;\/\/[AUDIOBLK];$/;"	m	struct:tempaudiobuf1
+buffer	include/common.h	/^    unsigned char *buffer;\/\/[VIDEOMAX];$/;"	m	struct:audioplaybuf1
+buffer	include/common.h	/^    unsigned char *buffer;\/\/[VIDEOMAX];$/;"	m	struct:temppicinfobuf1
+buffer	include/common.h	/^    unsigned char *buffer;\/\/[VIDEOMAX];$/;"	m	struct:tempvideobuf1
+buffer	include/common.h	/^    unsigned char *buffer;\/\/[VIDEOMAX];$/;"	m	struct:videoplaybuf1
+buffer	include/common.h	/^    unsigned char buffer[NMAX];$/;"	m	struct:audiobuf1
+buffer_u	include/common.h	/^    unsigned char *buffer_u[VNUM];\/\/[VIDEOMAX\/4];$/;"	m	struct:videobuf1
+buffer_v	include/common.h	/^    unsigned char *buffer_v[VNUM];\/\/[VIDEOMAX\/4];$/;"	m	struct:videobuf1
+buffer_y	include/common.h	/^    unsigned char *buffer_y[VNUM];\/\/[VIDEOMAX];$/;"	m	struct:videobuf1
+cb_audio_data	include/libqsa_callback.h	/^    _cb_data cb_audio_data;$/;"	m	struct:_cb_function
+cb_curr_status	include/libqsa_callback.h	/^    _cb_status cb_curr_status;$/;"	m	struct:_cb_function
+cb_info	include/libqsa_callback.h	/^    _cb_info cb_info;$/;"	m	struct:_cb_function
+center_ip	include/libqsa_def.h	/^	unsigned char center_ip[4];			\/\/192.168.10.XX$/;"	m	struct:dev_config
+chDATA	include/common.h	/^    char chDATA[4];$/;"	m	struct:WaveFileHeader
+chFACT	include/common.h	/^    char chFACT[4];$/;"	m	struct:WaveFileHeader
+chFMT	include/common.h	/^    char chFMT[4];$/;"	m	struct:WaveFileHeader
+chRIFF	include/common.h	/^    char chRIFF[4];$/;"	m	struct:WaveFileHeader
+chWAVE	include/common.h	/^    char chWAVE[4];$/;"	m	struct:WaveFileHeader
+cond	include/common.h	/^    pthread_cond_t cond;       \/\/Õ¨≤Ωœﬂ≥ÃÃıº˛±‰¡ø$/;"	m	struct:_SYNC
+cond_attr	include/common.h	/^    pthread_condattr_t cond_attr;$/;"	m	struct:_SYNC
+configlen	include/libqsa_common.h	/^int configlen = sizeof(struct dev_config);            \/\/ÁªìÊûÑÈïøÂ∫¶$/;"	v
+count	include/common.h	/^    unsigned int count;        \/\/º∆ ˝$/;"	m	struct:_SYNC
+curr_tm_t	include/common.h	/^struct tm *curr_tm_t;$/;"	v	typeref:struct:tm
+currpath	include/common.h	/^char currpath[80];   \/\/◊‘∂®“Â¬∑æ∂$/;"	v
+currpath	include/libqsa_common.h	/^char currpath[80];   \/\/Ëá™ÂÆö‰πâË∑ØÂæÑ$/;"	v
+dev_config	include/libqsa_def.h	/^struct dev_config {$/;"	s
+device_config	include/libqsa_common.h	/^struct dev_config device_config;                      \/\/Êú¨Âú∞ÈÄöÁî®ÈÖçÁΩÆ$/;"	v	typeref:struct:dev_config
+downfile1	include/common.h	/^struct downfile1$/;"	s
+dwDATALen	include/common.h	/^    uint32_t dwDATALen;$/;"	m	struct:WaveFileHeader
+dwFACTLen	include/common.h	/^    uint32_t dwFACTLen;$/;"	m	struct:WaveFileHeader
+dwFMTLen	include/common.h	/^    uint32_t dwFMTLen;$/;"	m	struct:WaveFileHeader
+dwRIFFLen	include/common.h	/^    uint32_t dwRIFFLen;$/;"	m	struct:WaveFileHeader
+frame_flag	include/common.h	/^    unsigned char frame_flag;             \/\/1 for private 2 for common 3 for alarm 4 for picture$/;"	m	struct:temppicinfobuf1
+frame_flag	include/common.h	/^    unsigned char frame_flag;             \/\/÷°±Í÷æ “Ù∆µ÷° I÷° P÷°$/;"	m	struct:tempaudiobuf1
+frame_flag	include/common.h	/^    unsigned char frame_flag;             \/\/÷°±Í÷æ “Ù∆µ÷° I÷° P÷°$/;"	m	struct:tempvideobuf1
+frame_flag	include/common.h	/^    unsigned char frame_flag;             \/\/÷°±Í÷æ “Ù∆µ÷° I÷° P÷°$/;"	m	struct:videoplaybuf1
+frame_type	arp.c	/^    u_short frame_type;$/;"	m	struct:arp_packet	file:
+frameno	include/common.h	/^    uint32_t frameno;       \/\/÷°–Ú∫≈$/;"	m	struct:tempaudiobuf1
+frameno	include/common.h	/^    uint32_t frameno;       \/\/÷°–Ú∫≈$/;"	m	struct:temppicinfobuf1
+frameno	include/common.h	/^    uint32_t frameno;       \/\/÷°–Ú∫≈$/;"	m	struct:tempvideobuf1
+frameno	include/common.h	/^    uint32_t frameno;   \/\/÷°–Ú∫≈$/;"	m	struct:audioplaybuf1
+frameno	include/common.h	/^    uint32_t frameno;   \/\/÷°–Ú∫≈$/;"	m	struct:videoplaybuf1
+frameno	include/common.h	/^    uint32_t frameno[NMAX\/AUDIOBLK];   \/\/÷°–Ú∫≈$/;"	m	struct:audiobuf1
+frameno	include/common.h	/^    uint32_t frameno[VNUM];   \/\/÷°–Ú∫≈$/;"	m	struct:videobuf1
+hw_addr_size	arp.c	/^    u_char hw_addr_size;$/;"	m	struct:arp_packet	file:
+hw_type	arp.c	/^    u_short hw_type;$/;"	m	struct:arp_packet	file:
+iget	include/common.h	/^    int iget; \/\/ ª∫≥Â«¯µƒµ±«∞»°≥ˆŒª÷√$/;"	m	struct:audiobuf1
+iget	include/common.h	/^    int iget; \/\/ ª∫≥Â«¯µƒµ±«∞»°≥ˆŒª÷√$/;"	m	struct:videobuf1
+iget	include/common.h	/^    int iget; \/\/ ª∫≥Â«¯µƒµ±«∞»°≥ˆŒª÷√$/;"	m	struct:wavbuf1
+infodata1	include/common.h	/^struct infodata1$/;"	s
+init_arp_socket	arp.c	/^int init_arp_socket(void)$/;"	f
+init_config_null	init.c	/^void init_config_null(struct dev_config * _config) {$/;"	f
+init_param_task	init.c	/^int init_param_task(struct dev_config * _config) {$/;"	f
+ip	include/libqsa_def.h	/^	unsigned char ip[4];				\/\/192.168.10.XX$/;"	m	struct:dev_config
+iput	include/common.h	/^    int iput; \/\/ ª∑–Œª∫≥Â«¯µƒµ±«∞∑≈»ÎŒª÷√$/;"	m	struct:audiobuf1
+iput	include/common.h	/^    int iput; \/\/ ª∑–Œª∫≥Â«¯µƒµ±«∞∑≈»ÎŒª÷√$/;"	m	struct:videobuf1
+iput	include/common.h	/^    int iput; \/\/ ª∑–Œª∫≥Â«¯µƒµ±«∞∑≈»ÎŒª÷√$/;"	m	struct:wavbuf1
+isDecodeAudio	include/common.h	/^    uint8_t isDecodeAudio;     \/\/“Ù∆µ“—Ω‚¬Î“ª÷°  Ω‚¬Îœﬂ≥Ã-->Õ¨≤Ωœﬂ≥Ã$/;"	m	struct:_SYNC
+isDecodeVideo	include/common.h	/^    uint8_t isDecodeVideo;     \/\/ ”∆µ“—Ω‚¬Î“ª÷°  Ω‚¬Îœﬂ≥Ã-->Õ¨≤Ωœﬂ≥Ã$/;"	m	struct:_SYNC
+isDirect	include/common.h	/^    int isDirect;       \/\/ «∑Ò÷±Õ®  0 ÷±Õ®  1 ÷–◊™$/;"	m	struct:Remote1
+isDirect	include/libqsa_def.h	/^    int isDirect;       \/\/ÊòØÂê¶Áõ¥ÈÄö  0 Áõ¥ÈÄö  1 ‰∏≠ËΩ¨$/;"	m	struct:Remote1
+isFull	include/common.h	/^    uint8_t isFull;                  \/\/∏√÷°“—Ω” ’ÕÍ»´$/;"	m	struct:tempaudiobuf1
+isFull	include/common.h	/^    uint8_t isFull;                  \/\/∏√÷°“—Ω” ’ÕÍ»´$/;"	m	struct:temppicinfobuf1
+isFull	include/common.h	/^    uint8_t isFull;                  \/\/∏√÷°“—Ω” ’ÕÍ»´$/;"	m	struct:tempvideobuf1
+isLocked	include/common.h	/^    uint8_t isLocked; \/\/À¯∂®±Í÷æ    1$/;"	m	struct:AlarmInfoContent1
+isLocked	include/common.h	/^    uint8_t isLocked; \/\/À¯∂®±Í÷æ    1$/;"	m	struct:InfoContent1
+isPlayAudio	include/common.h	/^    uint8_t isPlayAudio;       \/\/“Ù∆µ“—≤•∑≈“ª÷°  ≤•∑≈œﬂ≥Ã-->Õ¨≤Ωœﬂ≥Ã$/;"	m	struct:_SYNC
+isPlayVideo	include/common.h	/^    uint8_t isPlayVideo;       \/\/ ”∆µ“—≤•∑≈“ª÷°  ≤•∑≈œﬂ≥Ã-->Õ¨≤Ωœﬂ≥Ã$/;"	m	struct:_SYNC
+isReaded	include/common.h	/^    uint8_t isReaded; \/\/“—∂¡±Í÷æ    1$/;"	m	struct:AlarmInfoContent1
+isReaded	include/common.h	/^    uint8_t isReaded; \/\/“—∂¡±Í÷æ    1$/;"	m	struct:InfoContent1
+isUse	include/common.h	/^    uint8_t isUse;     \/\/∏√÷°“—Ω‚¬ÎŒ¥≤•∑≈,ª∫≥Â«¯≤ªø…”√$/;"	m	struct:audioplaybuf1
+isUse	include/common.h	/^    uint8_t isUse;     \/\/∏√÷°“—Ω‚¬ÎŒ¥≤•∑≈,ª∫≥Â«¯≤ªø…”√$/;"	m	struct:videoplaybuf1
+isValid	include/common.h	/^    int isValid; \/\/ «∑Ò”––ß$/;"	m	struct:Multi_Comm_Buff1
+isValid	include/common.h	/^    int isValid; \/\/ «∑Ò”––ß$/;"	m	struct:Multi_Udp_Buff1
+isValid	include/common.h	/^    int isValid; \/\/ «∑Ò”––ß$/;"	m	struct:Save_File_Buff1
+isValid	include/common.h	/^    uint8_t isValid;  \/\/”––ß£¨Œ¥…æ≥˝±Í÷æ   1$/;"	m	struct:AlarmInfoContent1
+isValid	include/common.h	/^    uint8_t isValid;  \/\/”––ß£¨Œ¥…æ≥˝±Í÷æ   1$/;"	m	struct:InfoContent1
+isValid	include/libqsa_def.h	/^    int isValid; \/\/ÊòØÂê¶ÊúâÊïà$/;"	m	struct:Multi_Udp_Buff1
+llink	include/common.h	/^	struct alarmnode *llink,*rlink;$/;"	m	struct:alarmnode	typeref:struct:alarmnode::alarmnode
+llink	include/common.h	/^    struct node *llink, *rlink;$/;"	m	struct:node	typeref:struct:node::node
+llink	include/common.h	/^    struct node2 *llink, *rlink;$/;"	m	struct:node2	typeref:struct:node2::node2
+llink	include/common.h	/^    struct node3 *llink, *rlink;$/;"	m	struct:node3	typeref:struct:node3::node3
+lmovie_lock	include/common.h	/^    pthread_mutex_t lmovie_lock;\/\/\/\/added from door\/\/\/paul0326\/\/\/\/\/\/$/;"	m	struct:_SYNC
+lock	include/common.h	/^    pthread_mutex_t lock;      \/\/ª•≥‚À¯$/;"	m	struct:_SYNC
+m_Comm	include/common.h	/^    int m_Comm;$/;"	m	struct:Multi_Comm_Buff1
+m_DataSocket	include/common.h	/^int m_DataSocket;$/;"	v
+m_EthSocket	include/common.h	/^int m_EthSocket;$/;"	v
+m_Socket	include/common.h	/^    int m_Socket;$/;"	m	struct:Multi_Udp_Buff1
+m_Socket	include/libqsa_def.h	/^    int m_Socket;$/;"	m	struct:Multi_Udp_Buff1
+m_VideoSocket	include/common.h	/^int m_VideoSocket;$/;"	v
+m_VideoSocket	include/libqsa_common.h	/^int m_VideoSocket;$/;"	v
+mac	include/libqsa_def.h	/^	unsigned char mac[12];			    \/\/00:00:00:36:25:9A$/;"	m	struct:dev_config
+mask	include/libqsa_def.h	/^	unsigned char mask[4];				\/\/255.255.0.0$/;"	m	struct:dev_config
+multi_send_flag	include/common.h	/^int multi_send_flag;$/;"	v
+multi_send_flag	include/libqsa_common.h	/^int multi_send_flag;$/;"	v
+multi_send_sem	include/common.h	/^sem_t multi_send_sem;$/;"	v
+multi_send_sem	include/libqsa_common.h	/^sem_t multi_send_sem;$/;"	v
+multi_send_thread	include/common.h	/^pthread_t multi_send_thread;$/;"	v
+multi_send_thread	include/libqsa_common.h	/^pthread_t multi_send_thread;$/;"	v
+multi_send_thread_func	udp.c	/^void multi_send_thread_func(void) {$/;"	f
+n	include/common.h	/^    int n; \/\/ ª∑–Œª∫≥Â«¯÷–µƒ‘™Àÿ◊‹ ˝¡ø$/;"	m	struct:audiobuf1
+n	include/common.h	/^    int n; \/\/ ª∑–Œª∫≥Â«¯÷–µƒ‘™Àÿ◊‹ ˝¡ø$/;"	m	struct:videobuf1
+n	include/common.h	/^    int n; \/\/ ª∑–Œª∫≥Â«¯÷–µƒ‘™Àÿ◊‹ ˝¡ø$/;"	m	struct:wavbuf1
+nAvgBytesPerSec	include/common.h	/^    uint32_t nAvgBytesPerSec;$/;"	m	struct:WaveFileHeader
+nBlockAlign	include/common.h	/^    uint16_t nBlockAlign;$/;"	m	struct:WaveFileHeader
+nChannels	include/common.h	/^    uint16_t nChannels;$/;"	m	struct:WaveFileHeader
+nSamplesPerSec	include/common.h	/^    uint32_t nSamplesPerSec;$/;"	m	struct:WaveFileHeader
+nlength	include/common.h	/^    int nlength;$/;"	m	struct:Multi_Comm_Buff1
+nlength	include/common.h	/^    int nlength;$/;"	m	struct:Multi_Udp_Buff1
+nlength	include/libqsa_def.h	/^    int nlength;$/;"	m	struct:Multi_Udp_Buff1
+node	include/common.h	/^typedef struct node$/;"	s
+node2	include/common.h	/^typedef struct node2$/;"	s
+node3	include/common.h	/^typedef struct node3$/;"	s
+op	arp.c	/^    u_short op;$/;"	m	struct:arp_packet	file:
+padding	arp.c	/^    u_char padding[18];$/;"	m	struct:arp_packet	file:
+prot_addr_size	arp.c	/^    u_char prot_addr_size;$/;"	m	struct:arp_packet	file:
+prot_type	arp.c	/^    u_short prot_type;$/;"	m	struct:arp_packet	file:
+rcpt_hw_addr	arp.c	/^    u_char rcpt_hw_addr[ETH_HW_ADDR_LEN];$/;"	m	struct:arp_packet	file:
+rcpt_ip_addr	arp.c	/^    u_char rcpt_ip_addr[IP_ADDR_LEN];$/;"	m	struct:arp_packet	file:
+rlink	include/common.h	/^	struct alarmnode *llink,*rlink;$/;"	m	struct:alarmnode	typeref:struct:alarmnode::
+rlink	include/common.h	/^    struct node *llink, *rlink;$/;"	m	struct:node	typeref:struct:node::
+rlink	include/common.h	/^    struct node2 *llink, *rlink;$/;"	m	struct:node2	typeref:struct:node2::
+rlink	include/common.h	/^    struct node3 *llink, *rlink;$/;"	m	struct:node3	typeref:struct:node3::
+route	include/libqsa_def.h	/^	unsigned char route[4];				\/\/192.168.10.1$/;"	m	struct:dev_config
+s16_to_alaw	include/g711common.h	/^static inline unsigned char s16_to_alaw(int pcm_val)$/;"	f
+s16_to_ulaw	include/g711common.h	/^static inline unsigned char s16_to_ulaw(int pcm_val)	\/* 2's complement (16-bit range) *\/$/;"	f
+sPath	include/common.h	/^char sPath[80];$/;"	v
+sPath	include/libqsa_common.h	/^char sPath[80];$/;"	v
+server_ip	include/libqsa_def.h	/^	unsigned char server_ip[4]; 		\/\/192.168.10.XX$/;"	m	struct:dev_config
+sndr_hw_addr	arp.c	/^    u_char sndr_hw_addr[ETH_HW_ADDR_LEN];$/;"	m	struct:arp_packet	file:
+sndr_ip_addr	arp.c	/^    u_char sndr_ip_addr[IP_ADDR_LEN];$/;"	m	struct:arp_packet	file:
+src_hw_addr	arp.c	/^    u_char src_hw_addr[ETH_HW_ADDR_LEN];$/;"	m	struct:arp_packet	file:
+start_call	talk.c	/^void start_call(const char * ip, const char * addr, int uFlag)$/;"	f
+stop_talk	talk.c	/^void stop_talk(void) {$/;"	f
+talkdata1	include/common.h	/^struct talkdata1$/;"	s
+targ_hw_addr	arp.c	/^    u_char targ_hw_addr[ETH_HW_ADDR_LEN];$/;"	m	struct:arp_packet	file:
+temp_audio_n	include/common.h	/^int temp_audio_n;      \/\/“Ù∆µΩ” ’ª∫≥Â∏ˆ ˝$/;"	v
+temp_video_n	include/common.h	/^int temp_video_n;      \/\/ ”∆µΩ” ’ª∫≥Â∏ˆ ˝$/;"	v
+tempaudiobuf1	include/common.h	/^struct tempaudiobuf1$/;"	s
+temppicinfobuf1	include/common.h	/^typedef struct temppicinfobuf1$/;"	s
+tempvideobuf1	include/common.h	/^struct tempvideobuf1$/;"	s
+timer_fd	timer.c	/^int timer_fd;$/;"	v
+timer_thread	timer.c	/^pthread_t timer_thread;$/;"	v
+timer_thread_flag	timer.c	/^int timer_thread_flag;$/;"	v
+timer_thread_task	timer.c	/^void timer_thread_task(void) {$/;"	f
+timestamp	include/common.h	/^    uint32_t timestamp;  \/\/ ±º‰¥¡$/;"	m	struct:tempaudiobuf1
+timestamp	include/common.h	/^    uint32_t timestamp;  \/\/ ±º‰¥¡$/;"	m	struct:tempvideobuf1
+timestamp	include/common.h	/^    uint32_t timestamp; \/\/ ±º‰¥¡$/;"	m	struct:audioplaybuf1
+timestamp	include/common.h	/^    uint32_t timestamp; \/\/ ±º‰¥¡$/;"	m	struct:videoplaybuf1
+timestamp	include/common.h	/^    uint32_t timestamp[NMAX\/AUDIOBLK]; \/\/ ±º‰¥¡$/;"	m	struct:audiobuf1
+timestamp	include/common.h	/^    uint32_t timestamp[VNUM]; \/\/ ±º‰¥¡$/;"	m	struct:videobuf1
+timestamp	include/common.h	/^    unsigned int timestamp;  \/\/ ±º‰¥¡$/;"	m	struct:talkdata1
+udp_lock	include/common.h	/^    pthread_mutex_t udp_lock;\/\/ª•≥‚À¯$/;"	m	struct:Local1
+udp_lock	include/libqsa_def.h	/^    pthread_mutex_t udp_lock;\/\/‰∫íÊñ•ÈîÅ$/;"	m	struct:Local1
+udpdatarcvid	udp.c	/^pthread_t udpdatarcvid;$/;"	v
+udpvideorcvid	udp.c	/^pthread_t udpvideorcvid;$/;"	v
+ulaw_to_s16	include/g711common.h	/^static inline int ulaw_to_s16(unsigned char u_val)$/;"	f
+undefined_ip	include/libqsa_def.h	/^	unsigned char undefined_ip[100];	\/\/192.168.10.XX x 25$/;"	m	struct:dev_config
+undefined_param	include/libqsa_def.h	/^	unsigned char undefined_param[100];$/;"	m	struct:dev_config
+val_seg	include/g711common.h	/^static inline int val_seg(int val)$/;"	f
+video_play_lock	include/common.h	/^    pthread_mutex_t video_play_lock;\/\/[VPLAYNUM];\/\/ ”∆µ≤•∑≈ª•≥‚À¯$/;"	m	struct:_SYNC
+video_rec_lock	include/common.h	/^    pthread_mutex_t video_rec_lock;\/\/[VPLAYNUM];\/\/ ”∆µ¬º÷∆ª•≥‚À¯$/;"	m	struct:_SYNC
+videobuf1	include/common.h	/^struct videobuf1$/;"	s
+videoplaybuf1	include/common.h	/^struct videoplaybuf1$/;"	s
+wBitsPerSample	include/common.h	/^    uint16_t wBitsPerSample;$/;"	m	struct:WaveFileHeader
+wFormatTag	include/common.h	/^    uint16_t wFormatTag;$/;"	m	struct:WaveFileHeader
+watchRecvBuf	udp.c	/^char watchRecvBuf[1024];$/;"	v
+wavPath	include/common.h	/^char wavPath[80];$/;"	v
+wavPath	include/libqsa_common.h	/^char wavPath[80];$/;"	v
+wavbuf1	include/common.h	/^struct wavbuf1$/;"	s

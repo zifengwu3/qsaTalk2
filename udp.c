@@ -77,19 +77,14 @@ int Init_Udp_Send_Task(void) {
 	if (multi_send_thread == 0) {
 		printf("don't create UDP send thread. \n");
 		return _FALSE;
-	}
+	} else {
+        return _TRUE;
+    }
 }
 
 void multi_send_thread_func(void) {
-	int i, j, k;
-	int isAdded;
+	int i, k;
 	int HaveDataSend;
-	char wavFile[80];
-	int CurrNo;
-	short CurrPack;
-	struct timeval tv1;
-	int SendCapturePicFailFlag = 0;
-	int FindError;
 
     printf("create multi send thread \n");
 	while (multi_send_flag == 1) {
@@ -152,7 +147,7 @@ void multi_send_thread_func(void) {
 									Local.OnlineFlag = 0;
 									Local.CallConfirmFlag = 0;
 									printf("multi_send_thread_func :: TalkEnd_ClearStatus()\n");
-									TalkEnd_ClearStatus();
+									//TalkEnd_ClearStatus();
 									break;
 								default:
 									Multi_Udp_Buff[i].isValid = 0;
@@ -199,17 +194,18 @@ int Uninit_Udp_Send_Task(void) {
 	usleep(40 * 1000);
 	sem_destroy(&multi_send_sem);
 	pthread_mutex_destroy(&Local.udp_lock);
+
+    return _TRUE;
 }
 
 int InitUdpSocket(short lPort) {
 	struct sockaddr_in s_addr;
 	int nZero = 0;
-	int iLen;
 	int m_Socket;
 	int nYes;
-	int ret;
-	int rc;
 	int ttl;
+    int rc;
+    int iLen;
 
 	if ((m_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
 		printf("Create socket error\r\n");
@@ -253,15 +249,14 @@ int InitUdpSocket(short lPort) {
 		m_VideoSocket = m_Socket;
 		CreateUdpVideoRcvThread();
 	}
-	return 1;
+	return _TRUE;
 }
-//---------------------------------------------------------------------------
+
 void CloseUdpSocket(void) {
 	UdpRecvFlag = 0;
-	close(m_DataSocket);
 	close(m_VideoSocket);
 }
-//---------------------------------------------------------------------------
+
 #define SMALLESTSIZE  512
 int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 		unsigned char * buf, int nlength) {
@@ -286,9 +281,8 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 	return nSize;
 }
 
-//---------------------------------------------------------------------------
-void CreateUdpVideoRcvThread() {
-	int i, ret;
+void CreateUdpVideoRcvThread(void) {
+	int ret;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
@@ -303,7 +297,7 @@ void CreateUdpVideoRcvThread() {
 		exit(1);
 	}
 }
-//---------------------------------------------------------------------------
+
 void AddMultiGroup(int m_Socket, char *McastAddr)
 {
 	struct ip_mreq mcast;
@@ -318,7 +312,7 @@ void AddMultiGroup(int m_Socket, char *McastAddr)
 	printf("AddMultiGroup \n\r");
 #endif
 }
-//---------------------------------------------------------------------------
+
 void DropMultiGroup(int m_Socket, char *McastAddr)
 {
 	struct ip_mreq mcast;
@@ -360,8 +354,7 @@ void UdpVideoRcvThread(void)
 
 	int isAddrOK;
 
-	if (DebugMode == 1)
-		printf("This is udp video pthread.");
+    printf("This is udp video pthread.");
 	UdpRecvFlag = 1;
 
 	addr_len = sizeof(c_addr);
@@ -373,17 +366,7 @@ void UdpVideoRcvThread(void)
 			continue;
 		}
 		buff[len] = '\0';
-#ifdef _DEBUG
-		if ((buff[8] != 0x0B) && (buff[8] != 0x08)) {
-			printf("&&& RECV VIDEO &&& len=%d addr=%s:%d\n", len,
-				inet_ntoa(c_addr.sin_addr), ntohs(c_addr.sin_port));
-		}
-		if ((buff[8] != 0x0B) && (buff[8] != 0x08)) {
-			printf("&&& RECV VIDEO &&& [6]%02X, [7]%02X, [8]%02X, [32]%02X, [33]%02X, [34]%02X, [35]%02X\n",
-				buff[6], buff[7], buff[8], buff[32], buff[33], buff[34],
-				buff[35]);
-		}
-#endif
+
 		strcpy(FromIP, inet_ntoa(c_addr.sin_addr));
 
 		if ((buff[0] == UdpPackageHead[0]) && (buff[1] == UdpPackageHead[1])
@@ -674,7 +657,7 @@ void Recv_Talk_Open_Lock_Task(unsigned char *recv_buf, char *cFromIP) {
 }
 
 void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
-	int i, j;
+	int i;
 	int isAddrOK;
 	unsigned char send_b[1520];
 	int sendlength;
@@ -690,17 +673,11 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
         memcpy(send_b, recv_buf, 57);
         send_b[7] = REPLY;
         sendlength = 57;
+
         RemotePort = RemoteVideoPort;
-        if (recv_buf[6] == VIDEOTALK) {
-            RemotePort = RemoteVideoPort;
-        } else {
-            RemotePort = RemoteVideoServerPort;
-        }
         UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
-#ifdef _MULTI_MACHINE_SUPPORT
-		ExitGroup(recv_buf);
-#endif
-		TalkEnd_ClearStatus();
+
+		//TalkEnd_ClearStatus();
 #ifdef _DEBUG
 		printf("other end talk, %s\n", cFromIP);
 #endif
@@ -723,7 +700,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 												cFromIP) == 0) {
 											Multi_Udp_Buff[i].isValid = 0;
 
-											TalkEnd_ClearStatus();
+											//TalkEnd_ClearStatus();
 
 											if (DebugMode == 1)
 												printf("other reply talk end\n");
@@ -792,7 +769,7 @@ void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {
 		sendlength = 57;
 		RemotePort = RemoteVideoPort;
 		UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
-		Local.ForceIFrame = 1;
+
 	} else {
 		pthread_mutex_lock(&Local.udp_lock);
 		if (recv_buf[7] == REPLY) {
@@ -821,15 +798,17 @@ void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {
 		pthread_mutex_unlock(&Local.udp_lock);
 	}
 }
-//-----------------------------------------------------------------------
 void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
 		int length) {
+#if 0
 	int isAddrOK;
 	unsigned char send_b[1520];
 	int sendlength;
 	short PackIsExist;
+
 	TempAudioNode1 * tmp_audionode;
 	int isFull;
+
 	struct talkdata1 talkdata;
 	if ((Local.Status == 1) || (Local.Status == 2) || (Local.Status == 5)
 			|| (Local.Status == 6) || (Local.Status == 7) || (Local.Status == 8)
@@ -888,8 +867,9 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
 
 		}
 	}
+#endif
 }
-//-----------------------------------------------------------------------
+
 void ForceIFrame_Func(void)
 {
 	int i;
@@ -934,98 +914,3 @@ void ForceIFrame_Func(void)
 	}
 }
 
-void ExitGroup(unsigned char *buf)
-{
-	int i, j;
-	int isIP;
-	int RemotePort;
-	char tmp_ip[20];
-	if (Remote.DenNum > 1) {
-		pthread_mutex_lock(&Local.udp_lock);
-		for (j = 0; j < Remote.DenNum; j++) {
-			Remote.Added[j] = 0;
-			if (DebugMode == 1) {
-				printf("%d.%d.%d.%d  %d.%d.%d.%d\n",
-						Remote.IP[j][0], Remote.IP[j][1], Remote.IP[j][2],
-						Remote.IP[j][3], buf[53], buf[54], buf[55], buf[56]);
-			}
-
-			if ((Remote.IP[j][0] == buf[53]) && (Remote.IP[j][1] == buf[54])
-					&& (Remote.IP[j][2] == buf[55])
-					&& (Remote.IP[j][3] == buf[56]))
-				isIP = 1;
-			else
-				isIP = 0;
-
-			sprintf(tmp_ip, "%d.%d.%d.%d", Remote.IP[j][0], Remote.IP[j][1],
-					Remote.IP[j][2], Remote.IP[j][3]);
-			for (i = 0; i < UDPSENDMAX; i++) {
-				if (Multi_Udp_Buff[i].isValid == 1) {
-					if ((strcmp(Multi_Udp_Buff[i].RemoteHost, tmp_ip) == 0)
-							&& (Multi_Udp_Buff[i].buf[8] == LEAVEGROUP)) {
-						isIP = 1;
-						printf("exit command of multicast group in buffer, %s\n",
-								tmp_ip);
-						break;
-					}
-				}
-			}
-
-			if (isIP == 0) {
-				for (i = 0; i < UDPSENDMAX; i++) {
-					if (Multi_Udp_Buff[i].isValid == 0) {
-						Multi_Udp_Buff[i].SendNum = 0;
-						Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
-						if (Remote.isDirect == 0) {
-							//ֱͨ����
-							RemotePort = RemoteVideoPort;
-							Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
-							sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
-									Remote.IP[j][0], Remote.IP[j][1],
-									Remote.IP[j][2], Remote.IP[j][3]);
-						} else {
-							//��ת����
-							RemotePort = RemoteVideoServerPort;
-							Multi_Udp_Buff[i].buf[6] = VIDEOTALKTRANS;
-							sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
-									Remote.DenIP[0], Remote.DenIP[1],
-									Remote.DenIP[2], Remote.DenIP[3]);
-						}
-						Multi_Udp_Buff[i].RemotePort = RemotePort;
-						if (DebugMode == 1) {
-                            printf("requiring exit multicast group, Multi_Udp_Buff[i].RemoteHost is %s\n",
-									Multi_Udp_Buff[i].RemoteHost);
-						}
-						//ͷ��
-						memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
-
-						Multi_Udp_Buff[i].buf[7] = ASK; //����
-						// ������
-						Multi_Udp_Buff[i].buf[8] = LEAVEGROUP;
-
-                        memcpy(Multi_Udp_Buff[i].buf + 9, device_config.address, 20);
-                        memcpy(Multi_Udp_Buff[i].buf + 29, device_config.ip, 4);
-                        memcpy(Multi_Udp_Buff[i].buf + 33, Remote.Addr[j], 20);
-						memcpy(Multi_Udp_Buff[i].buf + 53, Remote.IP[j], 4);
-
-						Multi_Udp_Buff[i].buf[57] = Remote.GroupIP[0];
-						Multi_Udp_Buff[i].buf[58] = Remote.GroupIP[1];
-						Multi_Udp_Buff[i].buf[59] = Remote.GroupIP[2];
-						Multi_Udp_Buff[i].buf[60] = Remote.GroupIP[3];
-
-						Multi_Udp_Buff[i].nlength = 61;
-						Multi_Udp_Buff[i].DelayTime = 100; //600;  20101112 ��Ϊ 100
-						Multi_Udp_Buff[i].SendDelayTime = 0; //���͵ȴ�ʱ�����  20101112
-						Multi_Udp_Buff[i].isValid = 1;
-
-						sem_post(&multi_send_sem);
-						break;
-					}
-				}
-			}
-		}
-		//�򿪻�����
-		pthread_mutex_unlock(&Local.udp_lock);
-	}
-}
-//-----------------------------------------------------------------------

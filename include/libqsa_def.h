@@ -43,6 +43,7 @@ enum {
 
 #define NSMULTIADDR  "238.9.9.1"//"192.168.10.255"  //NS组播地址
 #define LFTMULTIADDR  "238.9.9.2"//"192.168.10.255"  //NS组播地址
+#define MULTITTL   5      //组播TTL值
 
 #define ALARM         1    //报警
 #define CANCELALARM   2    //取消报警

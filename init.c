@@ -11,6 +11,7 @@ extern void init_arp_socket();
 
 int init_param_task(struct dev_config * _config);
 void init_config_null(struct dev_config * _config);
+int init_udp_task(void);
 
 int init_param_task(struct dev_config * _config) {
     
@@ -35,7 +36,7 @@ int init_param_task(struct dev_config * _config) {
 	memcpy(Remote.Addr[0], "S00010101010", 12);
 
 	init_arp_socket();
-	qsa_init_udp_task();
+	init_udp_task();
 	Init_Timer();
 
 	return (0);
@@ -46,6 +47,9 @@ void init_config_null(struct dev_config * _config) {
     return;
 }
 
+int init_udp_task(void) {
+    
+}
 /*
 int qsa_init_main_task(void) {
 	int i;
