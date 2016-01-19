@@ -4,7 +4,7 @@
 ######################################
   
 #共享库文件名，lib*.a
-TARGET_PATH := libs
+TARGET_PATH := ../static_libs
 TARGET  := $(TARGET_PATH)/libqsa_talk.a
   
 #compile and lib parameter

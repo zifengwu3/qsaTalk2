@@ -9,24 +9,28 @@
 
 #ifndef _LIB_QSA_DEF_H
 #define _LIB_QSA_DEF_H
-struct dev_config device_config;                      //本地通用配置
+struct dev_config local_config;                      //本地通用配置
 int configlen = sizeof(struct dev_config);            //结构长度
 
 struct Local1 Local;
 //远端地址
-struct Remote1 Remote;
-char NullAddr[21];   //空字符串
+struct Remote1 remote_info;
+char null_addr[21];   //空字符串
+char null_ip[4];   //空字符串
 
 //免费ARP
 int ARP_Socket;
 //UDP
 int m_VideoSocket;
+int m_DataSocket;
 
 int LocalDataPort;   //命令及数据UDP端口
 int LocalVideoPort;  //音视频UDP端口
 
 int RemoteDataPort;
 int RemoteVideoPort;
+int RemoteAudioPort;
+
 char RemoteHost[20];
 char sPath[80];
 char currpath[80];   //自定义路径
@@ -42,23 +46,27 @@ sem_t multi_send_sem;
 struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10个UDP主动发送缓冲
 
 #else
-extern struct dev_config device_config;               
+extern struct dev_config local_config;               
 extern int configlen;
 
 extern struct Local1 Local;
-extern struct Remote1 Remote;
-extern char NullAddr[21];   //空字符串
+extern struct Remote1 remote_info;
+extern char null_addr[21];   //空字符串
+extern char null_ip[4];   //空字符串
 
 //免费ARP
 extern int ARP_Socket;
 //UDP
 extern int m_VideoSocket;
+extern int m_DataSocket;
 
 extern int LocalDataPort;   //命令及数据UDP端口
 extern int LocalVideoPort;  //音视频UDP端口
 
 extern int RemoteDataPort;
 extern int RemoteVideoPort;
+extern int RemoteAudioPort;
+
 extern char RemoteHost[20];
 extern char sPath[80];
 extern char currpath[80];   //自定义路径

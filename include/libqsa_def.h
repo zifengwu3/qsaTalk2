@@ -45,6 +45,14 @@ enum {
 #define LFTMULTIADDR  "238.9.9.2"//"192.168.10.255"  //NS组播地址
 #define MULTITTL   5      //组播TTL值
 
+#define PACKDATALEN  1200   //数据包大小
+#ifdef _AUDIO_BUF_48MS
+#define AUDIOBLK (128*6)   //每帧48ms
+#else
+#define AUDIOBLK 128   //每帧8ms
+#endif
+
+
 #define ALARM         1    //报警
 #define CANCELALARM   2    //取消报警
 #define SENDMESSAGE   3   //发送信息
@@ -126,6 +134,23 @@ struct Multi_Udp_Buff1
     int SendDelayTime;
     int nlength;
 };
+
+//通话数据结构
+struct talkdata1
+{
+	char HostAddr[20];       //主叫方地址
+	unsigned char HostIP[4]; //主叫方IP地址
+	char AssiAddr[20];       //被叫方地址
+	unsigned char AssiIP[4]; //被叫方IP地址
+	unsigned int timestamp;  //时间戳
+	unsigned short DataType;          //数据类型
+	unsigned short Frameno;           //帧序号
+	unsigned int Framelen;            //帧数据长度
+	unsigned short TotalPackage;      //总包数
+	unsigned short CurrPackage;       //当前包数
+	unsigned short Datalen;           //数据长度
+	unsigned short PackLen;       //数据包大小
+}__attribute__ ((packed));
 
 
 

@@ -640,7 +640,8 @@ struct LocalCfg1 LocalCfg;
 
 //Ô¶¶ËµØÖ·
 struct Remote1 Remote;
-char NullAddr[21];   //¿Õ×Ö·û´®
+char null_addr[21];   //¿Õ×Ö·û´®
+char null_ip[4];   //¿Õ×Ö·û´®
 //Ãâ·ÑARP
 int ARP_Socket;
 //¼ì²âÍøÂçÁ¬½Ó
@@ -686,7 +687,8 @@ extern struct LocalCfg1 LocalCfg;
 
 //Ô¶¶ËµØÖ·
 extern struct Remote1 Remote;
-extern char NullAddr[21];   //¿Õ×Ö·û´®
+extern char null_addr[21];   //¿Õ×Ö·û´®
+extern char null_ip[4];   //¿Õ×Ö·û´®
 //Ãâ·ÑARP
 extern int ARP_Socket;
 //¼ì²âÍøÂçÁ¬½Ó

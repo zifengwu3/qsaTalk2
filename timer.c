@@ -29,10 +29,6 @@ void timer_thread_task(void);
 int Init_Timer(void);
 int Uninit_Timer(void);
 
-extern void Talk_Call_Task(int uFlag, const char *call_addr, const char *call_ip);
-extern void Talk_Call_End_Task(void);
-extern void Talk_Call_TimeOut_Task(void);
-
 int Init_Timer(void) {
 	pthread_attr_t attr;
 	timer_thread_flag = 1;
@@ -104,8 +100,8 @@ void OnlineCheckFunc(void)
 
 			send_b[7] = ASK;
 			send_b[8] = CALLCONFIRM;
-			memcpy(send_b + 9, device_config.address, 20);
-			memcpy(send_b + 29, device_config.ip, 4);
+			memcpy(send_b + 9, local_config.address, 20);
+			memcpy(send_b + 29, local_config.ip, 4);
 			//memcpy(send_b + 33, Remote.Addr[0], 20);
 			//memcpy(send_b + 53, Remote.IP[0], 4);
 			send_b[57] = (Local.OnlineNum & 0xFF000000) >> 24;
@@ -145,7 +141,7 @@ void TalkCtrlFunc(void)
                 sprintf(strtime, "%02d:%02d", Local.TimeOut / INTRPERSEC / 60,
                         (Local.TimeOut / INTRPERSEC) % 60);
                 if (Local.TimeOut > TALKTIMEOUT) {
-                    Talk_Call_End_Task();
+                    stop_talk();
                     //recv_Call_End(1);
                     Local.OnlineFlag = 0;
                     printf("talk timeout \n");
