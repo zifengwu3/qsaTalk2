@@ -4,7 +4,6 @@
 
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
-#include "libqsa_talk.h"
 
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
@@ -97,7 +96,6 @@ void stop_talk(void) {
 
             printf("<%s>   通知对方关闭对讲呼叫\n", __FUNCTION__);
 			sem_post(&multi_send_sem);
-			Local.Status = 0;
 			break;
 		}
 	}
@@ -106,8 +104,10 @@ void stop_talk(void) {
 //呼叫   0 住户 1  中心  
 void find_ip(const char * addr, int uFlag) {
     int i;
+    int Status;
 
-    if ((Local.Status == 0) && (uFlag == 0)) {
+    Status = get_device_status(CALL_MIXER);
+    if ((Status == 0) && (uFlag == 0)) {
         //查找可用发送缓冲并填空
         for (i=0; i<UDPSENDMAX; i++) {
             if (Multi_Udp_Buff[i].isValid == 0) {
@@ -156,15 +156,17 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
 
     struct timeval tv;
     uint32_t nowtime;
+    int Status;
 
 #ifdef _DEBUG
-    printf("发送一包数据：\n" );
+    printf("发送VIDEO数据：\n" );
 #endif
 
     gettimeofday(&tv, NULL);
     nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
 
-    if (Local.Status > 0) {
+    Status = get_device_status(CALL_MIXER);
+    if (Status > 0) {
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
         //命令
@@ -234,12 +236,14 @@ void send_audio(const char * data, int length, int frame_num, const char * ip) {
 
     struct timeval tv;
     uint32_t nowtime;
+    int Status;
 
 #ifdef _DEBUG
     printf("创建采集数据处理线程：\n" );
 #endif
 
-    if (Local.Status > 0) {
+    Status = get_device_status(CALL_MIXER);
+    if (Status > 0) {
         gettimeofday(&tv, NULL);
         nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
 
@@ -249,7 +253,7 @@ void send_audio(const char * data, int length, int frame_num, const char * ip) {
         adpcm_out[6] = VIDEOTALK;
         adpcm_out[7] = 1;
         //子命令
-        if ((Local.Status == 1)||(Local.Status == 3)||(Local.Status == 5)) { //本机为主叫方
+        if (Status == 5) { //本机为主叫方
             adpcm_out[8] = CALLUP;
             memcpy(talkdata.HostAddr, local_config.address, 20);
             memcpy(talkdata.HostIP, local_config.ip, 4);

@@ -6,9 +6,12 @@
 #include <arpa/inet.h>
 
 #include "libqsa_def.h"
+#include "libqsa_callback.h"
 
 #ifndef _LIB_QSA_DEF_H
 #define _LIB_QSA_DEF_H
+struct _cb_function cb_opt_function;
+
 struct dev_config local_config;                      //本地通用配置
 int configlen = sizeof(struct dev_config);            //结构长度
 
@@ -46,6 +49,7 @@ sem_t multi_send_sem;
 struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10个UDP主动发送缓冲
 
 #else
+extern struct _cb_function cb_opt_function;
 extern struct dev_config local_config;               
 extern int configlen;
 

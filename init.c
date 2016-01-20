@@ -15,6 +15,7 @@ void init_local_param_task(void);
 void init_default_ip_task(void);
 void init_default_remote_task(void);
 void get_device_config_task(struct dev_config * _config);
+void send_info(const char * data, struct _send_info * info);
 
 int init_param_task(struct dev_config * _config) {
     
@@ -78,50 +79,68 @@ void init_default_remote_task(void) {
     remote_info.isDirect = 1;
 }
 
+void send_info(const char * data, struct _send_info * info) {
+    int i;
+    int j;
+    uint32_t Ip_Int;
 
-/*
-int qsa_init_main_task(void) {
-	int i;
-	uint32_t Ip_Int;
+    if (info != NULL) {
+        j = 0;
+        /* get remote device information */
+        Ip_Int = inet_addr(info->ip);
+        memcpy(&remote_info.IP[j], &Ip_Int, 4);
+        printf("%d.%d.%d.%d\n", remote_info.IP[j][0], remote_info.IP[j][1], 
+                remote_info.IP[j][2], remote_info.IP[j][3]);
 
-	DebugMode = 1;
+        memcpy(&remote_info.Addr[j], local_config.address, 20);
+        remote_info.Addr[j][0] = 'S';
+        memcpy(&remote_info.Addr[j]+7, info->addr, 4);
 
-	TimeStamp.OldCurrVideo = 0;
-	TimeStamp.CurrVideo = 0;
-	TimeStamp.OldCurrAudio = 0;
-	TimeStamp.CurrAudio = 0;
+        for (i = 0; i < UDPSENDMAX; i++) {
+            if (Multi_Udp_Buff[i].isValid == 0) {
+                Multi_Udp_Buff[i].SendNum = 0;
+                Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+                Multi_Udp_Buff[i].RemotePort = info->port;
 
-	RemoteVideoPort = 8302;
-	strcpy(RemoteHost, "192.168.0.88");
-	LocalVideoPort = 8302;
+                sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
+                        remote_info.IP[j][0], remote_info.IP[j][1], 
+                        remote_info.IP[j][2], remote_info.IP[j][3]);
+                memcpy(&Multi_Udp_Buff[i].RemoteIP,
+                        &Multi_Udp_Buff[i].RemoteHost, 20);
 
-	//ReadCfgFile();
-	GetCfg();
-	DeltaLen = 9 + sizeof(struct talkdata1);
+                memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+                Multi_Udp_Buff[i].buf[6] = SENDMESSAGE;
+                Multi_Udp_Buff[i].buf[7] = ASK;
 
-	strcpy(UdpPackageHead, "QIUSHI");
-	for (i = 0; i < 20; i++) {
-		NullAddr[i] = '0';
-	}
-	NullAddr[20] = '\0';
+                memcpy(Multi_Udp_Buff[i].buf + 8, local_config.address, 20);
+                memcpy(Multi_Udp_Buff[i].buf + 28, remote_info.Addr[j], 20);
+                memcpy(Multi_Udp_Buff[i].buf + 48, local_config.mac, 6);
+                Multi_Udp_Buff[i].buf[54] = info->uFlag;
+                memcpy(Multi_Udp_Buff[i].buf + 55, info->title, 16);
+                memset(Multi_Udp_Buff[i].buf + 71, 0x00, 14);
+                Multi_Udp_Buff[i].buf[72] = 0x01;
+                Multi_Udp_Buff[i].buf[73] = ((info->length) >> 8);
+                Multi_Udp_Buff[i].buf[74] = ((info->length) & 0xFF);
+                Multi_Udp_Buff[i].buf[78] = 0x01;
+                Multi_Udp_Buff[i].buf[80] = 0x01;
+                Multi_Udp_Buff[i].buf[81] = ((info->length) >> 8);
+                Multi_Udp_Buff[i].buf[82] = ((info->length) & 0xFF);
+                Multi_Udp_Buff[i].buf[83] = (1200 >> 8);
+                Multi_Udp_Buff[i].buf[84] = (1200 & 0xFF);
+                memcpy(Multi_Udp_Buff[i].buf + 85, data, info->length);
 
-	Local.Status = 0;
-	Local.RecPicSize = 1;
-	Local.PlayPicSize = 1;
-
-	Ip_Int = inet_addr("192.168.0.5");
-	memcpy(Remote.IP, &Ip_Int, 4);
-	memcpy(Remote.Addr[0], NullAddr, 20);
-	memcpy(Remote.Addr[0], "S00010101010", 12);
-
-	InitArpSocket();
-
-	qsa_init_audio_task();
-	qsa_init_udp_task();
-
-	Init_Timer();
-
-	return (0);
+                Multi_Udp_Buff[i].nlength = 84 + (info->length);
+                Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
+                Multi_Udp_Buff[i].SendDelayTime = 0;
+                Multi_Udp_Buff[i].isValid = 1;
+                printf("<%s>   准备向<%d.%d.%d.%d>送信息\n", __FUNCTION__,
+                        remote_info.IP[j][0], remote_info.IP[j][1], 
+                        remote_info.IP[j][2], remote_info.IP[j][3]);
+                sem_post(&multi_send_sem);
+                break;
+            }
+        }
+    }
 }
-*/
+
 
