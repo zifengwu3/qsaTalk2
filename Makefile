@@ -5,7 +5,7 @@
   
 #共享库文件名，lib*.a
 TARGET_PATH := ../static_libs
-TARGET  := $(TARGET_PATH)/libqsa_talk.a
+TARGET  := libqsa_talk.a
   
 #compile and lib parameter
 #编译参数
@@ -33,7 +33,11 @@ all : $(TARGET)
   
 objs : $(OBJS)
   
-rebuild: veryclean everything
+rebuild: veryclean everything copy
+
+copy:
+	cp include/libqsa_def.h $(TARGET_PATH)/
+	cp libqsa_talk.a $(TARGET_PATH)/
                 
 clean :
 	rm -fr *.o

@@ -8,6 +8,7 @@
 
 extern void Init_Timer();
 extern int init_udp_task(void);
+extern void set_cb_function_default(struct _cb_function * p);
 
 int init_param_task(struct dev_config * _config);
 void init_config_null_task(void);
@@ -27,6 +28,9 @@ int init_param_task(struct dev_config * _config) {
     init_local_param_task();
     init_default_ip_task();
     init_default_remote_task();
+
+    //初始化回调函数
+    set_cb_function_default(&cb_opt_function);
 
     //初始化线程
 	Init_Timer();
@@ -54,20 +58,10 @@ void init_local_param_task(void) {
 	LocalVideoPort = 8302;
 
     strcpy(UdpPackageHead, "QIUSHI");
-    strcpy(RemoteHost, "192.168.0.88");
-
     memset(null_addr, 0x30, 20);
     null_addr[20] = '\0';
 
     memset(null_ip, 0, 4);
-
-	memcpy(remote_info.Addr[0], null_addr, 20);
-	memcpy(remote_info.Addr[0], "S00010101010", 12);
-
-    return;
-}
-
-void init_default_ip_task(void) {
 
     return;
 }

@@ -6,16 +6,16 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 AFRAMETIME	include/sndtools.h	26;"	d
 ALARM	include/common.h	42;"	d
-ALARM	include/libqsa_def.h	87;"	d
+ALARM	include/libqsa_def.h	88;"	d
 ALARMHANDLE	include/common.h	47;"	d
 AR	Makefile	/^AR      = ar$/;"	m
 ARP_Socket	include/common.h	/^int ARP_Socket;$/;"	v
 ARP_Socket	include/libqsa_common.h	/^int ARP_Socket;$/;"	v
 ASK	include/common.h	100;"	d
 ASK	include/common.h	76;"	d
-ASK	include/libqsa_def.h	101;"	d
-AUDIOBLK	include/libqsa_def.h	81;"	d
-AUDIOBLK	include/libqsa_def.h	83;"	d
+ASK	include/libqsa_def.h	102;"	d
+AUDIOBLK	include/libqsa_def.h	82;"	d
+AUDIOBLK	include/libqsa_def.h	84;"	d
 AUDIOBLK	include/sndtools.h	24;"	d
 AUDIODSP	include/sndtools.h	6;"	d
 AUDIODSP1	include/sndtools.h	7;"	d
@@ -38,33 +38,33 @@ AssiIP	include/libqsa_def.h	/^	unsigned char AssiIP[4]; \/\/Ë¢´Âè´ÊñπIPÂú∞ÂùÄ$/;
 BUFFER_SIZE	include/common.h	25;"	d
 BuildAddr	include/common.h	/^    unsigned char BuildAddr[2];$/;"	m	struct:LocalCfg1
 CALL	include/common.h	79;"	d
-CALL	include/libqsa_def.h	104;"	d
+CALL	include/libqsa_def.h	105;"	d
 CALLANSWER	include/common.h	82;"	d
-CALLANSWER	include/libqsa_def.h	107;"	d
+CALLANSWER	include/libqsa_def.h	108;"	d
 CALLCONFIRM	include/common.h	87;"	d
-CALLCONFIRM	include/libqsa_def.h	112;"	d
+CALLCONFIRM	include/libqsa_def.h	113;"	d
 CALLDOWN	include/common.h	86;"	d
-CALLDOWN	include/libqsa_def.h	111;"	d
+CALLDOWN	include/libqsa_def.h	112;"	d
 CALLEND	include/common.h	94;"	d
-CALLEND	include/libqsa_def.h	119;"	d
+CALLEND	include/libqsa_def.h	120;"	d
 CALLSTART	include/common.h	83;"	d
-CALLSTART	include/libqsa_def.h	108;"	d
+CALLSTART	include/libqsa_def.h	109;"	d
 CALLTIMEOUT	include/common.h	35;"	d
-CALLTIMEOUT	include/libqsa_def.h	70;"	d
+CALLTIMEOUT	include/libqsa_def.h	71;"	d
 CALLUP	include/common.h	85;"	d
-CALLUP	include/libqsa_def.h	110;"	d
+CALLUP	include/libqsa_def.h	111;"	d
 CALL_DEVICE	include/libqsa_def.h	/^	CALL_DEVICE          \/\/Êú¨Âú∞ÂëºÂè´$/;"	e	enum:__anon2
 CALL_MIXER	include/libqsa_def.h	/^	CALL_MIXER = 0,      \/\/Ê∑∑ÂêàÂëºÂè´Ê®°Âºè$/;"	e	enum:__anon2
 CALL_SIP	include/libqsa_def.h	/^	CALL_SIP,            \/\/SIPÂëºÂè´$/;"	e	enum:__anon2
 CANCELALARM	include/common.h	43;"	d
-CANCELALARM	include/libqsa_def.h	88;"	d
-CB_ACK_TIMEOUT	include/libqsa_def.h	/^    CB_ACK_TIMEOUT       \/\/ÂèëÈÄÅ6Ê¨°Êú™ÂõûÂ§ç$/;"	e	enum:__anon1
+CANCELALARM	include/libqsa_def.h	89;"	d
+CB_ACK_TIMEOUT	include/libqsa_def.h	/^    CB_ACK_TIMEOUT       \/\/ÂèëÈÄÅ6Ê¨°Ë∂ÖÊó∂$/;"	e	enum:__anon1
 CB_CALL_BUSY	include/libqsa_def.h	/^    CB_CALL_BUSY,        \/\/ÂΩìÂâçÊ≠£ÂøôÂõûÂ§ç$/;"	e	enum:__anon1
 CB_CALL_FAIL	include/libqsa_def.h	/^    CB_CALL_FAIL,		 \/\/ÂëºÂè´Áä∂ÊÄÅÂºÇÂ∏∏$/;"	e	enum:__anon1
 CB_CALL_LIFT	include/libqsa_def.h	/^    CB_CALL_LIFT,		 \/\/ÂëºÊ¢ØÂõûË∞ÉÂëΩ‰ª§$/;"	e	enum:__anon1
 CB_CALL_OK	include/libqsa_def.h	/^    CB_CALL_OK = 0,      \/\/ÂëºÂè´ÊàêÂäüÂõûÂ§ç$/;"	e	enum:__anon1
-CB_CALL_TIMEOUT	include/libqsa_def.h	/^    CB_CALL_TIMEOUT,     \/\/ÂëºÂè´30ÁßíÊú™ÂõûÂ§ç$/;"	e	enum:__anon1
-CB_FOREC_IFRAME	include/libqsa_def.h	/^    CB_FOREC_IFRAME,     \/\/Âº∫Âà∂IÂõûË∞É$/;"	e	enum:__anon1
+CB_CALL_TIMEOUT	include/libqsa_def.h	/^    CB_CALL_TIMEOUT,     \/\/ÂëºÂè´30ÁßíË∂ÖÊó∂$/;"	e	enum:__anon1
+CB_FORCE_IFRAME	include/libqsa_def.h	/^    CB_FORCE_IFRAME,	 \/\/Âº∫Âà∂IÂ∏ß$/;"	e	enum:__anon1
 CB_INFO_OK	include/libqsa_def.h	/^    CB_INFO_OK,		     \/\/ÂèëÈÄÅ‰ø°ÊÅØÂõûÂ§ç$/;"	e	enum:__anon1
 CB_OPEN_LOCK	include/libqsa_def.h	/^    CB_OPEN_LOCK,        \/\/ÂºÄÈîÅÂõûÂ§ç$/;"	e	enum:__anon1
 CB_ST_CALLED	include/libqsa_def.h	/^    CB_ST_CALLED,         \/\/ÂΩìÂâçËÆæÂ§áÊ≠£Âú®Ë¢´Âè´$/;"	e	enum:__anon3
@@ -77,7 +77,7 @@ CB_ST_WATCHED	include/libqsa_def.h	/^    CB_ST_WATCHED,        \/\/ÂΩìÂâçËÆæÂ§áÂ
 CB_ST_WATCHING	include/libqsa_def.h	/^    CB_ST_WATCHING,	      \/\/ÂΩìÂâçËÆæÂ§áÊ≠£Âú®ÁõëËßÜÂÖ∂‰ªñËÆæÂ§á‰∏≠$/;"	e	enum:__anon3
 CB_TALK_OK	include/libqsa_def.h	/^    CB_TALK_OK,          \/\/ÂØπËÆ≤ÂºÄÂßãÂëΩ‰ª§ÂõûÂ§ç$/;"	e	enum:__anon1
 CB_TALK_STOP	include/libqsa_def.h	/^    CB_TALK_STOP,        \/\/ÂÆ§ÂÜÖÊú∫ÊåÇÊú∫ÂëΩ‰ª§$/;"	e	enum:__anon1
-CB_TALK_TIMEOUT	include/libqsa_def.h	/^    CB_TALK_TIMEOUT,     \/\/ÂØπËÆ≤180ÁßíÊú™ÂõûÂ§ç$/;"	e	enum:__anon1
+CB_TALK_TIMEOUT	include/libqsa_def.h	/^    CB_TALK_TIMEOUT,     \/\/ÂØπËÆ≤180ÁßíË∂ÖÊó∂$/;"	e	enum:__anon1
 CB_TYPE_AUDIO	include/libqsa_def.h	/^    CB_TYPE_AUDIO = 0$/;"	e	enum:__anon4
 CC	Makefile	/^CC      := gcc$/;"	m
 CFLAGS	Makefile	/^CFLAGS  := -g -Wall -O3 $(DEFINES) $(INCLUDE)$/;"	m
@@ -115,7 +115,7 @@ CurrWin	include/common.h	/^    int CurrWin;   \/\/µ±«∞–≈œ¢¥∞ø⁄  0 –≈œ¢¡–±Ì  1  –
 CurrentInfoPage	include/common.h	/^    int CurrentInfoPage; \/\/µ±«∞–≈œ¢“≥$/;"	m	struct:Info1
 DEFINES	Makefile	/^DEFINES :=$/;"	m
 DELAYTIME	include/common.h	109;"	d
-DIRECTCALLTIME	include/libqsa_def.h	62;"	d
+DIRECTCALLTIME	include/libqsa_def.h	61;"	d
 DOWNLOAD	include/common.h	99;"	d
 DataType	include/common.h	/^    unsigned short DataType;          \/\/ ˝æ›¿‡–Õ$/;"	m	struct:talkdata1
 DataType	include/libqsa_def.h	/^	unsigned short DataType;          \/\/Êï∞ÊçÆÁ±ªÂûã$/;"	m	struct:talkdata1
@@ -138,7 +138,7 @@ DenNum	include/libqsa_def.h	/^    int DenNum;             \/\/ÁõÆÊ†áÊï∞Èáè  ‰∏ªÊ
 DropMultiGroup	udp.c	/^void DropMultiGroup(int m_Socket, char *McastAddr)$/;"	f
 EngineerPass	include/common.h	/^    char EngineerPass[10];             \/\/π§≥Ã√‹¬Î$/;"	m	struct:LocalCfg1
 FINDEQUIP	include/common.h	74;"	d
-FINDEQUIP	include/libqsa_def.h	99;"	d
+FINDEQUIP	include/libqsa_def.h	100;"	d
 FMT16BITS	include/sndtools.h	10;"	d
 FMT16K	include/sndtools.h	13;"	d
 FMT22K	include/sndtools.h	14;"	d
@@ -147,7 +147,7 @@ FMT8BITS	include/sndtools.h	9;"	d
 FMT8K	include/sndtools.h	12;"	d
 FORBIDTIMEOUT	include/common.h	40;"	d
 FORCEIFRAME	include/common.h	90;"	d
-FORCEIFRAME	include/libqsa_def.h	115;"	d
+FORCEIFRAME	include/libqsa_def.h	116;"	d
 FRAMEBUFFERMAX	include/common.h	26;"	d
 FileName	include/common.h	/^    char FileName[50];$/;"	m	struct:InfoContent1
 FileName	include/common.h	/^   char FileName[20];$/;"	m	struct:downfile1
@@ -172,9 +172,9 @@ INFONUMPERPAGE	include/common.h	116;"	d
 INFOROWLEN	include/common.h	29;"	d
 INFOTYPENUM	include/common.h	113;"	d
 INTRPERSEC	include/common.h	24;"	d
-INTRPERSEC	include/libqsa_def.h	65;"	d
+INTRPERSEC	include/libqsa_def.h	64;"	d
 INTRTIME	include/common.h	23;"	d
-INTRTIME	include/libqsa_def.h	64;"	d
+INTRTIME	include/libqsa_def.h	63;"	d
 IP	include/common.h	/^    unsigned char IP[10][4];    \/\/∂‘∑ΩIP$/;"	m	struct:Remote1
 IP	include/common.h	/^    unsigned char IP[4];       \/\/IPµÿ÷∑$/;"	m	struct:LocalCfg1
 IP	include/libqsa_def.h	/^    unsigned char IP[10][4];    \/\/ÂØπÊñπIP$/;"	m	struct:Remote1
@@ -200,11 +200,11 @@ Init_Timer	timer.c	/^int Init_Timer(void) {$/;"	f
 Init_Udp_Send_Task	udp.c	/^int Init_Udp_Send_Task(void) {$/;"	f
 LDFLAGS	Makefile	/^LDFLAGS :=$/;"	m
 LFTMULTIADDR	include/common.h	18;"	d
-LFTMULTIADDR	include/libqsa_def.h	76;"	d
+LFTMULTIADDR	include/libqsa_def.h	77;"	d
 LIBS	Makefile	/^LIBS    :=$/;"	m
 LIFT	include/common.h	8;"	d
 LINEUSE	include/common.h	80;"	d
-LINEUSE	include/libqsa_def.h	105;"	d
+LINEUSE	include/libqsa_def.h	106;"	d
 Len	include/common.h	/^    int Len;                \/\/÷° ˝æ›≥§∂»$/;"	m	struct:tempaudiobuf1
 Len	include/common.h	/^    int Len;                \/\/÷° ˝æ›≥§∂»$/;"	m	struct:temppicinfobuf1
 Len	include/common.h	/^    int Len;                \/\/÷° ˝æ›≥§∂»$/;"	m	struct:tempvideobuf1
@@ -226,11 +226,11 @@ MAKEOLD	include/common.h	55;"	d
 MAXPACKNUM	include/common.h	127;"	d
 MAXROW	include/common.h	30;"	d
 MAXSENDNUM	include/common.h	106;"	d
-MAXSENDNUM	include/libqsa_def.h	67;"	d
+MAXSENDNUM	include/libqsa_def.h	66;"	d
 MCUUPDATE	include/common.h	57;"	d
 MONO	include/sndtools.h	17;"	d
 MP4VNUM	include/common.h	125;"	d
-MULTITTL	include/libqsa_def.h	77;"	d
+MULTITTL	include/libqsa_def.h	78;"	d
 Mac_Addr	include/common.h	/^	unsigned char Mac_Addr[6]; \/\/Õ¯ø®µÿ÷∑$/;"	m	struct:LocalCfg1
 MaxNum	include/common.h	/^    int MaxNum;   \/\/◊Ó¥Û–≈œ¢ ˝$/;"	m	struct:Info1
 Multi_Comm_Buff1	include/common.h	/^struct Multi_Comm_Buff1$/;"	s
@@ -240,15 +240,15 @@ Multi_Udp_Buff1	include/common.h	/^struct Multi_Udp_Buff1$/;"	s
 Multi_Udp_Buff1	include/libqsa_def.h	/^struct Multi_Udp_Buff1 {$/;"	s
 NMAX	include/common.h	118;"	d
 NSMULTIADDR	include/common.h	17;"	d
-NSMULTIADDR	include/libqsa_def.h	75;"	d
+NSMULTIADDR	include/libqsa_def.h	76;"	d
 NSORDER	include/common.h	72;"	d
-NSORDER	include/libqsa_def.h	97;"	d
+NSORDER	include/libqsa_def.h	98;"	d
 NSSERVERORDER	include/common.h	73;"	d
-NSSERVERORDER	include/libqsa_def.h	98;"	d
+NSSERVERORDER	include/libqsa_def.h	99;"	d
 NoReadedNum	include/common.h	/^    int NoReadedNum; \/\/Œ¥∂¡–≈œ¢◊‹ ˝$/;"	m	struct:Info1
 OBJS	Makefile	/^OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))$/;"	m
 OPENLOCK	include/common.h	93;"	d
-OPENLOCK	include/libqsa_def.h	118;"	d
+OPENLOCK	include/libqsa_def.h	119;"	d
 OldCurrAudio	include/common.h	/^    unsigned int OldCurrAudio;     \/\/…œ“ª¥Œµ±«∞“Ù∆µ ±º‰$/;"	m	struct:TimeStamp1
 OldCurrVideo	include/common.h	/^    unsigned int OldCurrVideo;     \/\/…œ“ª¥Œµ±«∞ ”∆µ ±º‰$/;"	m	struct:TimeStamp1
 OnlineCheckFunc	timer.c	/^void OnlineCheckFunc(void)$/;"	f
@@ -260,37 +260,37 @@ OpenLockPass	include/common.h	/^    char OpenLockPass[10];$/;"	m	struct:LocalCfg
 OpenLockTime	include/common.h	/^    unsigned char OpenLockTime;$/;"	m	struct:LocalCfg1
 Out_DelayTime	include/common.h	/^    int Out_DelayTime;               \/\/Õ‚≥ˆ—” ±$/;"	m	struct:LocalCfg1
 PACKDATALEN	include/common.h	126;"	d
-PACKDATALEN	include/libqsa_def.h	79;"	d
+PACKDATALEN	include/libqsa_def.h	80;"	d
 PAGEPERROW	include/common.h	31;"	d
 PICINFONUM	include/common.h	51;"	d
 PREPARETIMEOUT	include/common.h	37;"	d
-PREPARETIMEOUT	include/libqsa_def.h	72;"	d
+PREPARETIMEOUT	include/libqsa_def.h	73;"	d
 PackLen	include/common.h	/^    unsigned short PackLen;       \/\/ ˝æ›∞¸¥Û–°$/;"	m	struct:talkdata1
 PackLen	include/libqsa_def.h	/^	unsigned short PackLen;       \/\/Êï∞ÊçÆÂåÖÂ§ßÂ∞è$/;"	m	struct:talkdata1
 PassOpenLock	include/common.h	/^    unsigned char PassOpenLock;$/;"	m	struct:LocalCfg1
 QUERYFAIL	include/common.h	81;"	d
-QUERYFAIL	include/libqsa_def.h	106;"	d
+QUERYFAIL	include/libqsa_def.h	107;"	d
 QUERYSTATUS	include/common.h	46;"	d
-QUERYSTATUS	include/libqsa_def.h	91;"	d
+QUERYSTATUS	include/libqsa_def.h	92;"	d
 RANLIB	Makefile	/^RANLIB  = ranlib$/;"	m
 READADDRESS	include/common.h	62;"	d
 READMAC	include/common.h	56;"	d
 READROOMSETUP	include/common.h	64;"	d
 READSETUP	include/common.h	66;"	d
 RECORDTIMEOUT	include/common.h	38;"	d
-RECORDTIMEOUT	include/libqsa_def.h	73;"	d
+RECORDTIMEOUT	include/libqsa_def.h	74;"	d
 REMOTECALLLIFT	include/common.h	95;"	d
-REMOTECALLLIFT	include/libqsa_def.h	120;"	d
+REMOTECALLLIFT	include/libqsa_def.h	121;"	d
 REMOTEDEFENCE	include/common.h	59;"	d
 REMOTELIFT	include/common.h	96;"	d
-REMOTELIFT	include/libqsa_def.h	121;"	d
+REMOTELIFT	include/libqsa_def.h	122;"	d
 REMOTEOPENLOCK	include/common.h	88;"	d
-REMOTEOPENLOCK	include/libqsa_def.h	113;"	d
+REMOTEOPENLOCK	include/libqsa_def.h	114;"	d
 REPLY	include/common.h	101;"	d
 REPLY	include/common.h	77;"	d
-REPLY	include/libqsa_def.h	102;"	d
+REPLY	include/libqsa_def.h	103;"	d
 REPORTSTATUS	include/common.h	45;"	d
-REPORTSTATUS	include/libqsa_def.h	90;"	d
+REPORTSTATUS	include/libqsa_def.h	91;"	d
 RESETPASS	include/common.h	60;"	d
 RcvBufLen	udp.c	/^int RcvBufLen = 1024 * 128;$/;"	v
 RecordPic	include/common.h	/^	int RecordPic;  \/\/¡Ù’’∆¨  0 ≤ª¡Ù  1 ∫ÙΩ–¡Ù’’∆¨  2 Õ®ª∞¡Ù’’∆¨$/;"	m	struct:Local1
@@ -322,7 +322,7 @@ RemoteVideoPort	include/libqsa_common.h	/^int RemoteVideoPort;$/;"	v
 ReportTime	include/common.h	/^    int ReportTime;      \/\/…Ë±∏∂® ±±®∏Ê◊¥Ã¨ ±º‰$/;"	m	struct:LocalCfg1
 SAVEMAX	include/common.h	103;"	d
 SENDMESSAGE	include/common.h	44;"	d
-SENDMESSAGE	include/libqsa_def.h	89;"	d
+SENDMESSAGE	include/libqsa_def.h	90;"	d
 SENDPICINFO	include/common.h	50;"	d
 SETPARAM	include/common.h	54;"	d
 SNDTOOLS_H	include/sndtools.h	2;"	d
@@ -342,9 +342,11 @@ Status	include/common.h	/^    int Status;$/;"	m	struct:Local1
 Status	include/libqsa_def.h	/^    int Status;$/;"	m	struct:Local1
 TAIL	include/sndtools.h	25;"	d
 TALKTIMEOUT	include/common.h	36;"	d
-TALKTIMEOUT	include/libqsa_def.h	71;"	d
+TALKTIMEOUT	include/libqsa_def.h	72;"	d
 TARGET	Makefile	/^TARGET  := $(TARGET_PATH)\/libqsa_talk.a$/;"	m
 TARGET_PATH	Makefile	/^TARGET_PATH := ..\/static_libs$/;"	m
+TIMERPERSEC	include/libqsa_def.h	68;"	d
+TIMERTIME	include/libqsa_def.h	67;"	d
 TOUCHMAXTIME	include/common.h	21;"	d
 TalkCtrlFunc	timer.c	/^void TalkCtrlFunc(void)$/;"	f
 TalkEnd_ClearStatus	udp.c	/^void TalkEnd_ClearStatus(void) {$/;"	f
@@ -381,7 +383,7 @@ Type	include/common.h	/^    uint8_t Type;     \/\/¿‡–Õ        1    –≈œ¢¿‡–ÕªÚ ¬º
 Type	include/common.h	/^    uint8_t Type;     \/\/¿‡–Õ        1    –≈œ¢¿‡–ÕªÚ ¬º˛¿‡–Õ$/;"	m	struct:InfoContent1
 Type	include/common.h	/^    unsigned short Type; \/\/¿‡–Õ$/;"	m	struct:infodata1
 UDPSENDMAX	include/common.h	104;"	d
-UDPSENDMAX	include/libqsa_def.h	66;"	d
+UDPSENDMAX	include/libqsa_def.h	65;"	d
 UdpPackageHead	include/common.h	/^char UdpPackageHead[15];$/;"	v
 UdpPackageHead	include/libqsa_common.h	/^char UdpPackageHead[15];$/;"	v
 UdpRecvFlag	udp.c	/^short UdpRecvFlag;$/;"	v
@@ -391,45 +393,44 @@ Uninit_Timer	timer.c	/^int Uninit_Timer(void) {$/;"	f
 Uninit_Udp_Send_Task	udp.c	/^int Uninit_Udp_Send_Task(void) {$/;"	f
 VIDEOMAX	include/common.h	122;"	d
 VIDEOTALK	include/common.h	68;"	d
-VIDEOTALK	include/libqsa_def.h	93;"	d
+VIDEOTALK	include/libqsa_def.h	94;"	d
 VIDEOTALKTRANS	include/common.h	69;"	d
-VIDEOTALKTRANS	include/libqsa_def.h	94;"	d
+VIDEOTALKTRANS	include/libqsa_def.h	95;"	d
 VIDEOWATCH	include/common.h	70;"	d
-VIDEOWATCH	include/libqsa_def.h	95;"	d
+VIDEOWATCH	include/libqsa_def.h	96;"	d
 VIDEOWATCHTRANS	include/common.h	71;"	d
-VIDEOWATCHTRANS	include/libqsa_def.h	96;"	d
+VIDEOWATCHTRANS	include/libqsa_def.h	97;"	d
 VNUM	include/common.h	123;"	d
 VPLAYNUM	include/common.h	124;"	d
 WATCHTIMEOUT	include/common.h	34;"	d
-WATCHTIMEOUT	include/libqsa_def.h	69;"	d
+WATCHTIMEOUT	include/libqsa_def.h	70;"	d
 WRITEADDRESS	include/common.h	61;"	d
 WRITEROOMSETUP	include/common.h	63;"	d
 WRITESETUP	include/common.h	65;"	d
 WaveFileHeader	include/common.h	/^struct WaveFileHeader$/;"	s
 ZOOMIN	include/common.h	92;"	d
-ZOOMIN	include/libqsa_def.h	117;"	d
+ZOOMIN	include/libqsa_def.h	118;"	d
 ZOOMMAXTIME	include/common.h	20;"	d
 ZOOMOUT	include/common.h	91;"	d
-ZOOMOUT	include/libqsa_def.h	116;"	d
+ZOOMOUT	include/libqsa_def.h	117;"	d
 _CALL_MODE	include/libqsa_def.h	/^} _CALL_MODE;$/;"	v	typeref:enum:__anon2
 _CB_CALL_STATUS	include/libqsa_def.h	/^}_CB_CALL_STATUS;$/;"	v	typeref:enum:__anon3
 _CB_OPT	include/libqsa_def.h	/^} _CB_OPT;$/;"	v	typeref:enum:__anon1
 _CB_TYPE_DATA	include/libqsa_def.h	/^} _CB_TYPE_DATA;$/;"	v	typeref:enum:__anon4
 _DEBUG	include/common.h	10;"	d
-_FALSE	include/libqsa_def.h	59;"	d
+_FALSE	include/libqsa_def.h	58;"	d
 _LIB_QSA_DEF_H	cb_function.c	4;"	d	file:
 _LIB_QSA_DEF_H	include/libqsa_common.h	12;"	d
 _LIB_QSA_DEF_H	talk.c	5;"	d	file:
 _LIB_QSA_DEF_H	timer.c	18;"	d	file:
 _LIB_QSA_DEF_H	udp.c	12;"	d	file:
-_LIB_QSA_TALK_H	include/libqsa_talk.h	2;"	d
 _SOFTWARE_MULTIPLE	include/sndtools.h	33;"	d
 _SOFTWARE_REC_MULTIPLE	include/sndtools.h	31;"	d
 _SYNC	include/common.h	/^struct _SYNC$/;"	s
-_TRUE	include/libqsa_def.h	60;"	d
+_TRUE	include/libqsa_def.h	59;"	d
 _cb_audio_data	include/libqsa_callback.h	/^typedef void ( * _cb_audio_data)(void *, int, int);$/;"	t
 _cb_devip	include/libqsa_callback.h	/^typedef void ( * _cb_devip)(const char *, const char *, int);$/;"	t
-_cb_function	include/libqsa_callback.h	/^static struct _cb_function{$/;"	s
+_cb_function	include/libqsa_callback.h	/^struct _cb_function{$/;"	s
 _cb_info	include/libqsa_callback.h	/^typedef void ( * _cb_info)(const char *, const char *, int, int);$/;"	t
 _cb_opt	include/libqsa_callback.h	/^typedef void ( * _cb_opt)(int);$/;"	t
 _cb_status	include/libqsa_callback.h	/^typedef int ( * _cb_status)(int);$/;"	t
@@ -461,7 +462,7 @@ cb_curr_opt	include/libqsa_callback.h	/^    _cb_opt cb_curr_opt;$/;"	m	struct:_c
 cb_curr_st	include/libqsa_callback.h	/^    _cb_status cb_curr_st;$/;"	m	struct:_cb_function
 cb_devip	include/libqsa_callback.h	/^    _cb_devip cb_devip;$/;"	m	struct:_cb_function
 cb_info	include/libqsa_callback.h	/^    _cb_info cb_info;$/;"	m	struct:_cb_function
-cb_opt_function	include/libqsa_callback.h	/^}cb_opt_function;$/;"	v	typeref:struct:_cb_function
+cb_opt_function	include/libqsa_common.h	/^struct _cb_function cb_opt_function;$/;"	v	typeref:struct:_cb_function
 center_ip	include/libqsa_def.h	/^	unsigned char center_ip[4];			\/\/192.168.10.XX$/;"	m	struct:dev_config
 chDATA	include/common.h	/^    char chDATA[4];$/;"	m	struct:WaveFileHeader
 chFACT	include/common.h	/^    char chFACT[4];$/;"	m	struct:WaveFileHeader
@@ -594,7 +595,7 @@ send_info	init.c	/^void send_info(const char * data, struct _send_info * info) {
 send_video	talk.c	/^void send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {$/;"	f
 server_ip	include/libqsa_def.h	/^	unsigned char server_ip[4]; 		\/\/192.168.10.XX$/;"	m	struct:dev_config
 set_cb_function	cb_function.c	/^void set_cb_function(struct _cb_function * p) {$/;"	f
-set_cb_function_null	cb_function.c	/^void set_cb_function_null(struct _cb_function * p) {$/;"	f
+set_cb_function_default	cb_function.c	/^void set_cb_function_default(struct _cb_function * p) {$/;"	f
 start_call	talk.c	/^void start_call(const char * ip, const char * addr, int uFlag) {$/;"	f
 stop_talk	talk.c	/^void stop_talk(void) {$/;"	f
 talkdata1	include/common.h	/^struct talkdata1$/;"	s

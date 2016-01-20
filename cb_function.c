@@ -12,11 +12,11 @@ int default_cb_status(int type);
 void default_cb_devip(const char * address, const char * ip, int uflag);
 void default_cb_opt(int value);
 
-void set_cb_function_null(struct _cb_function * p);
+void set_cb_function_default(struct _cb_function * p);
 void set_cb_function(struct _cb_function * p);
 int get_device_status(int uFlag);
 
-void set_cb_function_null(struct _cb_function * p) {
+void set_cb_function_default(struct _cb_function * p) {
 
     p->cb_audio_data = &default_cb_audio_data;
     p->cb_info = &default_cb_info;
