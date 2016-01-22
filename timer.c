@@ -21,7 +21,6 @@
 void OnlineCheckFunc(void);
 void TalkCtrlFunc(void);
 
-int timer_fd;
 int timer_thread_flag;
 pthread_t timer_thread;
 void timer_thread_task(void);
@@ -32,6 +31,7 @@ int Init_Timer(void);
 int Uninit_Timer(void);
 
 int Init_Timer(void) {
+
 	pthread_attr_t attr;
 	timer_thread_flag = 1;
 	pthread_attr_init(&attr);
@@ -56,7 +56,7 @@ void timer_thread_task(void) {
 
 	int timenum;
 
-	printf("create timer thread :0.001\n");
+	printf("create timer thread :0.5\n");
 
 	timenum = 0;
 	while (timer_thread_flag) {
@@ -85,7 +85,7 @@ void OnlineCheckFunc(void)
     int Status = 0;
     Status = get_device_status(CALL_MIXER);
 
-	if (Local.Timer1Num > INTRPERSEC * 20) {
+	if (Local.Timer1Num > (TIMERPERSEC * 6)) {
 		if (Local.CallConfirmFlag == 0) {
 			if ((Status == CB_ST_CALLING) || (Status == CB_ST_CALLED)
 					|| (Status == CB_ST_TALKING) || (Status == CB_ST_TALKED)) {
@@ -97,7 +97,7 @@ void OnlineCheckFunc(void)
 			Local.CallConfirmFlag = 0;
 		}
 		Local.Timer1Num = 0;
-	} else if ((Local.Timer1Num % INTRPERSEC) == 0) {
+	} else if ((Local.Timer1Num % (TIMERPERSEC * 2)) == 0) {
 		if ((Status == CB_ST_CALLED) || (Status == CB_ST_TALKED)) {
 			memcpy(send_b, UdpPackageHead, 6);
 			send_b[6] = VIDEOTALK;

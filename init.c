@@ -7,16 +7,20 @@
 #include "libqsa_common.h"
 
 extern void Init_Timer();
+extern void Uninit_Timer();
 extern int init_udp_task(void);
+extern int uninit_udp_task(void);
 extern void set_cb_function_default(struct _cb_function * p);
 
 int init_param_task(struct dev_config * _config);
+
 void init_config_null_task(void);
 void init_local_param_task(void);
-void init_default_ip_task(void);
 void init_default_remote_task(void);
 void get_device_config_task(struct dev_config * _config);
 void send_info(const char * data, struct _send_info * info);
+
+int uninit_task(void);
 
 int init_param_task(struct dev_config * _config) {
     
@@ -26,7 +30,6 @@ int init_param_task(struct dev_config * _config) {
 
     //初始化本地数据
     init_local_param_task();
-    init_default_ip_task();
     init_default_remote_task();
 
     //初始化回调函数
@@ -39,13 +42,23 @@ int init_param_task(struct dev_config * _config) {
 	return (0);
 }
 
+int uninit_task(void) {
+
+    Uninit_Timer();
+    uninit_udp_task();
+
+	return (0);
+}
+
 void init_config_null_task(void) {
     memset(&local_config, 0x00, configlen);
     return;
 }
 
 void get_device_config_task(struct dev_config * _config) {
-    memcpy(&local_config, _config, configlen);
+    if (_config) {
+        memcpy(&local_config, _config, configlen);
+    }
     return;
 }
 

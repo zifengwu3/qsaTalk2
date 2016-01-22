@@ -1,9 +1,15 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <arpa/inet.h>
+#include <semaphore.h>       //sem_t
 
 //CALLBACK Function
 typedef void ( * _cb_audio_data)(void *, int, int);
-typedef void ( * _cb_info)(const char *, const char *, int, int);
+typedef void ( * _cb_info)(const void *, const void *, int, int);
 typedef int ( * _cb_status)(int);
-typedef void ( * _cb_devip)(const char *, const char *, int);
+typedef void ( * _cb_devip)(const void *, const void *, int);
 typedef void ( * _cb_opt)(int);
 
 struct _cb_function{
@@ -73,9 +79,20 @@ enum {
 
 /* init callback function */ 
 extern void set_cb_function(struct _cb_function * p);
-/* find ip of the device */
+/* init the device param */
+extern int init_param_task(struct dev_config * _config);
+/* uninit the device param */
+extern int uninit_task(void);
+/* find ip of the device
+ * addr: 房号，如'0808';
+ * uFlag: 默认为0
+ * */
 extern void find_ip(const char * addr, int uFlag);
-/* start call a user device */
+/* start call a user device
+ * ip: 如'192.168.10.188'的字符串;
+ * addr: 房号，如'0808';
+ * uFlag: 默认为2
+ * */
 extern void start_call(const char * ip, const char * addr, int uFlag);
 /* stop a call or a talk */
 extern void stop_talk(void);

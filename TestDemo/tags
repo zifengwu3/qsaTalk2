@@ -1,0 +1,20 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CloseUdpSocketDemo	recvice_udp.c	/^void CloseUdpSocketDemo(void) {$/;"	f
+CreateUdpVideoRcvThreadDemo	recvice_udp.c	/^void CreateUdpVideoRcvThreadDemo(void) {$/;"	f
+InitUdpSocketDemo	recvice_udp.c	/^int InitUdpSocketDemo(short lPort) {$/;"	f
+UdpRecvFlag	recvice_udp.c	/^short UdpRecvFlag;$/;"	v
+UdpVideoRcvThreadDemo	recvice_udp.c	/^void UdpVideoRcvThreadDemo(void)$/;"	f
+default_cb_audio_data1	cb_function.c	/^void default_cb_audio_data1(void * data, int length, int type) {$/;"	f
+default_cb_devip1	cb_function.c	/^void default_cb_devip1(const char * address, const char * ip, int uflag) {$/;"	f
+default_cb_info1	cb_function.c	/^void default_cb_info1(const char * data, const char * ip, int length, int port) {$/;"	f
+default_cb_opt1	cb_function.c	/^void default_cb_opt1(int value) {$/;"	f
+default_cb_status1	cb_function.c	/^int default_cb_status1(int type) {$/;"	f
+g_Status	main.c	/^int g_Status = 0;$/;"	v
+m_VideoSocketDemo	recvice_udp.c	/^int m_VideoSocketDemo;$/;"	v
+main	main.c	/^int main() {$/;"	f
+udpvideorcvid	recvice_udp.c	/^pthread_t udpvideorcvid;$/;"	v

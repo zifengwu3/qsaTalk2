@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <semaphore.h>       //sem_t
 #include <dirent.h>
+#include <pthread.h>       //sem_t
 
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
@@ -68,6 +69,13 @@ int init_udp_task(void) {
     return _TRUE;
 }
 
+int uninit_udp_task(void) {
+    CloseUdpSocket();
+    Uninit_Udp_Send_Task();
+    DropMultiGroup(m_VideoSocket, NSMULTIADDR);
+    return _TRUE;
+}
+
 int Init_Udp_Send_Task(void) {
 	int i;
 	pthread_attr_t attr;
@@ -91,6 +99,7 @@ int Init_Udp_Send_Task(void) {
 		printf("don't create UDP send thread. \n");
 		return _FALSE;
 	} else {
+		printf("create UDP send thread. \n");
         return _TRUE;
     }
 }
@@ -100,14 +109,14 @@ void multi_send_thread_func(void) {
 	int HaveDataSend;
 
     printf("create multi send thread \n");
+
 	while (multi_send_flag == 1) {
 		sem_wait(&multi_send_sem);
 		HaveDataSend = 1;
-		while (HaveDataSend) {
-            pthread_mutex_lock (&Local.udp_lock);
-			for (i = 0; i < UDPSENDMAX; i++) {
-				if (Multi_Udp_Buff[i].isValid == 1) {
-					if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
+        while (HaveDataSend) {
+            for (i = 0; i < UDPSENDMAX; i++) {
+                if (Multi_Udp_Buff[i].isValid == 1) {
+                    if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
                         if (Multi_Udp_Buff[i].isValid == 1) {
                             if (Multi_Udp_Buff[i].SendDelayTime == 0) {
                                 UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
@@ -119,12 +128,13 @@ void multi_send_thread_func(void) {
                         }
                         Multi_Udp_Buff[i].SendDelayTime += 100;
                         if (Multi_Udp_Buff[i].SendDelayTime
-								>= Multi_Udp_Buff[i].DelayTime) {
-							Multi_Udp_Buff[i].SendDelayTime = 0;
-							Multi_Udp_Buff[i].SendNum++;
-						}
-					}
+                                >= Multi_Udp_Buff[i].DelayTime) {
+                            Multi_Udp_Buff[i].SendDelayTime = 0;
+                            Multi_Udp_Buff[i].SendNum++;
+                        }
+                    }
                     if (Multi_Udp_Buff[i].SendNum >= MAXSENDNUM) {
+                        pthread_mutex_lock (&Local.udp_lock);
                         switch (Multi_Udp_Buff[i].buf[6]) {
                             case VIDEOTALK:
                                 switch (Multi_Udp_Buff[i].buf[8]) {
@@ -168,18 +178,18 @@ void multi_send_thread_func(void) {
                         }
                         pthread_mutex_unlock (&Local.udp_lock);
                     }
-				}
-			}
+                }
+            }
 
-			HaveDataSend = 0;
-			for (i = 0; i < UDPSENDMAX; i++)
-				if (Multi_Udp_Buff[i].isValid == 1) {
-					HaveDataSend = 1;
-					break;
-				}
-            pthread_mutex_unlock (&Local.udp_lock);
-			usleep(100 * 1000);
-		}
+            HaveDataSend = 0;
+            for (i = 0; i < UDPSENDMAX; i++) {
+                if (Multi_Udp_Buff[i].isValid == 1) {
+                    HaveDataSend = 1;
+                    break;
+                }
+            }
+            usleep(100*1000);
+        }
 	}
 }
 
@@ -233,7 +243,7 @@ int InitUdpSocket(short lPort) {
 	}
 
 	if ((bind(m_Socket, (struct sockaddr *) &s_addr, sizeof(s_addr))) == (-1)) {
-		printf("bind error");
+		printf("bind error\n\r");
 		exit(errno);
 		return _FALSE;
 	} else {
@@ -256,6 +266,7 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 		unsigned char * buf, int nlength) {
 	struct sockaddr_in To;
 	int nSize;
+
 	To.sin_family = AF_INET;
 	To.sin_port = htons(RemotePort);
 	To.sin_addr.s_addr = inet_addr(RemoteHost);
@@ -263,10 +274,9 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
 
-#ifdef _DEBUG
-    printf("&&& SEND VIDEO &&& nSize = %d, nlength = %d", nSize, nlength);
-    printf("RemoteHost = %s, RemotePort = %d, buf[8] = %02X", RemoteHost, RemotePort, buf[8]);
-#endif
+    //printf("&&& SEND VIDEO &&& nSize = %d, nlength = %d\n", nSize, nlength);
+    //printf("&&& SEND VIDEO &&& RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n", \
+            RemoteHost, RemotePort, buf[8]);
 
 	return nSize;
 }
@@ -333,7 +343,7 @@ void UdpVideoRcvThread(void)
 	int len;
 	unsigned char buff[8096];
 
-    printf("This is udp video pthread.");
+    printf("This is udp video pthread.\n");
 	UdpRecvFlag = 1;
 
 	addr_len = sizeof(c_addr);
@@ -347,6 +357,7 @@ void UdpVideoRcvThread(void)
 		buff[len] = '\0';
 
 		strcpy(FromIP, inet_ntoa(c_addr.sin_addr));
+        //printf("FromIP:%s\n", FromIP);
 
 		if ((buff[0] == UdpPackageHead[0]) 
                 && (buff[1] == UdpPackageHead[1])
@@ -355,6 +366,20 @@ void UdpVideoRcvThread(void)
 				&& (buff[4] == UdpPackageHead[4])
                 && (buff[5] == UdpPackageHead[5])) {
             switch (buff[6]) {
+                case NSORDER:   //主机名解析（子网内广播）
+					switch(buff[7])
+					{
+                        case 2://解析回应
+                            if (len >= 57) {
+                                Recv_NS_Reply_Func(buff, FromIP, m_VideoSocket);
+                            } else {
+                                printf("解析应答数据长度异常\n");
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
                 case VIDEOTALK:
                 case VIDEOTALKTRANS:
                     switch (buff[8]) {
@@ -374,6 +399,7 @@ void UdpVideoRcvThread(void)
                             break;
                         case CALLANSWER:
                             if (len >= 61) {
+                                printf("call reply is ok\n");
                                 Recv_Talk_Call_Answer_Task(buff, FromIP);
                             } else {
                                 printf("len of call reply is unusual\n");
@@ -418,7 +444,11 @@ void UdpVideoRcvThread(void)
                         case CALLDOWN:
                             Recv_Talk_Call_UpDown_Task(buff, FromIP, len);
                             break;
+                        default:
+                            break;
                     }
+                    break;
+                default:
                     break;
             }
         }
@@ -440,36 +470,46 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
 	int isAddrOK = 0;
 	int AddrLen = 12;
     char addr[4];
-    char ip[4];
+    unsigned char ip[4];
     int type = 0;
+
+    printf("%s \n", __FUNCTION__);
 
 	//锁定互斥锁
 	pthread_mutex_lock (&Local.udp_lock);
 
-	for(i=0; i<UDPSENDMAX; i++)
-	  if(Multi_Udp_Buff[i].isValid == 1)
-		if(Multi_Udp_Buff[i].SendNum  < MAXSENDNUM)
-		  if(Multi_Udp_Buff[i].buf[6] == NSORDER)
-			if ((Multi_Udp_Buff[i].buf[7] == ASK)&&(recv_buf[32] > 0)) {
-				//判断要求解析地址是否匹配
-				isAddrOK = 1;
-				if (recv_buf[33] == 'S') {
-                    AddrLen = 11;
-                }
+    for(i=0; i<UDPSENDMAX; i++) {
+        if(Multi_Udp_Buff[i].isValid == 1) {
+            if(Multi_Udp_Buff[i].SendNum  < MAXSENDNUM) {
+                if(Multi_Udp_Buff[i].buf[6] == NSORDER) {
+                    if ((Multi_Udp_Buff[i].buf[7] == ASK)&&(recv_buf[32] > 0)) {
+                        printf("NSR:CLEANBUF %d \n",i);
+                        //判断要求解析地址是否匹配
+                        isAddrOK = 1;
+                        if ((recv_buf[33] == 'S') || (recv_buf[33] == 's')) {
+                            AddrLen = 11;
+                        }
 
-				for (j=32; j<32+AddrLen; j++) {
-					if (Multi_Udp_Buff[i].buf[j] != recv_buf[j+1]) {
-						isAddrOK = 0;
-						break;
-					}
-				}
+                        for (j=32; j<32+AddrLen; j++) {
+                            if(recv_buf[33] == 's' && j == 32)
+                                continue;
+                            if (Multi_Udp_Buff[i].buf[j] != recv_buf[j+1]) {
+                                isAddrOK = 0;
+                                break;
+                            }
+                        }
 
-				Multi_Udp_Buff[i].isValid = 0;
-				Multi_Udp_Buff[i].SendNum = 0;
-				if (isAddrOK == 1) {
-                    break;         
+                        Multi_Udp_Buff[i].isValid = 0;
+                        Multi_Udp_Buff[i].SendNum = 0;
+                        if (isAddrOK == 1) {
+                            break;         
+                        }
+                    }
                 }
-			}
+            }
+        }
+    }
+
 	//打开互斥锁
 	pthread_mutex_unlock (&Local.udp_lock);
 
@@ -491,9 +531,14 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
         }
 
         memcpy(addr, remote_info.Addr[0] + 7, 4);
-        memcpy(ip, remote_info.DenIP, 4);
+        for (k=0; k<4; k++) {
+            ip[k] = remote_info.IP[0][k];
+        }
 
-        if (remote_info.Addr[0][0] == 'S') {
+        printf("ip:%d.%d.%d.%d\n", remote_info.DenIP[0], remote_info.DenIP[1],
+                remote_info.DenIP[2], remote_info.DenIP[3]);
+        printf("ip:%d.%d.%d.%d\n", ip[0], ip[1], ip[2], ip[3]);
+        if ((remote_info.Addr[0][0] == 'S') || (remote_info.Addr[0][0] == 's')) {
             type = 0;
         }
 
@@ -592,6 +637,7 @@ void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {
     int Status = 0;
 
     Status = get_device_status(CALL_MIXER);
+    printf("Status = %d\n", Status);
 	if ((Status == CB_ST_CALLING) && (recv_buf[7] == ASK)) {
 		memcpy(send_b, recv_buf, 57);
 		send_b[7] = REPLY;
