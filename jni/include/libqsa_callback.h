@@ -6,11 +6,11 @@
 #include <semaphore.h>       //sem_t
 
 //CALLBACK Function
-typedef void ( * _cb_audio_data)(void *, int, int);
-typedef void ( * _cb_info)(const void *, const void *, int, int);
-typedef int ( * _cb_status)(int);
-typedef void ( * _cb_devip)(const void *, const void *, int);
-typedef void ( * _cb_opt)(int);
+typedef void ( * _cb_audio_data)(void * data, int length, int type);
+typedef void ( * _cb_info)(const void * data, const void * ip , int length, int port);
+typedef int ( * _cb_status)(int type );
+typedef void ( * _cb_devip)(const void * addr, const void * ip, int uFlag);
+typedef void ( * _cb_opt)(int value);
 
 struct _cb_function{
     _cb_audio_data cb_audio_data;

@@ -273,10 +273,8 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
-
     //printf("&&& SEND VIDEO &&& nSize = %d, nlength = %d\n", nSize, nlength);
-    //printf("&&& SEND VIDEO &&& RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n", \
-            RemoteHost, RemotePort, buf[8]);
+    //printf("&&& SEND VIDEO &&& RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n", RemoteHost, RemotePort, buf[8]);
 
 	return nSize;
 }

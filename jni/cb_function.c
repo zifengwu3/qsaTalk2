@@ -9,7 +9,7 @@
 void default_cb_audio_data(void * data, int length, int type);
 void default_cb_info(const void * data, const void * ip, int length, int port);
 int default_cb_status(int type);
-void default_cb_devip(const void * address, const void * ip, int uflag);
+void default_cb_devip(const void * address, const void * ip, int uFlag);
 void default_cb_opt(int value);
 
 void set_cb_function_default(struct _cb_function * p);
@@ -84,7 +84,7 @@ int default_cb_status(int type) {
     return CB_ST_NULL;
 }
 
-void default_cb_devip(const void * address, const void * ip, int uflag) {
+void default_cb_devip(const void * address, const void * ip, int uFlag) {
     printf("default_cb_devip\n");
     return;
 }
