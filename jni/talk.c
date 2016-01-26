@@ -54,7 +54,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
                     Multi_Udp_Buff[i].buf[8] = CALL;
 
                     memcpy(Multi_Udp_Buff[i].buf + 9, local_config.address, 20);
-                    memcpy(Multi_Udp_Buff[i].buf + 29, local_config.ip, 4);
+                    memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
                     memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[j], 20);
                     memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[j], 4);
                     Multi_Udp_Buff[i].buf[57] = 0;
@@ -96,7 +96,7 @@ void stop_talk(void) {
             Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
 
 			memcpy(Multi_Udp_Buff[i].buf + 9, local_config.address, 20);
-			memcpy(Multi_Udp_Buff[i].buf + 29, local_config.ip, 4);
+			memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
 			memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[0], 20);
 			memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[0], 4);
 
@@ -138,7 +138,7 @@ void find_ip(const char * addr, int uFlag) {
                     Multi_Udp_Buff[i].buf[6] = NSORDER;
                     Multi_Udp_Buff[i].buf[7] = ASK;    //主叫
                     memcpy(Multi_Udp_Buff[i].buf + 8, local_config.address, 20);
-                    memcpy(Multi_Udp_Buff[i].buf + 28, local_config.ip, 4);
+                    memcpy(Multi_Udp_Buff[i].buf + 28, &locate_ip, 4);
 
                     memcpy(Multi_Udp_Buff[i].buf+32, remoteAddr, 20);
 
@@ -195,7 +195,7 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
         mpeg4_out[8] = CALLUP;
         //IP
         memcpy(talkdata.HostAddr, local_config.address, 20);
-        memcpy(talkdata.HostIP, local_config.ip, 4);
+        memcpy(talkdata.HostIP, &locate_ip, 4);
         memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
         memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
         //时间戳
@@ -275,7 +275,7 @@ void send_audio(const char * data, int length, int frame_num, const char * ip) {
         if (Status == 5) { //本机为主叫方
             adpcm_out[8] = CALLUP;
             memcpy(talkdata.HostAddr, local_config.address, 20);
-            memcpy(talkdata.HostIP, local_config.ip, 4);
+            memcpy(talkdata.HostIP, &locate_ip, 4);
             memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
             memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
         }

@@ -64,6 +64,8 @@ void get_device_config_task(struct dev_config * _config) {
 
 void init_local_param_task(void) {
 
+    uint32_t Ip_Int;
+    
     RemoteDataPort = 8300;
 	LocalDataPort = 8300;
 
@@ -75,6 +77,9 @@ void init_local_param_task(void) {
     null_addr[20] = '\0';
 
     memset(null_ip, 0, 4);
+
+    Ip_Int = inet_addr((char *)local_config.ip);
+    memcpy(locate_ip, &Ip_Int, 4);
 
     return;
 }
@@ -94,7 +99,7 @@ void send_info(const char * data, struct _send_info * info) {
     if (info != NULL) {
         j = 0;
         /* get remote device information */
-        Ip_Int = inet_addr(info->ip);
+        Ip_Int = inet_addr((char *)info->ip);
         memcpy(&remote_info.IP[j], &Ip_Int, 4);
         printf("%d.%d.%d.%d\n", remote_info.IP[j][0], remote_info.IP[j][1], 
                 remote_info.IP[j][2], remote_info.IP[j][3]);
@@ -149,5 +154,6 @@ void send_info(const char * data, struct _send_info * info) {
         }
     }
 }
+
 
 

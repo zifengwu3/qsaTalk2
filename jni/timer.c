@@ -105,7 +105,7 @@ void OnlineCheckFunc(void)
 			send_b[7] = ASK;
 			send_b[8] = CALLCONFIRM;
 			memcpy(send_b + 9, local_config.address, 20);
-			memcpy(send_b + 29, local_config.ip, 4);
+			memcpy(send_b + 29, &locate_ip, 4);
 			memcpy(send_b + 33, remote_info.Addr[0], 20);
 			memcpy(send_b + 53, remote_info.IP[0], 4);
 			send_b[57] = (Local.OnlineNum & 0xFF000000) >> 24;

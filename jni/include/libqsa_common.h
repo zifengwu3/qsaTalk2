@@ -146,6 +146,8 @@ struct Remote1 remote_info;
 char null_addr[21];   //空字符串
 char null_ip[4];   //空字符串
 
+unsigned char locate_ip[4];
+
 //免费ARP
 int ARP_Socket;
 //UDP
@@ -182,6 +184,7 @@ extern struct Local1 Local;
 extern struct Remote1 remote_info;
 extern char null_addr[21];   //空字符串
 extern char null_ip[4];   //空字符串
+extern unsigned char locate_ip[4];
 
 //免费ARP
 extern int ARP_Socket;

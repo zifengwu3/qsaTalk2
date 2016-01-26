@@ -540,10 +540,8 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
             type = 0;
         }
 
+        memcpy(remote_info.GroupIP, &locate_ip, 4);
         remote_info.GroupIP[0] = 236;
-        remote_info.GroupIP[1] = local_config.ip[1];
-        remote_info.GroupIP[2] = local_config.ip[2];
-        remote_info.GroupIP[3] = local_config.ip[3];
 
         cb_opt_function.cb_devip(addr, ip, type);
     }
