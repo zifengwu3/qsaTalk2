@@ -39,7 +39,7 @@ all : $(TARGET)
   
 objs : $(OBJS)
   
-rebuild: veryclean everything
+rebuild: veryclean everything ndk git
 
 clean:
 	rm -fr *.o
@@ -62,6 +62,7 @@ git:
 	git add -A .
 	git commit
 	git push
+
   
 $(TARGET) : $(OBJS)
 	$(AR) cru $(TARGET) $(OBJS)

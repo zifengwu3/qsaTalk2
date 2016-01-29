@@ -21,6 +21,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
 
     if ( 2 == uFlag ) {
         Status = get_device_status();
+
         if (Status == CB_ST_NULL) {
             /* get remote device information */
             Ip_Int = inet_addr(ip);
@@ -157,7 +158,6 @@ void find_ip(const char * addr, int uFlag) {
                     break;
                 }
             }
-            set_device_status(CB_ST_FINDING);
         } else {
             LOGD("I'm BUSY\n");
         }
