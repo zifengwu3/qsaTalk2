@@ -8,7 +8,6 @@
 /* default defined */
 void default_cb_audio_data(void * data, int length, int type);
 void default_cb_info(const void * data, const void * ip, int length, int port);
-int default_cb_status(int type);
 void default_cb_devip(const void * address, const void * ip, int uFlag);
 void default_cb_opt(int value, int status);
 
@@ -25,10 +24,6 @@ void set_cb_function_default(struct _cb_function * p) {
 
     if (!(p->cb_info)) {
         p->cb_info = &default_cb_info;
-    }
-
-    if (!(p->cb_curr_st)) {
-        p->cb_curr_st = &default_cb_status;
     }
 
     if (!(p->cb_devip)) {
@@ -58,14 +53,6 @@ void set_cb_function(struct _cb_function * p) {
         LOGD("p->cb_info is NULL\n");
     }
  
-
-    if (p->cb_curr_st) {
-        LOGD("p->cb_curr_st is OK\n");
-        cb_opt_function.cb_curr_st = p->cb_curr_st;
-    } else {
-        LOGD("p->cb_curr_st is NULL\n");
-    }
-
     if (p->cb_devip) {
         LOGD("p->cb_devip is OK\n");
         cb_opt_function.cb_devip = p->cb_devip;
@@ -92,11 +79,6 @@ void default_cb_audio_data(void * data, int length, int type) {
 void default_cb_info(const void * data, const void * ip, int length, int port) {
     LOGD("default_cb_info\n");
     return;
-}
-
-int default_cb_status(int type) {
-    LOGD("default_cb_status\n");
-    return CB_ST_NULL;
 }
 
 void default_cb_devip(const void * address, const void * ip, int uFlag) {

@@ -8,13 +8,11 @@
 //CALLBACK Function
 typedef void ( * _cb_audio_data)(void * data, int length, int type);
 typedef void ( * _cb_info)(const void * data, const void * ip , int length, int port);
-typedef int ( * _cb_status)(int type);
 typedef void ( * _cb_devip)(const void * addr, const void * ip, int uFlag);
 typedef void ( * _cb_opt)(int value, int status);
 
 struct _cb_function{
     _cb_audio_data cb_audio_data;
-    _cb_status cb_curr_st;
     _cb_opt cb_curr_opt;
     _cb_devip cb_devip;
     _cb_info cb_info;
@@ -101,5 +99,7 @@ extern void send_info(const char * data, struct _send_info * info);
 /* send audio or video data to the user device */
 extern void send_audio(const char * data, int length, int frame_num, const char * ip);
 extern void send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
+/* device status */
+extern int get_device_status(void);
 
 
