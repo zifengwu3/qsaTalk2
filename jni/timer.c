@@ -83,15 +83,17 @@ void OnlineCheckFunc(void)
     int RemotePort;
 	unsigned char send_b[1520];
     int Status = 0;
-    Status = get_device_status(CALL_MIXER);
+    Status = get_device_status();
 
 	if (Local.Timer1Num > (TIMERPERSEC * 6)) {
 		if (Local.CallConfirmFlag == 0) {
 			if ((Status == CB_ST_CALLING) || (Status == CB_ST_CALLED)
 					|| (Status == CB_ST_TALKING) || (Status == CB_ST_TALKED)) {
 				stop_talk();
-                cb_opt_function.cb_curr_opt(CB_TALK_STOP);
-			}
+                Status = CB_ST_NULL;
+                set_device_status(Status);
+                cb_opt_function.cb_curr_opt(CB_TALK_STOP, Status);
+            }
 			Local.OnlineFlag = 0;
 		} else {
 			Local.CallConfirmFlag = 0;
@@ -129,8 +131,8 @@ void TalkCtrlFunc(void)
     int Status;
 
 	//1S
-	if ((Local.TimeOut % TIMERPERSEC)==0) {
-        Status = get_device_status(CALL_MIXER);
+	if ((Local.TimeOut % TIMERPERSEC) == 0) {
+        Status = get_device_status();
         
 		switch(Status)
 		{
@@ -141,7 +143,9 @@ void TalkCtrlFunc(void)
 				if (Local.TimeOut > CallTimeOut) {
                     LOGD("呼叫超时\n");
                     stop_talk();
-                    cb_opt_function.cb_curr_opt(CB_CALL_TIMEOUT);
+                    Status = CB_ST_NULL;
+                    set_device_status(Status);
+                    cb_opt_function.cb_curr_opt(CB_CALL_TIMEOUT, Status);
                     Local.OnlineFlag = 0;
 				}
 				break;
@@ -150,7 +154,9 @@ void TalkCtrlFunc(void)
 				if (Local.TimeOut > Local.TalkTimeOut) {
 					LOGD("通话超时\n");
                     stop_talk();
-                    cb_opt_function.cb_curr_opt(CB_TALK_TIMEOUT);
+                    Status = CB_ST_NULL;
+                    set_device_status(Status);
+                    cb_opt_function.cb_curr_opt(CB_TALK_TIMEOUT, Status);
 					Local.OnlineFlag = 0;
 				}
 				break;

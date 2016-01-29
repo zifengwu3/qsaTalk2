@@ -214,6 +214,7 @@ extern void multi_send_thread_func(void);
 extern sem_t multi_send_sem;
 extern struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10个UDP主动发送缓冲
 
-extern int get_device_status(int uFlag);
+extern int get_device_status(void);
+extern void set_device_status(int uStatus);
 #endif
 

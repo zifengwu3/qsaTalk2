@@ -8,9 +8,9 @@
 //CALLBACK Function
 typedef void ( * _cb_audio_data)(void * data, int length, int type);
 typedef void ( * _cb_info)(const void * data, const void * ip , int length, int port);
-typedef int ( * _cb_status)(int type );
+typedef int ( * _cb_status)(int type);
 typedef void ( * _cb_devip)(const void * addr, const void * ip, int uFlag);
-typedef void ( * _cb_opt)(int value);
+typedef void ( * _cb_opt)(int value, int status);
 
 struct _cb_function{
     _cb_audio_data cb_audio_data;
@@ -53,7 +53,7 @@ enum _CB_OPT {
     CB_CALL_FAIL,		 //呼叫状态异常
     CB_TALK_TIMEOUT,     //对讲180秒超时
     CB_CALL_TIMEOUT,     //呼叫30秒超时
-    CB_ACK_TIMEOUT       //发送6次超时
+    CB_ACK_TIMEOUT = 11  //发送6次超时
 };
 
 enum _CALL_MODE {
@@ -69,7 +69,7 @@ enum _CB_CALL_STATUS{
     CB_ST_WATCHED,        //当前设备处于被监视状态中
     CB_ST_WATCHING,	      //当前设备正在监视其他设备中
     CB_ST_TALKING,	      //当前设备正在对讲状态中
-    CB_ST_TALKED, 		  //当前设备正在被叫对讲中
+    CB_ST_TALKED = 6, 	  //当前设备正在被叫对讲中
     CB_ST_FINDING = 99	  //当前设备正在搜网
 };
 

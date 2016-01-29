@@ -20,7 +20,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
     j = remote_info.DenNum;
 
     if ( 2 == uFlag ) {
-        Status = get_device_status(CALL_MIXER);
+        Status = get_device_status();
         if (Status == CB_ST_NULL) {
             /* get remote device information */
             Ip_Int = inet_addr(ip);
@@ -119,7 +119,7 @@ void find_ip(const char * addr, int uFlag) {
     char remoteAddr[20];
 
     if (addr != NULL) {
-        Status = get_device_status(CALL_MIXER);
+        Status = get_device_status();
         if ((Status == CB_ST_NULL) && (uFlag == 0)) {
             memcpy(remoteAddr, local_config.address, 20);
             remoteAddr[0] = 'S';
@@ -127,7 +127,7 @@ void find_ip(const char * addr, int uFlag) {
             //查找可用发送缓冲并填空
             for (i=0; i<UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 3;
+                    Multi_Udp_Buff[i].SendNum = 0;
                     Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                     Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
                     strcpy(Multi_Udp_Buff[i].RemoteHost, NSMULTIADDR);
@@ -157,6 +157,7 @@ void find_ip(const char * addr, int uFlag) {
                     break;
                 }
             }
+            set_device_status(CB_ST_FINDING);
         } else {
             LOGD("I'm BUSY\n");
         }
@@ -164,7 +165,7 @@ void find_ip(const char * addr, int uFlag) {
         LOGD("Addr is NULL\n");
     }
 }
-//---------------------------------------------------------------------------
+
 void send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
     int j;
     int TotalPackage; //总包数
@@ -184,7 +185,7 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
     gettimeofday(&tv, NULL);
     nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
 
-    Status = get_device_status(CALL_MIXER);
+    Status = get_device_status();
     if (Status > 0) {
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
@@ -261,7 +262,7 @@ void send_audio(const char * data, int length, int frame_num, const char * ip) {
     LOGD("创建采集数据处理线程：\n" );
 #endif
 
-    Status = get_device_status(CALL_MIXER);
+    Status = get_device_status();
     if (Status > 0) {
         gettimeofday(&tv, NULL);
         nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;

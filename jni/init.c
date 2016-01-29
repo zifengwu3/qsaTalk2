@@ -11,6 +11,7 @@ extern void Uninit_Timer();
 extern int init_udp_task(void);
 extern int uninit_udp_task(void);
 extern void set_cb_function_default(struct _cb_function * p);
+extern void set_device_status(int uStatus);
 
 int init_param_task(struct dev_config * _config);
 
@@ -80,6 +81,8 @@ void init_local_param_task(void) {
 
     Ip_Int = inet_addr((char *)local_config.ip);
     memcpy(locate_ip, &Ip_Int, 4);
+
+    set_device_status(CB_ST_NULL);
 
     return;
 }

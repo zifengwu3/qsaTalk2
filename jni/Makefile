@@ -39,7 +39,7 @@ all : $(TARGET)
   
 objs : $(OBJS)
   
-rebuild: veryclean everything gcc
+rebuild: veryclean everything
 
 clean:
 	rm -fr *.o

@@ -10,11 +10,12 @@ void default_cb_audio_data(void * data, int length, int type);
 void default_cb_info(const void * data, const void * ip, int length, int port);
 int default_cb_status(int type);
 void default_cb_devip(const void * address, const void * ip, int uFlag);
-void default_cb_opt(int value);
+void default_cb_opt(int value, int status);
 
 void set_cb_function_default(struct _cb_function * p);
 void set_cb_function(struct _cb_function * p);
-int get_device_status(int uFlag);
+int get_device_status(void);
+void set_device_status(int uStatus);
 
 void set_cb_function_default(struct _cb_function * p) {
 
@@ -103,18 +104,18 @@ void default_cb_devip(const void * address, const void * ip, int uFlag) {
     return;
 }
 
-void default_cb_opt(int value) {
+void default_cb_opt(int value, int status) {
     LOGD("default_cb_opt\n");
     return;
 }
 
-int get_device_status(int uFlag) {
-    if (cb_opt_function.cb_curr_st != NULL) {
-        return cb_opt_function.cb_curr_st(uFlag);
-    } else {
-        LOGD("call back fail, use default value <0>\n");
-        return CB_ST_NULL;
-    }
+int get_device_status(void) {
+    return Local.Status;
 }
+
+void set_device_status(int uStatus) {
+    Local.Status = uStatus;
+}
+
 
 
