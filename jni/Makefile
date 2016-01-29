@@ -57,6 +57,11 @@ ndk:
 
 run:
 	./main
+
+git:
+	git add -A .
+	git commit
+	git push
   
 $(TARGET) : $(OBJS)
 	$(AR) cru $(TARGET) $(OBJS)

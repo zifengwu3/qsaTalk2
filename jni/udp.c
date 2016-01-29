@@ -13,7 +13,6 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
-
 //UDP
 int SndBufLen = 1024 * 128;
 int RcvBufLen = 1024 * 128;
@@ -105,7 +104,7 @@ int Init_Udp_Send_Task(void) {
 }
 
 void multi_send_thread_func(void) {
-	int i, k;
+	int i;
 	int HaveDataSend;
     int Status = 0;
 
@@ -134,28 +133,17 @@ void multi_send_thread_func(void) {
                             Multi_Udp_Buff[i].SendNum++;
                         }
                     }
+
                     if (Multi_Udp_Buff[i].SendNum >= MAXSENDNUM) {
                         pthread_mutex_lock (&Local.udp_lock);
                         switch (Multi_Udp_Buff[i].buf[6]) {
                             case VIDEOTALK:
                                 switch (Multi_Udp_Buff[i].buf[8]) {
                                     case CALL:
-                                        if (Multi_Udp_Buff[i].buf[6] == VIDEOTALK) {
-                                            for (k = 0; k < UDPSENDMAX; k++) {
-                                                if (Multi_Udp_Buff[k].isValid == 1) {
-                                                    if (Multi_Udp_Buff[k].buf[8] == CALL) {
-                                                        if (k != i) {
-                                                            Multi_Udp_Buff[k].isValid = 0;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            Multi_Udp_Buff[i].isValid = 0;
-                                            Status = CB_ST_NULL;
-                                            set_device_status(Status);
-                                            cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
-                                            LOGD("call fail, %d\n", Multi_Udp_Buff[i].buf[6]);
-                                        }
+                                        Multi_Udp_Buff[i].isValid = 0;
+                                        Status = get_device_status();
+                                        cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
+                                        LOGD("call fail, %d\n", Multi_Udp_Buff[i].buf[6]);
                                         break;
                                     case CALLEND:
                                         Multi_Udp_Buff[i].isValid = 0;
@@ -165,11 +153,7 @@ void multi_send_thread_func(void) {
                                         LOGD("multi_send_thread_func :: TalkEnd_ClearStatus()\n");
                                         break;
                                     default:
-                                        Status = CB_ST_NULL;
-                                        set_device_status(Status);
                                         Multi_Udp_Buff[i].isValid = 0;
-                                        LOGD("communicate fail 1, %d\n", Multi_Udp_Buff[i].buf[6]);
-                                        cb_opt_function.cb_curr_opt(CB_ACK_TIMEOUT, Status);
                                         break;
                                 }
                                 break;
