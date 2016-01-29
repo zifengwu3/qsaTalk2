@@ -39,7 +39,7 @@ int init_param_task(struct dev_config * _config) {
 	Init_Timer();
 	init_udp_task();
 
-	return (0);
+	return (1);
 }
 
 int uninit_task(void) {
