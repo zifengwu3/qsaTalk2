@@ -468,7 +468,7 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
 	int isAddrOK = 0;
 	int AddrLen = 12;
     char addr[4];
-    unsigned char ip[4];
+    char ip[20];
     int type = 0;
 
     LOGD("%s \n", __FUNCTION__);
@@ -481,7 +481,6 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
             if(Multi_Udp_Buff[i].SendNum  < MAXSENDNUM) {
                 if(Multi_Udp_Buff[i].buf[6] == NSORDER) {
                     if ((Multi_Udp_Buff[i].buf[7] == ASK)&&(recv_buf[32] > 0)) {
-                        LOGD("NSR:CLEANBUF %d \n",i);
                         //判断要求解析地址是否匹配
                         isAddrOK = 1;
                         if ((recv_buf[33] == 'S') || (recv_buf[33] == 's')) {
@@ -533,9 +532,10 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
             ip[k] = remote_info.IP[0][k];
         }
 
-        LOGD("ip:%d.%d.%d.%d\n", remote_info.DenIP[0], remote_info.DenIP[1],
+        sprintf(ip, "%d.%d.%d.%d", remote_info.DenIP[0], remote_info.DenIP[1],  \
                 remote_info.DenIP[2], remote_info.DenIP[3]);
-        LOGD("ip:%d.%d.%d.%d\n", ip[0], ip[1], ip[2], ip[3]);
+        LOGD("ip:  %s\n", ip);
+
         if ((remote_info.Addr[0][0] == 'S') || (remote_info.Addr[0][0] == 's')) {
             type = 0;
         }

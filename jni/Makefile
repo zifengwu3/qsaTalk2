@@ -22,7 +22,7 @@ RANLIB  := ranlib
 LIBS    :=
 LDFLAGS :=
 DEFINES :=
-INCLUDE := -I./include/ 
+INCLUDE := -I./c_include/ 
 CFLAGS  := -g -Wall -O3 $(DEFINES) $(INCLUDE)
 CXXFLAGS:= $(CFLAGS) -DHAVE_CONFIG_H
   

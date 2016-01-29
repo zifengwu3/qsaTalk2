@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #define _LIB_QSA_DEF_H
-#include "include/libqsa_common.h"
+#include "libqsa_common.h"
 
 
 /* default defined */
@@ -18,11 +18,25 @@ int get_device_status(int uFlag);
 
 void set_cb_function_default(struct _cb_function * p) {
 
-    p->cb_audio_data = &default_cb_audio_data;
-    p->cb_info = &default_cb_info;
-    p->cb_curr_st = &default_cb_status;
-    p->cb_devip = &default_cb_devip;
-    p->cb_curr_opt = &default_cb_opt;
+    if (!(p->cb_audio_data)) {
+        p->cb_audio_data = &default_cb_audio_data;
+    }
+
+    if (!(p->cb_info)) {
+        p->cb_info = &default_cb_info;
+    }
+
+    if (!(p->cb_curr_st)) {
+        p->cb_curr_st = &default_cb_status;
+    }
+
+    if (!(p->cb_devip)) {
+        p->cb_devip = &default_cb_devip;
+    }
+
+    if (!(p->cb_curr_opt)) {
+        p->cb_curr_opt = &default_cb_opt;
+    }
 
     return;
 }
@@ -30,14 +44,14 @@ void set_cb_function_default(struct _cb_function * p) {
 void set_cb_function(struct _cb_function * p) {
 
     if (p->cb_audio_data) {
-        LOGD("p->cb_audio_data\n");
+        LOGD("p->cb_audio_data is OK\n");
         cb_opt_function.cb_audio_data = p->cb_audio_data;
     } else {
         LOGD("p->cb_audio_data is NULL\n");
     }
 
     if (p->cb_info) {
-        LOGD("p->cb_info\n");
+        LOGD("p->cb_info is OK\n");
        cb_opt_function.cb_info = p->cb_info;
     } else {
         LOGD("p->cb_info is NULL\n");
@@ -45,21 +59,21 @@ void set_cb_function(struct _cb_function * p) {
  
 
     if (p->cb_curr_st) {
-        LOGD("p->cb_curr_st\n");
+        LOGD("p->cb_curr_st is OK\n");
         cb_opt_function.cb_curr_st = p->cb_curr_st;
     } else {
         LOGD("p->cb_curr_st is NULL\n");
     }
 
     if (p->cb_devip) {
-        LOGD("p->cb_devip\n");
+        LOGD("p->cb_devip is OK\n");
         cb_opt_function.cb_devip = p->cb_devip;
     } else {
         LOGD("p->cb_devip is NULL\n");
     }
 
     if (p->cb_curr_opt) {
-        LOGD("p->cb_curr_opt\n");
+        LOGD("p->cb_curr_opt is OK\n");
         cb_opt_function.cb_curr_opt = p->cb_curr_opt;
     } else {
         LOGD("p->cb_curr_opt is NULL\n");
