@@ -34,44 +34,11 @@ void default_cb_devip1(const void * address, const void * ip, int uflag) {
     return;
 }
 
-void default_cb_opt1(int value) {
-    printf("<%s> value = %d\n", __FUNCTION__, value);
+void default_cb_opt1(int value, int status) {
 
-    switch (value) {
-        case CB_CALL_OK:
-            g_Status = CB_ST_CALLING;
-            break;
-        case CB_CALL_BUSY:
-            g_Status = CB_ST_NULL;
-            break;
-        case CB_TALK_OK:
-            g_Status = CB_ST_TALKING;
-            break;
-        case CB_TALK_STOP:
-            g_Status = CB_ST_NULL;
-            break;
-        case CB_OPEN_LOCK:
-            break;
-        case CB_FORCE_IFRAME:
-            printf("force iframe\n");
-            break;
-        case CB_CALL_FAIL:
-            g_Status = CB_ST_NULL;
-            break;
-        case CB_TALK_TIMEOUT:     
-            g_Status = CB_ST_NULL;
-            break;
-        case CB_CALL_TIMEOUT:
-            g_Status = CB_ST_NULL;
-            break;
-        case CB_ACK_TIMEOUT: 
-            g_Status = CB_ST_NULL;
-            break;
-        default:
-            break;
-    }
+    g_Status = status;
 
-    printf("g_Status = %d\n", g_Status);
+    printf(" %s:value = %d, g_Status = %d\n", __FUNCTION__, value, g_Status);
 
     return;
 }

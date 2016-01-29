@@ -6,9 +6,8 @@
 
 extern void default_cb_audio_data1(void * data, int length, int type);
 extern void default_cb_info1(const void * data, const void * ip, int length, int port);
-extern int default_cb_status1(int type);
 extern void default_cb_devip1(const void * address, const void * ip, int uflag);
-extern void default_cb_opt1(int value);
+extern void default_cb_opt1(int value, int status);
 extern int InitUdpSocketDemo(short lPort);
 
 int g_Status = 0;
