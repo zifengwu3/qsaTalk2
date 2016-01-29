@@ -672,7 +672,13 @@ void Recv_Talk_Call_Confirm_Task(unsigned char *recv_buf, char *cFromIP) {
 		RemotePort = RemoteVideoPort;
 		UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
 		Local.CallConfirmFlag = 1;
-	}
+	} else {
+        //本机为被叫方
+		if(((Local.Status == CB_ST_CALLED) || (Local.Status == CB_ST_TALKED))
+				&& (recv_buf[7] == REPLY)) {
+            Local.CallConfirmFlag = 1;
+		}
+    }
 }
 
 void Recv_Talk_Open_Lock_Task(unsigned char *recv_buf, char *cFromIP) {

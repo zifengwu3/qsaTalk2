@@ -23,7 +23,7 @@
 
 #define WATCHTIMEOUT  30*(1000/INTRTIME)    //监视最长时间
 #define CALLTIMEOUT  25*(1000/INTRTIME)     //呼叫最长时间
-#define TALKTIMEOUT  130*(1000/INTRTIME)//30*20     //通话最长时间
+#define TALKTIMEOUT  180*(1000/INTRTIME)//30*20     //通话最长时间
 #define PREPARETIMEOUT  10*(1000/INTRTIME)     //留影留言预备最长时间
 #define RECORDTIMEOUT  30*(1000/INTRTIME)     //留影留言最长时间
 

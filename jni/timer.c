@@ -85,7 +85,7 @@ void OnlineCheckFunc(void)
     int Status = 0;
     Status = get_device_status();
 
-	if (Local.Timer1Num > (TIMERPERSEC * 6)) {
+	if (Local.Timer1Num > (TIMERPERSEC * 12)) {
 		if (Local.CallConfirmFlag == 0) {
 			if ((Status == CB_ST_CALLING) || (Status == CB_ST_CALLED)
 					|| (Status == CB_ST_TALKING) || (Status == CB_ST_TALKED)) {
@@ -95,10 +95,12 @@ void OnlineCheckFunc(void)
                 cb_opt_function.cb_curr_opt(CB_TALK_STOP, Status);
             }
 			Local.OnlineFlag = 0;
+			LOGD("没有收到在线确认，强制结束\n");
 		} else {
 			Local.CallConfirmFlag = 0;
 		}
 		Local.Timer1Num = 0;
+
 	} else if ((Local.Timer1Num % (TIMERPERSEC * 2)) == 0) {
 		if ((Status == CB_ST_CALLED) || (Status == CB_ST_TALKED)) {
 			memcpy(send_b, UdpPackageHead, 6);
@@ -151,6 +153,7 @@ void TalkCtrlFunc(void)
 				break;
 			case 5:  //主叫通话
 			case 6:  //被叫通话
+                Local.TalkTimeOut = TALKTIMEOUT;
 				if (Local.TimeOut > Local.TalkTimeOut) {
 					LOGD("通话超时\n");
                     stop_talk();

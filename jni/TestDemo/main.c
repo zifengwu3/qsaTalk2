@@ -33,7 +33,6 @@ int main() {
 
     p.cb_audio_data = &default_cb_audio_data1;
     p.cb_info = NULL;
-    p.cb_curr_st = &default_cb_status1;
     p.cb_curr_opt = &default_cb_opt1;
     p.cb_devip = &default_cb_devip1;
 

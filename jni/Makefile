@@ -39,7 +39,7 @@ all : $(TARGET)
   
 objs : $(OBJS)
   
-rebuild: veryclean everything ndk git
+rebuild: veryclean everything ndk gcc
 
 clean:
 	rm -fr *.o

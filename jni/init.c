@@ -73,6 +73,9 @@ void init_local_param_task(void) {
 	RemoteVideoPort = 8302;
 	LocalVideoPort = 8302;
 
+    Local.TimeOut = 0;
+    Local.TalkTimeOut = TALKTIMEOUT;
+
     strcpy(UdpPackageHead, "QIUSHI");
     memset(null_addr, 0x30, 20);
     null_addr[20] = '\0';

@@ -17,20 +17,15 @@ void default_cb_info1(const void * data, const void * ip, int length, int port) 
     return;
 }
 
-int default_cb_status1(int type) {
-    printf("%s : type = %d, g_Status = %d\n", __FUNCTION__, type, g_Status);
-    return g_Status;
-}
-
 void default_cb_devip1(const void * address, const void * ip, int uflag) {
     int rtnval = 0;
     printf("default_cb_devip1\n");
     
     rtnval = memcmp(g_addr, address, 4);
     if (rtnval == 0) {
-        memcpy(g_ip, ip, 4);
+        memcpy(g_ip, ip, 20);
     }
-    printf("ip:%d.%d.%d.%d\n", g_ip[0], g_ip[1], g_ip[2], g_ip[3]);
+    printf("ip: %s\n", g_ip);
     return;
 }
 
