@@ -101,7 +101,7 @@ void send_info(const char * data, struct _send_info * info) {
         /* get remote device information */
         Ip_Int = inet_addr((char *)info->ip);
         memcpy(&remote_info.IP[j], &Ip_Int, 4);
-        printf("%d.%d.%d.%d\n", remote_info.IP[j][0], remote_info.IP[j][1], 
+        LOGD("%d.%d.%d.%d\n", remote_info.IP[j][0], remote_info.IP[j][1], 
                 remote_info.IP[j][2], remote_info.IP[j][3]);
 
         memcpy(&remote_info.Addr[j], local_config.address, 20);
@@ -145,7 +145,7 @@ void send_info(const char * data, struct _send_info * info) {
                 Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
                 Multi_Udp_Buff[i].SendDelayTime = 0;
                 Multi_Udp_Buff[i].isValid = 1;
-                printf("<%s>   准备向<%d.%d.%d.%d>送信息\n", __FUNCTION__,
+                LOGD("<%s>   准备向<%d.%d.%d.%d>送信息\n", __FUNCTION__,
                         remote_info.IP[j][0], remote_info.IP[j][1], 
                         remote_info.IP[j][2], remote_info.IP[j][3]);
                 sem_post(&multi_send_sem);

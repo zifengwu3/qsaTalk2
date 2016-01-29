@@ -39,7 +39,7 @@ int Init_Timer(void) {
 	pthread_create(&timer_thread, &attr, (void *) timer_thread_task, NULL);
 	pthread_attr_destroy(&attr);
 	if (timer_thread == 0) {
-		printf("don't create timer thread \n");
+		LOGD("don't create timer thread \n");
 		return (-1);
 	}
 	return 0;
@@ -56,7 +56,7 @@ void timer_thread_task(void) {
 
 	int timenum;
 
-	printf("create timer thread :0.5\n");
+	LOGD("create timer thread :0.5\n");
 
 	timenum = 0;
 	while (timer_thread_flag) {
@@ -139,7 +139,7 @@ void TalkCtrlFunc(void)
 				CallTimeOut = CALLTIMEOUT;
                 //呼叫超时
 				if (Local.TimeOut > CallTimeOut) {
-                    printf("呼叫超时\n");
+                    LOGD("呼叫超时\n");
                     stop_talk();
                     cb_opt_function.cb_curr_opt(CB_CALL_TIMEOUT);
                     Local.OnlineFlag = 0;
@@ -148,7 +148,7 @@ void TalkCtrlFunc(void)
 			case 5:  //主叫通话
 			case 6:  //被叫通话
 				if (Local.TimeOut > Local.TalkTimeOut) {
-					printf("通话超时\n");
+					LOGD("通话超时\n");
                     stop_talk();
                     cb_opt_function.cb_curr_opt(CB_TALK_TIMEOUT);
 					Local.OnlineFlag = 0;

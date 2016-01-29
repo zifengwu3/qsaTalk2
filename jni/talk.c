@@ -25,7 +25,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
             /* get remote device information */
             Ip_Int = inet_addr(ip);
             memcpy(&remote_info.IP[j], &Ip_Int, 4);
-            printf("<%s>   %d.%d.%d.%d\n", __FUNCTION__,
+            LOGD("<%s>   %d.%d.%d.%d\n", __FUNCTION__,
                     remote_info.IP[j][0], remote_info.IP[j][1], 
                     remote_info.IP[j][2], remote_info.IP[j][3]);
 
@@ -64,13 +64,13 @@ void start_call(const char * ip, const char * addr, int uFlag) {
                     Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
                     Multi_Udp_Buff[i].SendDelayTime = 0;
                     Multi_Udp_Buff[i].isValid = 1;
-                    printf("<%s>   开始呼叫命令\n", __FUNCTION__);
+                    LOGD("<%s>   开始呼叫命令\n", __FUNCTION__);
                     sem_post(&multi_send_sem);
                     break;
                 }
             }
         } else {
-            printf("I'm is Busy!\n");
+            LOGD("I'm is Busy!\n");
         }
     }
 }
@@ -105,7 +105,7 @@ void stop_talk(void) {
 			Multi_Udp_Buff[i].SendDelayTime = 0;
 			Multi_Udp_Buff[i].isValid = 1;
 
-            printf("<%s>   通知对方关闭对讲呼叫\n", __FUNCTION__);
+            LOGD("<%s>   通知对方关闭对讲呼叫\n", __FUNCTION__);
 			sem_post(&multi_send_sem);
 			break;
 		}
@@ -152,16 +152,16 @@ void find_ip(const char * addr, int uFlag) {
                     memcpy(remote_info.Addr[0], null_addr, 20);
                     memcpy(remote_info.Addr[0], addr, 20);
                     memcpy(remote_info.IP[0], null_ip, 4);
-                    printf("<%s>   正在查找地址 : %s\n", __FUNCTION__, addr);
+                    LOGD("<%s>   正在查找地址 : %s\n", __FUNCTION__, addr);
                     sem_post(&multi_send_sem);
                     break;
                 }
             }
         } else {
-            printf("I'm BUSY\n");
+            LOGD("I'm BUSY\n");
         }
     } else {
-        printf("Addr is NULL\n");
+        LOGD("Addr is NULL\n");
     }
 }
 //---------------------------------------------------------------------------
@@ -178,7 +178,7 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
     int Status;
 
 #ifdef _DEBUG
-    printf("发送VIDEO数据：\n" );
+    LOGD("发送VIDEO数据：\n" );
 #endif
 
     gettimeofday(&tv, NULL);
@@ -258,7 +258,7 @@ void send_audio(const char * data, int length, int frame_num, const char * ip) {
     int Status;
 
 #ifdef _DEBUG
-    printf("创建采集数据处理线程：\n" );
+    LOGD("创建采集数据处理线程：\n" );
 #endif
 
     Status = get_device_status(CALL_MIXER);

@@ -52,6 +52,8 @@ gcc:
 						   $(TEST_PATH)/timer.c \
 						   $(TEST_PATH)/cb_function.c \
 						   $(TARGET)
+ndk:
+	ndk-build -B
 
 run:
 	./main

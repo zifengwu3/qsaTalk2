@@ -7,6 +7,7 @@
 
 #include "libqsa_def.h"
 #include "libqsa_callback.h"
+#include "log_jni.h"
 
 #define _FALSE 0
 #define _TRUE  1
