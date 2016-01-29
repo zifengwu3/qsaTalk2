@@ -47,7 +47,7 @@ int uninit_task(void) {
     Uninit_Timer();
     uninit_udp_task();
 
-	return (0);
+	return (1);
 }
 
 void init_config_null_task(void) {

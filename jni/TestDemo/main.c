@@ -21,13 +21,15 @@ int main() {
     struct _cb_function p;
 	int ch;
 	int programrun;//程序运行标志
-    uint32_t Ip_Int;
+    //uint32_t Ip_Int;
+    unsigned char ip[20] = "192.168.10.97";
     int uFlag = 0;
 
     memset(&config, 0x00, sizeof(struct dev_config));
     strcpy(config.address, "M00010100000000000000");
-    Ip_Int = inet_addr("192.168.10.97");
-    memcpy(config.ip, &Ip_Int, 4);
+    //Ip_Int = inet_addr("192.168.10.97");
+    //memcpy(config.ip, &Ip_Int, 4);
+    memcpy(config.ip, ip, 20);
     init_param_task(&config);
 
     p.cb_audio_data = &default_cb_audio_data1;
