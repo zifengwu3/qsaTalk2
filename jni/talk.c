@@ -7,10 +7,11 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
-void qsa_send_audio(const char * data, int length, int frame_num, const char * ip);
-void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
+
+void qsa_send_audio(const char * data, int length, int frame_num, const char * ip);
+void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
 
 //---------------------------------------------------------------------------
 void start_call(const char * ip, const char * addr, int uFlag) {
@@ -186,7 +187,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
 
     Status = get_device_status();
-    LOGD("%s%d: Status = %d\n", __FUNCTION__, __LINE__, Status);
 
     if (Status > 0) {
         //头部
@@ -248,8 +248,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
-            LOGD("RemoteHost = %s, RemoteVideoPort = %d, num = %d, len = %d\n",
-                    RemoteHost, RemoteVideoPort, j, talkdata.PackLen);
+            LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
         }
     }
 }
