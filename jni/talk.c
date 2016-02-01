@@ -245,7 +245,7 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
-            printf("RemoteHost = %s, RemoteVideoPort = %d, num = %d, len = %d\n",
+            LOGD("RemoteHost = %s, RemoteVideoPort = %d, num = %d, len = %d\n",
                     RemoteHost, RemoteVideoPort, j, talkdata.PackLen);
         }
     }
