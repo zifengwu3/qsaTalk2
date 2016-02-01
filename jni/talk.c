@@ -7,6 +7,8 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
+void qsa_send_audio(const char * data, int length, int frame_num, const char * ip);
+void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
 
