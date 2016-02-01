@@ -633,7 +633,7 @@ void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {
     int Status = 0;
 
     Status = get_device_status();
-    LOGD("Status = %d\n", Status);
+    LOGD("%s%d: Status = %d\n", __FUNCTION__, __LINE__, Status);
 	if ((Status == CB_ST_CALLING) && (recv_buf[7] == ASK)) {
 		memcpy(send_b, recv_buf, 57);
 		send_b[7] = REPLY;

@@ -3,11 +3,9 @@
 #include <sys/time.h>
 #include <semaphore.h>       //sem_t
 #include <pthread.h>       //sem_t
-#include <android/log.h>
 
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
-#include "include/log_jni.h"
 
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
@@ -180,15 +178,13 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
     uint32_t nowtime;
     int Status;
 
-#ifdef _DEBUG
-    LOGD("发送VIDEO数据：\n" );
-#endif
+    LOGD("发送VIDEO数据：%d\n", length);
 
     gettimeofday(&tv, NULL);
     nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
 
     Status = get_device_status();
-    LOGD("Status = %d\n", Status);
+    LOGD("%s%d: Status = %d\n", __FUNCTION__, __LINE__, Status);
 
     if (Status > 0) {
         //头部
@@ -267,9 +263,7 @@ void send_audio(const char * data, int length, int frame_num, const char * ip) {
     uint32_t nowtime;
     int Status;
 
-#ifdef _DEBUG
     LOGD("创建采集数据处理线程：\n" );
-#endif
 
     Status = get_device_status();
     if (Status > 0) {
