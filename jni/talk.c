@@ -3,9 +3,11 @@
 #include <sys/time.h>
 #include <semaphore.h>       //sem_t
 #include <pthread.h>       //sem_t
+#include <android/log.h>
 
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
+#include "include/log_jni.h"
 
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);

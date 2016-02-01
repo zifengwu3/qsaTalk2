@@ -4,7 +4,6 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
-
 /* default defined */
 void default_cb_audio_data(void * data, int length, int type);
 void default_cb_info(const void * data, const void * ip, int length, int port);
