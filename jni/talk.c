@@ -187,6 +187,7 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
 
     Status = get_device_status();
     LOGD("Status = %d\n", Status);
+
     if (Status > 0) {
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
