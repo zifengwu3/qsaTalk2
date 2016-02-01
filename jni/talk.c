@@ -166,7 +166,7 @@ void find_ip(const char * addr, int uFlag) {
     }
 }
 
-void send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
+void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
     int j;
     int TotalPackage; //总包数
     unsigned char mpeg4_out[1600];
@@ -252,7 +252,7 @@ void send_video(const char * data, int length, int frame_num, int frame_type, co
     }
 }
 
-void send_audio(const char * data, int length, int frame_num, const char * ip) {
+void qsa_send_audio(const char * data, int length, int frame_num, const char * ip) {
 
     unsigned char adpcm_out[1600];
     char RemoteHost[20];

@@ -97,8 +97,8 @@ extern void stop_talk(void);
 /* send the public message or the private message */
 extern void send_info(const char * data, struct _send_info * info);
 /* send audio or video data to the user device */
-extern void send_audio(const char * data, int length, int frame_num, const char * ip);
-extern void send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
+extern void qsa_send_audio(const char * data, int length, int frame_num, const char * ip);
+extern void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
 /* device status */
 extern int get_device_status(void);
 
