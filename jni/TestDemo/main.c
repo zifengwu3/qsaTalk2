@@ -14,6 +14,8 @@ int g_Status = 0;
 unsigned char g_addr[30];
 unsigned char g_ip[20];
 
+void playh264file(char * filename);
+
 int main() {
 
     struct dev_config config;
@@ -81,6 +83,8 @@ int main() {
                     }
                     break;
                 case 'E':
+                    {
+                    }
                     break;
                 case 'F':
                     break;
@@ -103,6 +107,8 @@ int main() {
                 case 'O':
                     break;
                 case 'P':
+                    //playh264file("/home/l/workspace/talk/jni/TestDemo/1.h264");
+                    user_main();
                     break;
                 case 'Q':                     // 判断是否[q]键被按下
                     {
@@ -178,6 +184,34 @@ int main() {
     uninit_task();
 
     exit(0);
+}
+
+void playh264file(char * filename) {
+    int i;
+	int bytes_read,bytes_write;
+    FILE *fd;
+    char buffer[500];
+
+    fd = fopen(filename, "rb+");
+
+    if (fd == NULL) {
+        printf("fd is fail");
+    } else {
+        printf("fd is success\n");
+        bytes_read = fread(buffer, 130, 1, fd);
+        printf("bytes_read = %d\n", bytes_read);
+
+        for (i = 0; i < 130; i++) {
+            if ((i != 0) && ((i % 13) == 0)) {
+                printf("\n");
+            }
+            printf("%02x ", (buffer[i]));
+        }
+    }
+
+    fclose(fd);
+
+    return;
 }
 
 

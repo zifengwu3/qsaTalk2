@@ -233,7 +233,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
                         data + (j - 1)*talkdata.PackLen, (length - (j - 1)*talkdata.PackLen));
 
-
                 //UDP发送
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + (length - (j - 1)*talkdata.PackLen)));
