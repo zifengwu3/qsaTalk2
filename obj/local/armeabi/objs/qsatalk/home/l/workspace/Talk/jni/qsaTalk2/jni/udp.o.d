@@ -76,7 +76,9 @@
  /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/strings.h \
  /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/memory.h \
  /home/l/workspace/Talk/jni/qsaTalk2/jni/include/libqsa_def.h \
- /home/l/workspace/Talk/jni/qsaTalk2/jni/include/libqsa_callback.h
+ /home/l/workspace/Talk/jni/qsaTalk2/jni/include/libqsa_callback.h \
+ /home/l/workspace/Talk/jni/qsaTalk2/jni/include/log_jni.h \
+ /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/android/log.h
 
 /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/stdio.h:
 
@@ -231,3 +233,7 @@
 /home/l/workspace/Talk/jni/qsaTalk2/jni/include/libqsa_def.h:
 
 /home/l/workspace/Talk/jni/qsaTalk2/jni/include/libqsa_callback.h:
+
+/home/l/workspace/Talk/jni/qsaTalk2/jni/include/log_jni.h:
+
+/home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/android/log.h:

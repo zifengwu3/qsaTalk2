@@ -51,7 +51,7 @@ gcc:
 	$(CC) -pthread -o main $(TEST_PATH)/main.c \
 						   $(TEST_PATH)/timer.c \
 						   $(TEST_PATH)/cb_function.c \
-						   $(TEST_PATH)/nal.c \
+						   $(TEST_PATH)/nalu.c \
 						   $(TARGET)
 ndk:
 	ndk-build -B

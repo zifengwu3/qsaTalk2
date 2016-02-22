@@ -57,7 +57,7 @@ int main() {
         ch = getchar();
         if (ch == 0x0A) {
             /* The Input Key isn't Enter Key */
-            printf("\nplease input operate_code:  ");
+            printf("please input operate_code:  ");
             continue;
         }
 

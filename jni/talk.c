@@ -208,7 +208,11 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         //帧数据长度
         talkdata.Framelen = length;
         //帧类型
-        talkdata.DataType = frame_type;
+        if (frame_type == 5) {
+            talkdata.DataType = 2;
+        } else {
+            talkdata.DataType = 3;
+        }
         //单包长度
         talkdata.PackLen = PACKDATALEN;
         //总包数

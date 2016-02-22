@@ -69,7 +69,9 @@
  /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/sys/select.h \
  /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/sys/sysconf.h \
  /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/linux/capability.h \
- /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/pathconf.h
+ /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/pathconf.h \
+ /home/l/workspace/Talk/jni/qsaTalk2/jni/include/log_jni.h \
+ /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/android/log.h
 
 /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/stdio.h:
 
@@ -210,3 +212,7 @@
 /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/linux/capability.h:
 
 /home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/pathconf.h:
+
+/home/l/workspace/Talk/jni/qsaTalk2/jni/include/log_jni.h:
+
+/home/l/android/sdk/ndk-bundle/platforms/android-3/arch-arm/usr/include/android/log.h:
