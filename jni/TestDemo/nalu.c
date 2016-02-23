@@ -184,8 +184,8 @@ int user_main(int argc, char* argv[])
     OpenBitstreamFile("TestDemo/1.h264");   
     OpenBitstreamFile1("TestDemo/2.h264");   
 #else
-    OpenBitstreamFile("TestDemo/test01.h264");   
-    OpenBitstreamFile1("TestDemo/test02.h264");   
+    OpenBitstreamFile("TestDemo/test3.h264");   
+    OpenBitstreamFile1("TestDemo/test4.h264");   
 #endif
     unsigned int ts_current = 0;
     static int ts_length = 0;
@@ -206,32 +206,29 @@ int user_main(int argc, char* argv[])
         ts_length += n->len;
 
         if (((n->nal_unit_type) == 5) || ((n->nal_unit_type) == 1)) {
-#if 0
-            if ((n->buf[1]&0x80) == 0x80) {
+            if ((n->buf[1]&0x80) != 0x80) {
                 //判断是否为同一片数据，如果＆0x80等于0x80，下一片再出现0x80数据之前的数据为同一片数据
                 continue;
+            } else {
+                ts_length -= n->startcodeprefix_len;
+                ts_length -= n->len;
+                sendflag = 2;
             }
-#endif
-#if 0
-            i_frame++;
-            if (i_frame % 2 == 0) {
-                sendflag = 1;
-            }
-#endif
-#if 1
-            sendflag = 1;
-#endif
         }
 
         if (sendflag == 1) {
             printf("framebuffer length = %d\n", ts_length);
+            w_length = 0;
             if (!feof(bits1)) {
                 count++;
                 w_length = fread(framebuffer, 1, ts_length, bits1);
             }
             printf("w_length = %d, count = %d\n", w_length, count);
+        }
+
+        if (w_length != 0) {
             qsa_send_video(framebuffer, w_length, count, n->nal_unit_type, g_ip);
-            usleep(30*1000);
+            usleep(40*1000);
             ts_length = 0;
             sendflag = 0;
         }
