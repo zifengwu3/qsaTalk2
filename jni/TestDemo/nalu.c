@@ -169,6 +169,7 @@ int GetAnnexbNALU (NALU_t *nalu)
 
     return (pos+rewind);//返回两个开始字符之间间隔的字节数   
 }   
+
 void dump(NALU_t *n)   
 {   
     if (!n) return;   
@@ -180,7 +181,7 @@ void dump(NALU_t *n)
 
 int user_main(int argc, char* argv[])   
 {   
-#if 0
+#if 1
     OpenBitstreamFile("TestDemo/1.h264");   
     OpenBitstreamFile1("TestDemo/2.h264");   
 #else
@@ -206,14 +207,15 @@ int user_main(int argc, char* argv[])
         ts_length += n->len;
 
         if (((n->nal_unit_type) == 5) || ((n->nal_unit_type) == 1)) {
+#if 0
             if ((n->buf[1]&0x80) != 0x80) {
                 //判断是否为同一片数据，如果＆0x80等于0x80，下一片再出现0x80数据之前的数据为同一片数据
                 continue;
             } else {
-                ts_length -= n->startcodeprefix_len;
-                ts_length -= n->len;
-                sendflag = 2;
+                sendflag = 1;
             }
+#endif
+            sendflag = 1;
         }
 
         if (sendflag == 1) {
@@ -228,7 +230,7 @@ int user_main(int argc, char* argv[])
 
         if (w_length != 0) {
             qsa_send_video(framebuffer, w_length, count, n->nal_unit_type, g_ip);
-            usleep(40*1000);
+            usleep(60*1000);
             ts_length = 0;
             sendflag = 0;
         }
