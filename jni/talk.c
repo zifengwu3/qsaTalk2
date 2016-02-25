@@ -313,6 +313,8 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
 
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteAudioPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + AUDIOBLK/2);
+
+        LOGD("%s:%d send_buf[61] = %d, ip = %s\n", __FUNCTION__, __LINE__, adpcm_out[61], RemoteHost);
     }
 }
 
