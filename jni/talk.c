@@ -267,8 +267,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     uint32_t nowtime;
     int Status;
 
-    LOGD("创建采集数据处理线程：\n" );
-
     Status = get_device_status();
     if (Status > 0) {
         gettimeofday(&tv, NULL);
@@ -311,10 +309,11 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
                 remote_info.DenIP[0], remote_info.DenIP[1],
                 remote_info.DenIP[2], remote_info.DenIP[3]);
 
-        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteAudioPort, 
+        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + AUDIOBLK/2);
 
-        LOGD("%s:%d send_buf[61] = %d, ip = %s\n", __FUNCTION__, __LINE__, adpcm_out[61], RemoteHost);
+        LOGD("%s:%d send_buf[61] = %d, ip = %s, RemoteAudioPort = %d, RemoteVideoPort = %d\n", 
+                __FUNCTION__, __LINE__, adpcm_out[61], RemoteHost, RemoteAudioPort, RemoteVideoPort);
     }
 }
 
