@@ -786,6 +786,9 @@ void TalkEnd_ClearStatus(void) {
     cb_opt_function.cb_curr_opt(CB_TALK_STOP, Status);
 }
 
+#if _REC_FILE
+static FILE* audioFp4 = NULL;
+#endif
 void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
         int length) {
 
@@ -796,6 +799,15 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
     if (Status == CB_ST_TALKING) {
         if (1 == recv_buf[61]) {
             memcpy(&talkdata, recv_buf + 9, sizeof(struct talkdata1));
+#if _REC_FILE
+            LOGD("%s: audioFp4: Length = %d \n", __FUNCTION__, talkdata.Datalen);
+            if (audioFp4 == NULL) {
+                audioFp4 = fopen("/mnt/sdcard/qsa_audio_receive_encoded_201602225.pcmu", "wb");
+            }
+            if (audioFp4) {
+                fwrite((recv_buf + 9 + sizeof(struct talkdata1)), 1, talkdata.Datalen, audioFp4);
+            }   
+#endif  
             //回调声音数据
             cb_opt_function.cb_audio_data((void *)(recv_buf + 9 + sizeof(struct talkdata1)),
                     talkdata.Datalen, 0);

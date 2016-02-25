@@ -256,6 +256,9 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     }
 }
 
+#if _REC_FILE
+static FILE* audioFp2 = NULL;
+#endif
 void qsa_send_audio(const char * data, int length, int frame_num, const char * ip) {
 
     unsigned char adpcm_out[1600];
@@ -266,11 +269,20 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     struct timeval tv;
     uint32_t nowtime;
     int Status;
+    int tmpLen;
 
     Status = get_device_status();
     if (Status > 0) {
-        gettimeofday(&tv, NULL);
-        nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
+
+#if _REC_FILE
+        LOGD("%s: audioFp2: Length = %d \n", __FUNCTION__, length);
+        if (audioFp2 == NULL) {
+            audioFp2 = fopen("/mnt/sdcard/qsa_audio_send_encoded_201602225.pcmu", "wb");
+        }
+        if (audioFp2) {
+            fwrite(data, 1, length, audioFp2);
+        }   
+#endif
 
         //头部
         memcpy(adpcm_out, UdpPackageHead, 6);
@@ -286,34 +298,40 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
             memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
         }
 
-        //时间戳
-        talkdata.timestamp = nowtime;
-        //数据类型
-        talkdata.DataType = 1;
-        //帧序号
-        talkdata.Frameno = frame_num;
-        //帧数据长度
-        talkdata.Framelen = AUDIOBLK/2;
-        //总包数
-        talkdata.TotalPackage = 1;
-        //当前包
-        talkdata.CurrPackage = 1;
-        //数据长度
-        talkdata.Datalen = AUDIOBLK/2;
-        talkdata.PackLen = PACKDATALEN;
-        memcpy(adpcm_out + 9, &talkdata, sizeof(talkdata));
-        memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  AUDIOBLK/2);
+        tmpLen = length;
+        while (tmpLen > AUDIOBLK/2) {
 
-        //UDP发送
-        sprintf(RemoteHost, "%d.%d.%d.%d", 
-                remote_info.DenIP[0], remote_info.DenIP[1],
-                remote_info.DenIP[2], remote_info.DenIP[3]);
+            //时间戳
+            gettimeofday(&tv, NULL);
+            nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
+            talkdata.timestamp = nowtime;
 
-        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                adpcm_out, 9 + sizeof(struct talkdata1) + AUDIOBLK/2);
+            //数据类型
+            talkdata.DataType = 1;
+            //帧序号
+            talkdata.Frameno = frame_num;
+            //帧数据长度
+            talkdata.Framelen = AUDIOBLK/2;
+            //总包数
+            talkdata.TotalPackage = 1;
+            //当前包
+            talkdata.CurrPackage = 1;
+            //数据长度
+            talkdata.Datalen = AUDIOBLK/2;
+            talkdata.PackLen = PACKDATALEN;
+            memcpy(adpcm_out + 9, &talkdata, sizeof(talkdata));
+            memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  AUDIOBLK/2);
 
-        LOGD("%s:%d send_buf[61] = %d, ip = %s, RemoteAudioPort = %d, RemoteVideoPort = %d\n", 
-                __FUNCTION__, __LINE__, adpcm_out[61], RemoteHost, RemoteAudioPort, RemoteVideoPort);
+            //UDP发送
+            sprintf(RemoteHost, "%d.%d.%d.%d", 
+                    remote_info.DenIP[0], remote_info.DenIP[1],
+                    remote_info.DenIP[2], remote_info.DenIP[3]);
+
+            UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
+                    adpcm_out, 9 + sizeof(struct talkdata1) + AUDIOBLK/2);
+
+            tmpLen -= AUDIOBLK/2;
+        }
     }
 }
 
