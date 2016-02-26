@@ -787,7 +787,7 @@ void TalkEnd_ClearStatus(void) {
 }
 
 #if _REC_FILE
-static FILE* audioFp4 = NULL;
+static FILE* qsa_audioFp4 = NULL;
 #endif
 void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
         int length) {
@@ -800,12 +800,12 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
         if (1 == recv_buf[61]) {
             memcpy(&talkdata, recv_buf + 9, sizeof(struct talkdata1));
 #if _REC_FILE
-            LOGD("%s: audioFp4: Length = %d \n", __FUNCTION__, talkdata.Datalen);
-            if (audioFp4 == NULL) {
-                audioFp4 = fopen("/mnt/sdcard/qsa_audio_receive_encoded_201602225.pcmu", "wb");
+            LOGD("%s: qsa_audioFp4: Length = %d \n", __FUNCTION__, talkdata.Datalen);
+            if (qsa_audioFp4 == NULL) {
+                qsa_audioFp4 = fopen("/mnt/sdcard/qsa_audio_receive_encoded_201602226.pcmu", "wb");
             }
-            if (audioFp4) {
-                fwrite((recv_buf + 9 + sizeof(struct talkdata1)), 1, talkdata.Datalen, audioFp4);
+            if (qsa_audioFp4) {
+                fwrite((recv_buf + 9 + sizeof(struct talkdata1)), 1, talkdata.Datalen, qsa_audioFp4);
             }   
 #endif  
             //回调声音数据
