@@ -299,7 +299,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         }
 
         tmpLen = length;
-        while (tmpLen > AUDIOBLK/2) {
+        while (tmpLen > 0) {
 
             //时间戳
             gettimeofday(&tv, NULL);
