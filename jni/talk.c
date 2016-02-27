@@ -181,7 +181,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     uint32_t nowtime;
     int Status;
 
-    LOGD("发送VIDEO数据：%d\n", length);
+    //LOGD("发送VIDEO数据：%d\n", length);
 
     gettimeofday(&tv, NULL);
     nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
@@ -269,7 +269,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     struct timeval tv;
     uint32_t nowtime;
     int Status;
-    int tmpLen;
 
     Status = get_device_status();
     if (Status > 0) {
@@ -298,7 +297,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
             memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
         }
 
-#if 1
         //时间戳
         gettimeofday(&tv, NULL);
         nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
@@ -327,42 +325,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
 
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-#else
-        tmpLen = length;
-        while (tmpLen > 0) {
-
-            //时间戳
-            gettimeofday(&tv, NULL);
-            nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
-            talkdata.timestamp = nowtime;
-
-            //数据类型
-            talkdata.DataType = 1;
-            //帧序号
-            talkdata.Frameno = frame_num;
-            //帧数据长度
-            talkdata.Framelen = AUDIOBLK/2;
-            //总包数
-            talkdata.TotalPackage = 1;
-            //当前包
-            talkdata.CurrPackage = 1;
-            //数据长度
-            talkdata.Datalen = AUDIOBLK/2;
-            talkdata.PackLen = PACKDATALEN;
-            memcpy(adpcm_out + 9, &talkdata, sizeof(talkdata));
-            memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  AUDIOBLK/2);
-
-            //UDP发送
-            sprintf(RemoteHost, "%d.%d.%d.%d", 
-                    remote_info.DenIP[0], remote_info.DenIP[1],
-                    remote_info.DenIP[2], remote_info.DenIP[3]);
-
-            UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                    adpcm_out, 9 + sizeof(struct talkdata1) + AUDIOBLK/2);
-
-            tmpLen -= AUDIOBLK/2;
-        }
-#endif
     }
 }
 
