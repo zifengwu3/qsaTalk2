@@ -560,11 +560,14 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 									if (strcmp(Multi_Udp_Buff[i].RemoteHost,
 											cFromIP) == 0) {
 										Multi_Udp_Buff[i].isValid = 0;
-										if (remote_info.DenNum == 1) {
-                                            Status = CB_ST_NULL;
-                                            set_device_status(Status);
-                                            cb_opt_function.cb_curr_opt(CB_CALL_BUSY, Status);
-										}
+                                        if (remote_info.DenNum == 1) {
+                                            Status = get_device_status();
+                                            if (Status == CB_ST_FINDING) {
+                                                Status = CB_ST_NULL;
+                                                set_device_status(Status);
+                                                cb_opt_function.cb_curr_opt(CB_CALL_BUSY, Status);
+                                            }
+                                        }
                                         break;
 									}
 								}
