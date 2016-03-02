@@ -432,6 +432,7 @@ void UdpVideoRcvThread(void)
                                 }
                             }
                             break;
+#if 0
                         case IFRAMEREADY:
                             {
                                 if (len >= 57) {
@@ -441,6 +442,7 @@ void UdpVideoRcvThread(void)
                                 }
                             }
                             break;
+#endif
                         case CALLUP:
                         case CALLDOWN:
                             Recv_Talk_Call_UpDown_Task(buff, FromIP, len);
