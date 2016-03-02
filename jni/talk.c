@@ -174,8 +174,10 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 #if _SEND_VIDEO_TEST
     int j;
     int TotalPackage; //总包数
+    unsigned char mpeg4_out[1600];
+#else
+    unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
 #endif
-    unsigned char mpeg4_out[length + 50];
     char RemoteHost[20];
     //通话数据结构
     struct talkdata1 talkdata;

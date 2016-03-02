@@ -71,6 +71,7 @@ int main() {
                     break;
                 case 'B':
                     {
+                        printf("g_ip = %s\n", g_ip);
                         start_call(g_ip, g_addr, 2);
                     }
                     break;

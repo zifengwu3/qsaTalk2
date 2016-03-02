@@ -19,6 +19,7 @@ void default_cb_info1(const void * data, const void * ip, int length, int port) 
 
 void default_cb_devip1(const void * address, const void * ip, int uflag) {
     int rtnval = 0;
+
     printf("default_cb_devip1\n");
     
     rtnval = memcmp(g_addr, address, 4);
