@@ -64,7 +64,7 @@ CALL_SIP	include/libqsa_callback.h	/^	CALL_SIP,            \/\/SIP呼叫$/;"	e	e
 CANCELALARM	c_include/libqsa_common.h	42;"	d
 CANCELALARM	include/libqsa_common.h	43;"	d
 CB_ACK_TIMEOUT	c_include/libqsa_callback.h	/^    CB_ACK_TIMEOUT       \/\/发送6次超时$/;"	e	enum:_CB_OPT
-CB_ACK_TIMEOUT	include/libqsa_callback.h	/^    CB_ACK_TIMEOUT = 11  \/\/发送6次超时$/;"	e	enum:_CB_OPT
+CB_ACK_TIMEOUT	include/libqsa_callback.h	/^    CB_ACK_TIMEOUT = 11, \/\/发送6次超时$/;"	e	enum:_CB_OPT
 CB_CALL_BUSY	c_include/libqsa_callback.h	/^    CB_CALL_BUSY,        \/\/当前正忙回复$/;"	e	enum:_CB_OPT
 CB_CALL_BUSY	include/libqsa_callback.h	/^    CB_CALL_BUSY,        \/\/当前正忙回复$/;"	e	enum:_CB_OPT
 CB_CALL_FAIL	c_include/libqsa_callback.h	/^    CB_CALL_FAIL,		 \/\/呼叫状态异常$/;"	e	enum:_CB_OPT
@@ -77,6 +77,7 @@ CB_CALL_TIMEOUT	c_include/libqsa_callback.h	/^    CB_CALL_TIMEOUT,     \/\/呼�
 CB_CALL_TIMEOUT	include/libqsa_callback.h	/^    CB_CALL_TIMEOUT,     \/\/呼叫30秒超时$/;"	e	enum:_CB_OPT
 CB_FORCE_IFRAME	c_include/libqsa_callback.h	/^    CB_FORCE_IFRAME,	 \/\/强制I帧$/;"	e	enum:_CB_OPT
 CB_FORCE_IFRAME	include/libqsa_callback.h	/^    CB_FORCE_IFRAME,	 \/\/强制I帧$/;"	e	enum:_CB_OPT
+CB_IFRAME_READY	include/libqsa_callback.h	/^    CB_IFRAME_READY	     \/\/I帧解析OK$/;"	e	enum:_CB_OPT
 CB_INFO_OK	c_include/libqsa_callback.h	/^    CB_INFO_OK,		     \/\/发送信息回复$/;"	e	enum:_CB_OPT
 CB_INFO_OK	include/libqsa_callback.h	/^    CB_INFO_OK,		     \/\/发送信息回复$/;"	e	enum:_CB_OPT
 CB_OPEN_LOCK	c_include/libqsa_callback.h	/^    CB_OPEN_LOCK,        \/\/开锁回复$/;"	e	enum:_CB_OPT
@@ -304,6 +305,7 @@ RcvBufLen	udp.c	/^int RcvBufLen = 1024 * 128;$/;"	v
 RecordPic	c_include/libqsa_common.h	/^	int RecordPic;  \/\/留照片  0 不留  1 呼叫留照片  2 通话留照片$/;"	m	struct:Local1
 RecordPic	include/libqsa_common.h	/^	int RecordPic;  \/\/留照片  0 不留  1 呼叫留照片  2 通话留照片$/;"	m	struct:Local1
 RecvForceIFrame_Func	udp.c	/^void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+RecvIFrameReadyOK_Func	udp.c	/^void RecvIFrameReadyOK_Func(unsigned char *recv_buf, char *cFromIP) {$/;"	f
 Recv_NS_Reply_Func	udp.c	/^void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)$/;"	f
 Recv_Talk_Call_Answer_Task	udp.c	/^void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
 Recv_Talk_Call_Confirm_Task	udp.c	/^void Recv_Talk_Call_Confirm_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f

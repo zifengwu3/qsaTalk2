@@ -9,6 +9,7 @@ extern void default_cb_info1(const void * data, const void * ip, int length, int
 extern void default_cb_devip1(const void * address, const void * ip, int uflag);
 extern void default_cb_opt1(int value, int status);
 extern int InitUdpSocketDemo(short lPort);
+extern int send_video_flag;
 
 int g_Status = 0;
 unsigned char g_addr[30];
@@ -105,9 +106,11 @@ int main() {
                 case 'N':
                     break;
                 case 'O':
+                    send_video_flag = 0;
                     break;
                 case 'P':
                     //playh264file("/home/l/workspace/talk/jni/TestDemo/1.h264");
+                    send_video_flag = 1;
                     user_main();
                     break;
                 case 'Q':                     // 判断是否[q]键被按下

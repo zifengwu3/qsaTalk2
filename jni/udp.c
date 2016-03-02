@@ -47,6 +47,7 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
 		int length);
 void TalkEnd_ClearStatus(void);
 void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP);
+void RecvIFrameReadyOK_Func(unsigned char *recv_buf, char *cFromIP);
 
 int init_udp_task(void);
 int Init_Udp_Send_Task(void);
@@ -423,10 +424,21 @@ void UdpVideoRcvThread(void)
                             }
                             break;
                         case FORCEIFRAME:
-                            if (len >= 57) {
-                                RecvForceIFrame_Func(buff, FromIP);
-                            } else {
-                                LOGD("len of force Iframe is unusual\n");
+                            {
+                                if (len >= 57) {
+                                    RecvForceIFrame_Func(buff, FromIP);
+                                } else {
+                                    LOGD("len of force Iframe is unusual\n");
+                                }
+                            }
+                            break;
+                        case IFRAMEREADY:
+                            {
+                                if (len >= 57) {
+                                    RecvIFrameReadyOK_Func(buff, FromIP);
+                                } else {
+                                    LOGD("len of Iframe ready ok is unusual\n");
+                                }
                             }
                             break;
                         case CALLUP:
@@ -864,6 +876,23 @@ void ForceIFrame_Func(void) //强制I帧
 			break;
         }
     }
+}
+
+void RecvIFrameReadyOK_Func(unsigned char *recv_buf, char *cFromIP) {
+	unsigned char send_b[1520];
+	int sendlength;
+	int RemotePort;
+    int Status = get_device_status();;
+
+	//本机被动
+	if (recv_buf[7] == ASK) {
+		memcpy(send_b, recv_buf, 57);
+		send_b[7] = REPLY; //应答
+		sendlength = 57;
+		RemotePort = RemoteVideoPort;
+		UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
+        cb_opt_function.cb_curr_opt(CB_IFRAME_READY, Status);
+	}
 }
 
 //对讲强制I帧

@@ -74,8 +74,7 @@ void UdpVideoRcvThreadDemo(void)
 				&& (buff[3] == UdpPackageHead[3])
 				&& (buff[4] == UdpPackageHead[4])
                 && (buff[5] == UdpPackageHead[5])) {
-            printf("Order = %02X\n", buff[6]);
-        }
+		}
 
 		if (strcmp((char *)buff, "exit") == 0) {
 			printf("recvfrom888888888\n");

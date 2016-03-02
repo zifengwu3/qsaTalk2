@@ -51,7 +51,8 @@ enum _CB_OPT {
     CB_CALL_FAIL,		 //呼叫状态异常
     CB_TALK_TIMEOUT,     //对讲180秒超时
     CB_CALL_TIMEOUT,     //呼叫30秒超时
-    CB_ACK_TIMEOUT       //发送6次超时
+    CB_ACK_TIMEOUT = 11, //发送6次超时
+    CB_IFRAME_READY	     //I帧解析OK
 };
 
 enum _CALL_MODE {

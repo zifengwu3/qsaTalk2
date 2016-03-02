@@ -68,6 +68,7 @@
 #define REMOTEOPENLOCK   10     //远程开锁
 
 #define FORCEIFRAME      11     //强制I帧请求
+#define IFRAMEREADY      12     //I帧请求OK
 #define ZOOMOUT          15     //放大(720*480)
 #define ZOOMIN           16     //缩小(352*288)
 #define OPENLOCK         17
