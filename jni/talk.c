@@ -174,7 +174,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 #if _SEND_VIDEO_TEST
     int j;
     int TotalPackage; //总包数
-    unsigned char mpeg4_out[1600];
+    unsigned char mpeg4_out[9600];
 #else
     unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
 #endif
@@ -274,7 +274,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         //UDP发送
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 mpeg4_out, (9 + sizeof(struct talkdata1) + length));
-        LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
+        //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
 #endif
     }
 }

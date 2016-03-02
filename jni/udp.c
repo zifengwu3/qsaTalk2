@@ -474,7 +474,7 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
     char ip[20];
     int type = 0;
 
-    LOGD("%s \n", __FUNCTION__);
+    LOGD("\n%s \n", __FUNCTION__);
 
 	//Ëø¶¨»¥³âËø
 	pthread_mutex_lock (&Local.udp_lock);
