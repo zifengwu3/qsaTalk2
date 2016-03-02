@@ -42,7 +42,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
 
             for (i = 0; i < UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 4;
+                    Multi_Udp_Buff[i].SendNum = 5;
                     Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                     Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
 
