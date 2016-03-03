@@ -31,8 +31,8 @@
 #define LFTMULTIADDR  "238.9.9.2"//"192.168.10.255"  //NS组播地址
 #define MULTITTL   5      //组播TTL值
 
-//#define PACKDATALEN  1200   //数据包大小
-#define PACKDATALEN  4096   //数据包大小
+#define AUDIOPACKDATALEN  1200   //数据包大小
+#define VIDEOPACKDATALEN  4096   //数据包大小
 #ifdef _AUDIO_BUF_48MS
 #define AUDIOBLK (128*6)   //每帧48ms
 #else

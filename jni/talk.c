@@ -188,11 +188,11 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     Status = get_device_status();
 
 #if _SEND_VIDEO_TEST
-    if (Status == CB_TALK_OK) {
+    if (Status == CB_ST_TALKING) {
 
         int j;
         int TotalPackage; //总包数
-        unsigned char mpeg4_out[4096 + sizeof(struct talkdata1) + 20];
+        unsigned char mpeg4_out[VIDEOPACKDATALEN + sizeof(struct talkdata1) + 20];
 
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
@@ -225,7 +225,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 remote_info.DenIP[2], remote_info.DenIP[3]);
 
         //单包长度
-        talkdata.PackLen = PACKDATALEN;
+        talkdata.PackLen = VIDEOPACKDATALEN;
         //总包数
         if ((length%talkdata.PackLen) == 0) {
             TotalPackage = length/talkdata.PackLen;
@@ -259,7 +259,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
             //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
         }
-    } else if (Status == CB_CALL_OK) {
+    } else if (Status == CB_ST_CALLING) {
 
         unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
 
@@ -309,7 +309,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
     }
 #else
-
     if (Status > 0) {
 
         unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
@@ -420,7 +419,13 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         talkdata.CurrPackage = 1;
         //数据长度
         talkdata.Datalen = length;
-        talkdata.PackLen = 1200;
+
+        if (talkdata.Datalen < AUDIOPACKDATALEN) {
+            talkdata.PackLen = length;
+        } else {
+            talkdata.PackLen = AUDIOPACKDATALEN;
+        }
+
         memcpy(adpcm_out + 9, &talkdata, sizeof(talkdata));
         memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  length);
 
