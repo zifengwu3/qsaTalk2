@@ -171,13 +171,7 @@ void find_ip(const char * addr, int uFlag) {
 
 #define _SEND_VIDEO_TEST 0
 void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
-#if _SEND_VIDEO_TEST
-    int j;
-    int TotalPackage; //总包数
-    unsigned char mpeg4_out[9600];
-#else
-    unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
-#endif
+
     char RemoteHost[20];
     //通话数据结构
     struct talkdata1 talkdata;
@@ -193,7 +187,13 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 
     Status = get_device_status();
 
-    if (Status > 0) {
+#if _SEND_VIDEO_TEST
+    if (Status == CB_TALK_OK) {
+
+        int j;
+        int TotalPackage; //总包数
+        unsigned char mpeg4_out[9600];
+
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
         //命令
@@ -218,7 +218,12 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         } else {
             talkdata.DataType = 3;
         }
-#if _SEND_VIDEO_TEST
+
+        //对方IP
+        sprintf(RemoteHost, "%d.%d.%d.%d", 
+                remote_info.DenIP[0], remote_info.DenIP[1],
+                remote_info.DenIP[2], remote_info.DenIP[3]);
+
         //单包长度
         talkdata.PackLen = PACKDATALEN;
         //总包数
@@ -228,18 +233,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             TotalPackage = (length/talkdata.PackLen) + 1;
         }
         talkdata.TotalPackage = TotalPackage;
-#else
-        //单包长度
-        talkdata.PackLen = length;
-        //总包数
-        talkdata.TotalPackage = 1;
-#endif
-        //对方IP
-        sprintf(RemoteHost, "%d.%d.%d.%d", 
-                remote_info.DenIP[0], remote_info.DenIP[1],
-                remote_info.DenIP[2], remote_info.DenIP[3]);
 
-#if _SEND_VIDEO_TEST
         for (j=1; j<=TotalPackage; j++) {        
             //包的顺序从大到小
             if (j == TotalPackage) {
@@ -265,7 +259,45 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
             //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
         }
-#else
+    } else if (Status == CB_CALL_OK) {
+
+        unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
+
+        //头部
+        memcpy(mpeg4_out, UdpPackageHead, 6);
+        //命令
+        mpeg4_out[6] = VIDEOTALK;
+        mpeg4_out[7] = 1;
+        //子命令
+        mpeg4_out[8] = CALLUP;
+        //IP
+        memcpy(talkdata.HostAddr, local_config.address, 20);
+        memcpy(talkdata.HostIP, &locate_ip, 4);
+        memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
+        memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
+        //时间戳
+        talkdata.timestamp = nowtime;
+        //帧序号
+        talkdata.Frameno = frame_num;
+        //帧数据长度
+        talkdata.Framelen = length;
+        //帧类型
+        if (frame_type == 5) {
+            talkdata.DataType = 2;
+        } else {
+            talkdata.DataType = 3;
+        }
+
+        //对方IP
+        sprintf(RemoteHost, "%d.%d.%d.%d", 
+                remote_info.DenIP[0], remote_info.DenIP[1],
+                remote_info.DenIP[2], remote_info.DenIP[3]);
+
+        //单包长度
+        talkdata.PackLen = length;
+        //总包数
+        talkdata.TotalPackage = 1;
+
         talkdata.CurrPackage = 1;      //当前包
         talkdata.Datalen = length;
         memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
@@ -275,8 +307,59 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 mpeg4_out, (9 + sizeof(struct talkdata1) + length));
         //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
-#endif
     }
+#else
+
+    if (Status > 0) {
+
+        unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
+
+        //头部
+        memcpy(mpeg4_out, UdpPackageHead, 6);
+        //命令
+        mpeg4_out[6] = VIDEOTALK;
+        mpeg4_out[7] = 1;
+        //子命令
+        mpeg4_out[8] = CALLUP;
+        //IP
+        memcpy(talkdata.HostAddr, local_config.address, 20);
+        memcpy(talkdata.HostIP, &locate_ip, 4);
+        memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
+        memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
+        //时间戳
+        talkdata.timestamp = nowtime;
+        //帧序号
+        talkdata.Frameno = frame_num;
+        //帧数据长度
+        talkdata.Framelen = length;
+        //帧类型
+        if (frame_type == 5) {
+            talkdata.DataType = 2;
+        } else {
+            talkdata.DataType = 3;
+        }
+
+        //对方IP
+        sprintf(RemoteHost, "%d.%d.%d.%d", 
+                remote_info.DenIP[0], remote_info.DenIP[1],
+                remote_info.DenIP[2], remote_info.DenIP[3]);
+
+        //单包长度
+        talkdata.PackLen = length;
+        //总包数
+        talkdata.TotalPackage = 1;
+
+        talkdata.CurrPackage = 1;      //当前包
+        talkdata.Datalen = length;
+        memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
+        memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), data, length);
+
+        //UDP发送
+        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
+                mpeg4_out, (9 + sizeof(struct talkdata1) + length));
+        //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
+    }
+#endif
 }
 
 #if _REC_FILE

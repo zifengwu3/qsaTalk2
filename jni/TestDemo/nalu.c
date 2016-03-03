@@ -26,7 +26,6 @@ static int FindStartCode3 (unsigned char *Buf);//查找开始字符0x00000001
 //static bool flag = true;   
 static int info2=0, info3=0;   
 extern unsigned char g_ip[20];
-int send_video_flag = 0;
 
 char framebuffer[1024*2000];
 
@@ -200,7 +199,7 @@ int user_main(int argc, char* argv[])
 
     memset(framebuffer, 0, 1024*2000);//清空buffer；
 
-    while(!feof(bits) && (send_video_flag == 1)) {   
+    while(!feof(bits)) {   
         GetAnnexbNALU(n);//每执行一次，文件的指针指向本次找到的NALU的末尾，下一个位置即为下个NALU的起始码0x000001
         dump(n);//输出NALU长度和TYPE
 
