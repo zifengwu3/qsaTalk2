@@ -169,7 +169,7 @@ void find_ip(const char * addr, int uFlag) {
     }
 }
 
-#define _SEND_VIDEO_TEST 0
+#define _SEND_VIDEO_TEST 1
 void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
 
     char RemoteHost[20];
