@@ -192,7 +192,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 
         int j;
         int TotalPackage; //总包数
-        unsigned char mpeg4_out[9600];
+        unsigned char mpeg4_out[4096 + sizeof(struct talkdata1) + 20];
 
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
@@ -420,7 +420,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         talkdata.CurrPackage = 1;
         //数据长度
         talkdata.Datalen = length;
-        talkdata.PackLen = PACKDATALEN;
+        talkdata.PackLen = 1200;
         memcpy(adpcm_out + 9, &talkdata, sizeof(talkdata));
         memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  length);
 
