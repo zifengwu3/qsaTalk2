@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <arpa/inet.h> 
 #include <linux/if_ether.h>
+#include <sys/socket.h>
 
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
