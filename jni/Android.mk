@@ -13,6 +13,7 @@ LOCAL_SRC_FILES := $(QSA_TALK_PATH)/cb_function.c \
                    $(QSA_TALK_PATH)/init.c \
                    $(QSA_TALK_PATH)/talk.c \
                    $(QSA_TALK_PATH)/timer.c \
+                   $(QSA_TALK_PATH)/arp.c \
                    $(QSA_TALK_PATH)/udp.c
 
 #LOCAL_LDFLAGS :=  -ldl -lm -lc  -lz -llog
