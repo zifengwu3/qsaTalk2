@@ -2,7 +2,7 @@
 #include <arpa/inet.h> 
 #include <linux/if_ether.h>
 
-#define CommonH
+#define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
 int InitArpSocket(void);

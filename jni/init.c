@@ -12,6 +12,7 @@ extern int init_udp_task(void);
 extern int uninit_udp_task(void);
 extern void set_cb_function_default(struct _cb_function * p);
 extern void set_device_status(int uStatus);
+extern int InitArpSocket(void);
 
 int init_param_task(struct dev_config * _config);
 

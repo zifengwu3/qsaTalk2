@@ -13,6 +13,8 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
+extern void SendFreeArp(void);
+
 //UDP
 int SndBufLen = 1024 * 128;
 int RcvBufLen = 1024 * 128;
@@ -357,7 +359,7 @@ void UdpVideoRcvThread(void)
                 && (buff[5] == UdpPackageHead[5])) {
 
             if ((buff[6] == VIDEOTALK) && ((buff[8] != CALLUP) || (buff[8] != CALLDOWN))) {
-                LOGD("FromIP:%s, \n", FromIP);
+                LOGD("FromIP:%s, buff[6] = %d, buff[8] = %d\n", FromIP, buff[6], buff[8]);
             }
 
             switch (buff[6]) {
