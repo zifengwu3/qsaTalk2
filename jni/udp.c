@@ -239,10 +239,16 @@ int InitUdpSocket(short lPort) {
 		return _FALSE;
 	}
 
+    /* Enable address reuse */
+    nYes = 1;
+	if (setsockopt(m_Socket, SOL_SOCKET, SO_REUSEADDR, (char *) &nYes,
+			sizeof((char *) &nYes)) == (-1)) {
+		LOGD("set reuseaddr error.\n\r");
+		return _FALSE;
+    }
+
 	if ((bind(m_Socket, (struct sockaddr *) &s_addr, sizeof(s_addr))) == (-1)) {
 		LOGD("bind error\n\r");
-		exit(errno);
-		return _FALSE;
 	} else {
         LOGD("bind address to socket.\n\r");
     }
@@ -270,8 +276,8 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
-    LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d\n", nSize, nlength);
-    LOGD("&&& SEND VIDEO &&& RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n", RemoteHost, RemotePort, buf[8]);
+    LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d, RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n",
+            nSize, nlength, RemoteHost, RemotePort, buf[8]);
 
 	return nSize;
 }
