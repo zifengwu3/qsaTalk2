@@ -59,6 +59,8 @@ int init_udp_task(void) {
     if (InitUdpSocket(LocalVideoPort) == 0) {
         LOGD("can't create video rece socket.\n\r");
         return _FALSE;
+    } else {
+        LOGD("create video recvice socket.\n\r");
     }
 
     // Send
@@ -268,8 +270,8 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
-    //LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d\n", nSize, nlength);
-    //LOGD("&&& SEND VIDEO &&& RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n", RemoteHost, RemotePort, buf[8]);
+    LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d\n", nSize, nlength);
+    LOGD("&&& SEND VIDEO &&& RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n", RemoteHost, RemotePort, buf[8]);
 
 	return nSize;
 }
