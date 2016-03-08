@@ -65,6 +65,8 @@ int init_udp_task(void) {
     // Add Multiaddr
 	AddMultiGroup(m_VideoSocket, NSMULTIADDR);  
 
+    SendFreeArp();
+
     return _TRUE;
 }
 

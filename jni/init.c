@@ -33,6 +33,8 @@ int init_param_task(struct dev_config * _config) {
     init_local_param_task();
     init_default_remote_task();
 
+    InitArpSocket();
+
     //初始化回调函数
     set_cb_function_default(&cb_opt_function);
 
