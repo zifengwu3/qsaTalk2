@@ -47,7 +47,6 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
 		int length);
 void TalkEnd_ClearStatus(void);
 void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP);
-void RecvIFrameReadyOK_Func(unsigned char *recv_buf, char *cFromIP);
 
 int init_udp_task(void);
 int Init_Udp_Send_Task(void);
@@ -347,7 +346,6 @@ void UdpVideoRcvThread(void)
 		buff[len] = '\0';
 
 		strcpy(FromIP, inet_ntoa(c_addr.sin_addr));
-        //LOGD("FromIP:%s\n", FromIP);
 
 		if ((buff[0] == UdpPackageHead[0]) 
                 && (buff[1] == UdpPackageHead[1])
@@ -355,6 +353,11 @@ void UdpVideoRcvThread(void)
 				&& (buff[3] == UdpPackageHead[3])
 				&& (buff[4] == UdpPackageHead[4])
                 && (buff[5] == UdpPackageHead[5])) {
+
+            if ((buff[6] == VIDEOTALK) && ((buff[8] != CALLUP) || (buff[8] != CALLDOWN))) {
+                LOGD("FromIP:%s, \n", FromIP);
+            }
+
             switch (buff[6]) {
                 case NSORDER:   //主机名解析（子网内广播）
 					switch(buff[7])
@@ -432,17 +435,6 @@ void UdpVideoRcvThread(void)
                                 }
                             }
                             break;
-#if 0
-                        case IFRAMEREADY:
-                            {
-                                if (len >= 57) {
-                                    RecvIFrameReadyOK_Func(buff, FromIP);
-                                } else {
-                                    LOGD("len of Iframe ready ok is unusual\n");
-                                }
-                            }
-                            break;
-#endif
                         case CALLUP:
                         case CALLDOWN:
                             Recv_Talk_Call_UpDown_Task(buff, FromIP, len);
@@ -878,23 +870,6 @@ void ForceIFrame_Func(void) //强制I帧
 			break;
         }
     }
-}
-
-void RecvIFrameReadyOK_Func(unsigned char *recv_buf, char *cFromIP) {
-	unsigned char send_b[1520];
-	int sendlength;
-	int RemotePort;
-    int Status = get_device_status();;
-
-	//本机被动
-	if (recv_buf[7] == ASK) {
-		memcpy(send_b, recv_buf, 57);
-		send_b[7] = REPLY; //应答
-		sendlength = 57;
-		RemotePort = RemoteVideoPort;
-		UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
-        cb_opt_function.cb_curr_opt(CB_IFRAME_READY, Status);
-	}
 }
 
 //对讲强制I帧

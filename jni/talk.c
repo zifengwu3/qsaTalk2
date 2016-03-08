@@ -43,7 +43,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
 
             for (i = 0; i < UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 5;
+                    Multi_Udp_Buff[i].SendNum = 3;
                     Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                     Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
 
@@ -262,7 +262,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                     UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                             mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
                 }
-                LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
+                //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
             }
         } else if (Status == CB_ST_CALLING) {
 
@@ -279,7 +279,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             //UDP发送
             UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                     mpeg4_out, (9 + sizeof(struct talkdata1) + length));
-            LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
+            //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
         }
 #else
         //单包长度
