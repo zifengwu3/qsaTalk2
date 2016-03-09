@@ -3,8 +3,10 @@
 
 #include "../include/libqsa_callback.h"
 extern int g_Status;
+extern int g_Value;
 extern unsigned char g_addr[30];
 extern unsigned char g_ip[20];
+extern short UdpRecvFlag;
 
 /* default defined */
 void default_cb_audio_data1(void * data, int length, int type) {
@@ -33,8 +35,11 @@ void default_cb_devip1(const void * address, const void * ip, int uflag) {
 void default_cb_opt1(int value, int status) {
 
     g_Status = status;
+    g_Value = value;
 
-    printf(" %s:value = %d, g_Status = %d\n", __FUNCTION__, value, g_Status);
+    UdpRecvFlag = 1;
+
+    printf("[%s]:value = %d, g_Status = %d\n", __FUNCTION__, g_Value, g_Status);
 
     return;
 }

@@ -50,7 +50,9 @@ veryclean : clean
 gcc:
 	$(CC) -pthread -o main $(TEST_PATH)/main.c \
 						   $(TEST_PATH)/timer.c \
+						   $(TEST_PATH)/tty.c \
 						   $(TEST_PATH)/cb_function.c \
+						   $(TEST_PATH)/recvice_udp.c \
 						   $(TEST_PATH)/nalu.c \
 						   $(TARGET)
 ndk:

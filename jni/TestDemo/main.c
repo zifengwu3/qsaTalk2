@@ -9,12 +9,12 @@ extern void default_cb_info1(const void * data, const void * ip, int length, int
 extern void default_cb_devip1(const void * address, const void * ip, int uflag);
 extern void default_cb_opt1(int value, int status);
 extern int InitUdpSocketDemo(short lPort);
+extern void CreateUdpVideoRcvThreadDemo(void);
 
 int g_Status = 0;
+int g_Value = 0;
 unsigned char g_addr[30];
 unsigned char g_ip[20];
-
-void playh264file(char * filename);
 
 int main() {
 
@@ -25,6 +25,7 @@ int main() {
     //uint32_t Ip_Int;
     unsigned char ip[20] = "192.168.10.97";
     int uFlag = 0;
+    int rntval = 0;
 
     memset(&config, 0x00, sizeof(struct dev_config));
     strcpy(config.address, "M00010100000000000000");
@@ -43,7 +44,9 @@ int main() {
     g_Status = CB_ST_NULL;
     strcpy(g_addr, "0606");
     //strcpy(g_ip, "192.168.11.188");
-
+    //
+    //
+    CreateUdpVideoRcvThreadDemo();
     usleep(100*1000);
     programrun = 1;
 	ch = ' ';
@@ -81,6 +84,8 @@ int main() {
                     break;
                 case 'D':
                     {
+                        rntval = opentty("/dev/pts/7");
+                        printf("rntval = %d\n", rntval);
                     }
                     break;
                 case 'E':
@@ -108,7 +113,6 @@ int main() {
                 case 'O':
                     break;
                 case 'P':
-                    //playh264file("/home/l/workspace/talk/jni/TestDemo/1.h264");
                     user_main();
                     break;
                 case 'Q':                     // 判断是否[q]键被按下
@@ -185,34 +189,6 @@ int main() {
     uninit_task();
 
     exit(0);
-}
-
-void playh264file(char * filename) {
-    int i;
-	int bytes_read,bytes_write;
-    FILE *fd;
-    char buffer[500];
-
-    fd = fopen(filename, "rb+");
-
-    if (fd == NULL) {
-        printf("fd is fail");
-    } else {
-        printf("fd is success\n");
-        bytes_read = fread(buffer, 130, 1, fd);
-        printf("bytes_read = %d\n", bytes_read);
-
-        for (i = 0; i < 130; i++) {
-            if ((i != 0) && ((i % 13) == 0)) {
-                printf("\n");
-            }
-            printf("%02x ", (buffer[i]));
-        }
-    }
-
-    fclose(fd);
-
-    return;
 }
 
 

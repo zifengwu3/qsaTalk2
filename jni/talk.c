@@ -29,10 +29,13 @@ void start_call(const char * ip, const char * addr, int uFlag) {
         if (Status == CB_ST_NULL) {
             /* get remote device information */
             Ip_Int = inet_addr(ip);
+
             memcpy(&remote_info.IP[j], &Ip_Int, 4);
             LOGD("<%s>   %d.%d.%d.%d\n", __FUNCTION__,
                     remote_info.IP[j][0], remote_info.IP[j][1], 
                     remote_info.IP[j][2], remote_info.IP[j][3]);
+
+            memcpy(remote_info.DenIP, remote_info.IP[j], 4);
 
             memcpy(&remote_info.Addr[j], local_config.address, 20);
             remote_info.Addr[j][0] = 'S';
@@ -43,7 +46,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
 
             for (i = 0; i < UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 5;
+                    Multi_Udp_Buff[i].SendNum = 3;
                     Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                     Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
 

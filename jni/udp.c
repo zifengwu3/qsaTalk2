@@ -276,10 +276,13 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
+
+#if 0
     if ((buf[8] != CALLUP) && (buf[8] != CALLDOWN)) {
         LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d, RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n",
                 nSize, nlength, RemoteHost, RemotePort, buf[8]);
     }
+#endif
 
 	return nSize;
 }

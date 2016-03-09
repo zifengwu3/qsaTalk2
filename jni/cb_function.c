@@ -91,7 +91,7 @@ void default_cb_opt(int value, int status) {
 }
 
 int get_device_status(void) {
-    LOGD("%s: Status = %d\n", __FUNCTION__, Local.Status);
+    LOGD("\n[%s]: Status = %d\n", __FUNCTION__, Local.Status);
     return Local.Status;
 }
 

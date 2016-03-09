@@ -11,6 +11,8 @@
 #include <pthread.h>       //sem_t
 #include <string.h>
 
+extern int g_Value;
+extern int g_Status;
 
 int InitUdpSocketDemo(short lPort);
 void CloseUdpSocketDemo(void);
@@ -34,13 +36,12 @@ void CreateUdpVideoRcvThreadDemo(void) {
 	ret = pthread_create(&udpvideorcvid, &attr, (void *) UdpVideoRcvThreadDemo,
 			NULL);
 	pthread_attr_destroy(&attr);
-#ifdef _DEBUG
-	printf("Create UDP video pthread!\n");
-#endif
+	printf("Create UDP video demo pthread!\n");
 	if (ret != 0) {
 		printf("Create video pthread error!\n");
         return;
 	}
+    return;
 }
 
 void UdpVideoRcvThreadDemo(void)
@@ -52,34 +53,32 @@ void UdpVideoRcvThreadDemo(void)
 	unsigned char buff[8096];
     char UdpPackageHead[15];
 
-    printf("This is udp video pthread.\n");
+    printf("This is udp value demo pthread.\n");
 	UdpRecvFlag = 1;
 
-    strcpy(UdpPackageHead, "QIUSHI");
-	addr_len = sizeof(c_addr);
 	while (UdpRecvFlag == 1) {
-		len = recvfrom(m_VideoSocketDemo, buff, sizeof(buff) - 1, 0,
-				(struct sockaddr *) &c_addr, &addr_len);
-		if (len < 0) {
-			perror("recvfrom");
-			continue;
-		}
-		buff[len] = '\0';
+        switch (g_Value) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+            case 4:
+            case 5:
+            case 6:
+            case 7:
+            case 8:
+            case 9:
+            case 10:
+            case 11:
+                {
+                    printf("[%s]:value = %d, g_Status = %d\n", __FUNCTION__, g_Value, g_Status);
+                    g_Value = 99;
+                }
+                break;
+            default:
+                break;
+        }
 
-		strcpy(FromIP, inet_ntoa(c_addr.sin_addr));
-
-		if ((buff[0] == UdpPackageHead[0]) 
-                && (buff[1] == UdpPackageHead[1])
-				&& (buff[2] == UdpPackageHead[2])
-				&& (buff[3] == UdpPackageHead[3])
-				&& (buff[4] == UdpPackageHead[4])
-                && (buff[5] == UdpPackageHead[5])) {
-		}
-
-		if (strcmp((char *)buff, "exit") == 0) {
-			printf("recvfrom888888888\n");
-			UdpRecvFlag = 0;
-		}
 	}
 
     return;
