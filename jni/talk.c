@@ -20,7 +20,8 @@ void start_call(const char * ip, const char * addr, int uFlag) {
 	uint32_t Ip_Int;
     int Status = 0;
 
-    j = remote_info.DenNum;
+    //j = remote_info.DenNum;
+    j = 0;
 
     if ( 2 == uFlag ) {
 
@@ -376,10 +377,13 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  length);
 
         //UDP发送
+        /*
         sprintf(RemoteHost, "%d.%d.%d.%d", 
                 remote_info.DenIP[0], remote_info.DenIP[1],
                 remote_info.DenIP[2], remote_info.DenIP[3]);
-
+                */
+        strcpy(RemoteHost, ip);
+        LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
     }
