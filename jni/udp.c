@@ -276,8 +276,10 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
-    LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d, RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n",
-            nSize, nlength, RemoteHost, RemotePort, buf[8]);
+    if ((buf[8] != CALLUP) && (buf[8] != CALLDOWN)) {
+        LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d, RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n",
+                nSize, nlength, RemoteHost, RemotePort, buf[8]);
+    }
 
 	return nSize;
 }
@@ -366,8 +368,8 @@ void UdpVideoRcvThread(void)
 				&& (buff[4] == UdpPackageHead[4])
                 && (buff[5] == UdpPackageHead[5])) {
 
-            if ((buff[6] == VIDEOTALK) && ((buff[8] != CALLUP) || (buff[8] != CALLDOWN))) {
-                LOGD("FromIP:%s, buff[6] = %d, buff[8] = %d\n", FromIP, buff[6], buff[8]);
+            if ((buff[8] != CALLUP) && (buff[8] != CALLDOWN)) {
+                LOGD("FromIP:%s, buff[8] = 0x%02X\n", FromIP, buff[8]);
             }
 
             switch (buff[6]) {
@@ -397,6 +399,7 @@ void UdpVideoRcvThread(void)
                             break;
                         case LINEUSE:
                             if (len >= 57) {
+                                LOGD("call reply is busy\n");
                                 Recv_Talk_Line_Use_Task(buff, FromIP);
                             } else {
                                 LOGD("len of lineuse reply is unusual\n");
@@ -575,8 +578,6 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 								|| (Multi_Udp_Buff[i].buf[6] == VIDEOTALKTRANS)) {
 							if (Multi_Udp_Buff[i].buf[7] == ASK) {
 								if (Multi_Udp_Buff[i].buf[8] == CALL) {
-									if (strcmp(Multi_Udp_Buff[i].RemoteHost,
-											cFromIP) == 0) {
 										Multi_Udp_Buff[i].isValid = 0;
                                         if (remote_info.DenNum == 1) {
                                             Status = get_device_status();
@@ -587,7 +588,6 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
                                             }
                                         }
                                         break;
-									}
 								}
 							}
 						}
