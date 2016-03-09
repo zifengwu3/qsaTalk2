@@ -35,7 +35,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
                     remote_info.IP[j][0], remote_info.IP[j][1], 
                     remote_info.IP[j][2], remote_info.IP[j][3]);
 
-            memcpy(remote_info.DenIP, remote_info.IP[j], 4);
+            memcpy(&remote_info.DenIP, &remote_info.IP[j], 4);
 
             memcpy(&remote_info.Addr[j], local_config.address, 20);
             remote_info.Addr[j][0] = 'S';
@@ -224,9 +224,13 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         }
 
         //对方IP
+        /*
         sprintf(RemoteHost, "%d.%d.%d.%d", 
                 remote_info.DenIP[0], remote_info.DenIP[1],
                 remote_info.DenIP[2], remote_info.DenIP[3]);
+                */
+        strcpy(RemoteHost, ip);
+        LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
 
 #if _SEND_VIDEO_TEST
 
