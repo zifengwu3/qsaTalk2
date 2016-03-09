@@ -113,7 +113,7 @@ void stop_talk(void) {
 			Multi_Udp_Buff[i].SendDelayTime = 0;
 			Multi_Udp_Buff[i].isValid = 1;
 
-            LOGD("<%s>   通知对方关闭对讲呼叫\n", __FUNCTION__);
+            LOGD("<%s>   通知对方关闭对讲呼叫 ip = %s\n", __FUNCTION__, Multi_Udp_Buff[i].RemoteHost);
 			sem_post(&multi_send_sem);
 			break;
 		}
