@@ -12,6 +12,9 @@
 #define _FALSE 0
 #define _TRUE  1
 
+#define _MEPG2 0
+#define _H264  1
+
 #define DIRECTCALLTIME  600 
 
 #define INTRTIME 50       //线程50ms

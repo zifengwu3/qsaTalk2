@@ -66,7 +66,7 @@ void start_call(const char * ip, const char * addr, int uFlag) {
                     memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
                     memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[j], 20);
                     memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[j], 4);
-                    Multi_Udp_Buff[i].buf[57] = 0;
+                    Multi_Udp_Buff[i].buf[57] = _H264;
                     memcpy(Multi_Udp_Buff[i].buf + 58, remote_info.IP, 4);
 
                     Multi_Udp_Buff[i].nlength = 62;
