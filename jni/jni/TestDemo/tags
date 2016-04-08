@@ -1,0 +1,103 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AllocNALU	nalu.c	/^NALU_t *AllocNALU(int buffersize)   $/;"	f
+AllocNALU	new_nal.c	/^NALU_t *AllocNALU(int buffersize)$/;"	f
+CloseUdpSocketDemo	recvice_udp.c	/^void CloseUdpSocketDemo(void) {$/;"	f
+CreateUdpVideoRcvThreadDemo	recvice_udp.c	/^void CreateUdpVideoRcvThreadDemo(void) {$/;"	f
+DEST_IP	h264.h	21;"	d
+DEST_PORT	h264.h	22;"	d
+E	h264.h	/^	unsigned char E:1;$/;"	m	struct:__anon4
+F	h264.h	/^	unsigned char F:1;    $/;"	m	struct:__anon2
+F	h264.h	/^	unsigned char F:1;    $/;"	m	struct:__anon3
+FU_HEADER	h264.h	/^} FU_HEADER; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon4
+FU_INDICATOR	h264.h	/^} FU_INDICATOR; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon3
+FindStartCode2	nalu.c	/^static int FindStartCode2 (unsigned char *Buf)   $/;"	f	file:
+FindStartCode2	new_nal.c	/^static int FindStartCode2 (unsigned char *Buf)$/;"	f	file:
+FindStartCode3	nalu.c	/^static int FindStartCode3 (unsigned char *Buf)   $/;"	f	file:
+FindStartCode3	new_nal.c	/^static int FindStartCode3 (unsigned char *Buf)$/;"	f	file:
+FreeNALU	nalu.c	/^void FreeNALU(NALU_t *n)   $/;"	f
+FreeNALU	new_nal.c	/^void FreeNALU(NALU_t *n)$/;"	f
+GetAnnexbNALU	nalu.c	/^int GetAnnexbNALU (NALU_t *nalu)   $/;"	f
+GetAnnexbNALU	new_nal.c	/^int GetAnnexbNALU (NALU_t *nalu)$/;"	f
+H264	h264.h	24;"	d
+InitUdpSocketDemo	recvice_udp.c	/^int InitUdpSocketDemo(short lPort) {$/;"	f
+InitWinsock	new_nal.c	/^BOOL InitWinsock()$/;"	f
+MAX_RTP_PKT_LENGTH	h264.h	19;"	d
+NALU_HEADER	h264.h	/^} NALU_HEADER; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon2
+NALU_t	nalu.c	/^} NALU_t;   $/;"	t	typeref:struct:__anon5	file:
+NALU_t	new_nal.c	/^} NALU_t;$/;"	t	typeref:struct:__anon6	file:
+NRI	h264.h	/^	unsigned char NRI:2; $/;"	m	struct:__anon3
+NRI	h264.h	/^    unsigned char NRI:2;$/;"	m	struct:__anon2
+OpenBitstreamFile	nalu.c	/^void OpenBitstreamFile (char *fn)   $/;"	f
+OpenBitstreamFile	new_nal.c	/^void OpenBitstreamFile (char *fn)$/;"	f
+OpenBitstreamFile1	nalu.c	/^void OpenBitstreamFile1 (char *fn)   $/;"	f
+PACKET_BUFFER_END	h264.h	16;"	d
+R	h264.h	/^	unsigned char R:1;$/;"	m	struct:__anon4
+RTP_FIXED_HEADER	h264.h	/^} RTP_FIXED_HEADER;$/;"	t	typeref:struct:__anon1
+S	h264.h	/^	unsigned char S:1;    $/;"	m	struct:__anon4
+TYPE	h264.h	/^	unsigned char TYPE:5;$/;"	m	struct:__anon2
+TYPE	h264.h	/^    unsigned char TYPE:5;$/;"	m	struct:__anon3
+TYPE	h264.h	/^    unsigned char TYPE:5;$/;"	m	struct:__anon4
+UdpRecvFlag	recvice_udp.c	/^short UdpRecvFlag;$/;"	v
+UdpVideoRcvThreadDemo	recvice_udp.c	/^void UdpVideoRcvThreadDemo(void)$/;"	f
+bits	nalu.c	/^FILE *bits = NULL;                \/\/!< the bit stream file   $/;"	v
+bits	new_nal.c	/^FILE *bits = NULL;                \/\/!< the bit stream file$/;"	v
+buf	nalu.c	/^    char *buf;                    \/\/! contains the first byte followed by the EBSP   $/;"	m	struct:__anon5	file:
+buf	new_nal.c	/^  char *buf;                    \/\/! contains the first byte followed by the EBSP$/;"	m	struct:__anon6	file:
+buffer	nalu.c	/^char buffer[1024*1024*512];$/;"	v
+csrc_len	h264.h	/^    unsigned char csrc_len:4;        \/**\/\/* expect 0 *\/$/;"	m	struct:__anon1
+default_cb_audio_data1	cb_function.c	/^void default_cb_audio_data1(void * data, int length, int type) {$/;"	f
+default_cb_devip1	cb_function.c	/^void default_cb_devip1(const void * address, const void * ip, int uflag) {$/;"	f
+default_cb_info1	cb_function.c	/^void default_cb_info1(const void * data, const void * ip, int length, int port) {$/;"	f
+default_cb_opt1	cb_function.c	/^void default_cb_opt1(int value, int status) {$/;"	f
+dump	nalu.c	/^void dump(NALU_t *n)   $/;"	f
+dump	new_nal.c	/^void dump(NALU_t *n)$/;"	f
+extension	h264.h	/^    unsigned char extension:1;        \/**\/\/* expect 1, see RTP_OP below *\/$/;"	m	struct:__anon1
+forbidden_bit	nalu.c	/^    int forbidden_bit;            \/\/! should be always FALSE   $/;"	m	struct:__anon5	file:
+forbidden_bit	new_nal.c	/^  int forbidden_bit;            \/\/! should be always FALSE$/;"	m	struct:__anon6	file:
+framebuffer	nalu.c	/^char framebuffer[1024*200];$/;"	v
+fu_hdr	new_nal.c	/^FU_HEADER		*fu_hdr;$/;"	v
+fu_ind	new_nal.c	/^FU_INDICATOR	*fu_ind;$/;"	v
+g_Status	main.c	/^int g_Status = 0;$/;"	v
+g_addr	main.c	/^unsigned char g_addr[30];$/;"	v
+g_ip	main.c	/^unsigned char g_ip[20];$/;"	v
+info2	nalu.c	/^static int info2=0, info3=0;   $/;"	v	file:
+info2	new_nal.c	/^static int info2=0, info3=0;$/;"	v	file:
+info3	nalu.c	/^static int info2=0, info3=0;   $/;"	v	file:
+info3	new_nal.c	/^static int info2=0, info3=0;$/;"	v	file:
+init_order	timer.c	/^int init_order(void) {$/;"	f
+len	nalu.c	/^    unsigned len;                 \/\/! Length of the NAL unit (Excluding the start code, which does not belong to the NALU)   $/;"	m	struct:__anon5	file:
+len	new_nal.c	/^  unsigned len;                 \/\/! Length of the NAL unit (Excluding the start code, which does not belong to the NALU)$/;"	m	struct:__anon6	file:
+lost_packets	nalu.c	/^    unsigned short lost_packets;  \/\/! true, if packet loss is detected   $/;"	m	struct:__anon5	file:
+lost_packets	new_nal.c	/^  unsigned short lost_packets;  \/\/! true, if packet loss is detected$/;"	m	struct:__anon6	file:
+m_VideoSocketDemo	recvice_udp.c	/^int m_VideoSocketDemo;$/;"	v
+main	main.c	/^int main() {$/;"	f
+main	new_nal.c	/^int main(int argc, char* argv[])$/;"	f
+marker	h264.h	/^    unsigned char marker:1;        \/**\/\/* expect 1 *\/$/;"	m	struct:__anon1
+max_size	nalu.c	/^    unsigned max_size;            \/\/! Nal Unit Buffer size   $/;"	m	struct:__anon5	file:
+max_size	new_nal.c	/^  unsigned max_size;            \/\/! Nal Unit Buffer size$/;"	m	struct:__anon6	file:
+nal_reference_idc	nalu.c	/^    int nal_reference_idc;        \/\/! NALU_PRIORITY_xxxx   $/;"	m	struct:__anon5	file:
+nal_reference_idc	new_nal.c	/^  int nal_reference_idc;        \/\/! NALU_PRIORITY_xxxx$/;"	m	struct:__anon6	file:
+nal_unit_type	nalu.c	/^    int nal_unit_type;            \/\/! NALU_TYPE_xxxx       $/;"	m	struct:__anon5	file:
+nal_unit_type	new_nal.c	/^  int nal_unit_type;            \/\/! NALU_TYPE_xxxx    $/;"	m	struct:__anon6	file:
+nalu_hdr	new_nal.c	/^NALU_HEADER		*nalu_hdr;$/;"	v
+order_thread	timer.c	/^pthread_t order_thread;$/;"	v
+order_thread_flag	timer.c	/^int order_thread_flag;$/;"	v
+order_thread_task	timer.c	/^void order_thread_task(void) {$/;"	f
+padding	h264.h	/^    unsigned char padding:1;        \/**\/\/* expect 0 *\/$/;"	m	struct:__anon1
+payload	h264.h	/^    unsigned char payload:7;        \/**\/\/* RTP_PAYLOAD_RTSP *\/$/;"	m	struct:__anon1
+playh264file	main.c	/^void playh264file(char * filename) {$/;"	f
+rtp_hdr	new_nal.c	/^RTP_FIXED_HEADER        *rtp_hdr;$/;"	v
+seq_no	h264.h	/^    unsigned short seq_no;            $/;"	m	struct:__anon1
+ssrc	h264.h	/^    unsigned long ssrc;            \/**\/\/* stream number is used here. *\/$/;"	m	struct:__anon1
+startcodeprefix_len	nalu.c	/^    int startcodeprefix_len;      \/\/! 4 for parameter sets and first slice in picture, 3 for everything else (suggested)   $/;"	m	struct:__anon5	file:
+startcodeprefix_len	new_nal.c	/^  int startcodeprefix_len;      \/\/! 4 for parameter sets and first slice in picture, 3 for everything else (suggested)$/;"	m	struct:__anon6	file:
+timestamp	h264.h	/^    unsigned  long timestamp;        $/;"	m	struct:__anon1
+udpvideorcvid	recvice_udp.c	/^pthread_t udpvideorcvid;$/;"	v
+uninit_order	timer.c	/^int uninit_order(void) {$/;"	f
+user_main	nalu.c	/^int user_main(int argc, char* argv[])   $/;"	f
+version	h264.h	/^    unsigned char version:2;        \/**\/\/* expect 2 *\/$/;"	m	struct:__anon1

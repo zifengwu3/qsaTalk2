@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <semaphore.h>       //sem_t
-#include <pthread.h>       //sem_t
 #include <string.h>
+#include <pthread.h>       //sem_t
+#include <semaphore.h>       //sem_t
 #include <arpa/inet.h>
 
 #include "libqsa_def.h"
@@ -88,7 +88,7 @@ struct Remote1 {
     int isDirect;       //是否直通  0 直通  1 中转
 };
 
-struct Local1 {
+struct Local2 {
     int Status;
     //状态 0 空闲 1 主叫对讲  2 被叫对讲  3 监视  4 被监视  5 主叫通话
     //6 被叫通话
@@ -145,7 +145,7 @@ struct _cb_function cb_opt_function;
 struct dev_config local_config;                      //本地通用配置
 int configlen = sizeof(struct dev_config);            //结构长度
 
-struct Local1 Local;
+struct Local2 Local;
 //远端地址
 struct Remote1 remote_info;
 char null_addr[21];   //空字符串
@@ -185,7 +185,7 @@ extern struct _cb_function cb_opt_function;
 extern struct dev_config local_config;               
 extern int configlen;
 
-extern struct Local1 Local;
+extern struct Local2 Local;
 extern struct Remote1 remote_info;
 extern char null_addr[21];   //空字符串
 extern char null_ip[4];   //空字符串

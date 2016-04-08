@@ -1,172 +1,489 @@
-/************************************************************
- *  File:
- *  Author:
- *  Version :
- *  Date:
- *  Description:
- *  History:
- *            <Zhou Xiaomin> <2016-01-20>
- ***********************************************************/
-
 #include <stdio.h>
-#include <time.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <pthread.h>
+#include <time.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <sys/mman.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include <sys/ipc.h>
 
-#define _LIB_QSA_DEF_H
-#include "libqsa_common.h"
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef unsigned char u8;
 
-void OnlineCheckFunc(void);
-void TalkCtrlFunc(void);
+//#include <linux/ethtool.h>
+#include <net/if.h>
+#include <linux/sockios.h>
 
-int timer_thread_flag;
-pthread_t timer_thread;
-void timer_thread_task(void);
-extern int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
-		unsigned char * buf, int nlength);
+#define CommonH
+#include "common.h"
 
-int Init_Timer(void);
-int Uninit_Timer(void);
+//¼üÅÌÉ¨Ãè
+void OnlineCheckFunc(void); //ÔÚÏßÈ·ÈÏ¼ì²âº¯Êı
+void TimeReportStatusFunc(void); //Éè±¸¶¨Ê±±¨¸æ×´Ì¬º¯Êı
 
-int Init_Timer(void) {
+int CursorFlag;
+int ShowCursor; //ÊÇ·ñÏÔÊ¾¹â±ê
+void ShowCursorFunc(void);  //ÏÔÊ¾ÊäÈë¹â±êº¯Êı
+void TalkCtrlFunc(void);  //¶Ô½²¿ØÖÆ£¬ÏÔÊ¾Í¨»°Ê±¼äºÍÅĞ¶Ï³¬Ê±
 
-	pthread_attr_t attr;
-	timer_thread_flag = 1;
-	pthread_attr_init(&attr);
-	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
-	pthread_create(&timer_thread, &attr, (void *) timer_thread_task, NULL);
-	pthread_attr_destroy(&attr);
-	if (timer_thread == 0) {
-		LOGD("don't create timer thread \n");
-		return (-1);
-	}
-	return 0;
-}
+//---------------------------------------------------------------------------
+void gpio_rcv_thread_func(void)
+{
+	int timenum;  //¼ÆÊı
 
-int Uninit_Timer(void) {
-	//timer
-	timer_thread_flag = 0;
-	usleep(40 * 1000);
-	return 0;
-}
-
-void timer_thread_task(void) {
-
-	int timenum;
-
-	LOGD("create timer thread :0.5\n");
+#ifdef _DEBUG
+	printf("´´½¨GPIO½ÓÊÕÏß³Ì£º\n" );
+	printf("gpio_rcv_flag=%d\n",gpio_rcv_flag);
+#endif
 
 	timenum = 0;
-	while (timer_thread_flag) {
+	//¹â±ê
+	CursorFlag = 1;
+	while(gpio_rcv_flag)
+	{
+        //Á¬Ğø6ÃëÃ»ÓĞÊÕµ½ÔÚÏßÈ·ÈÏ£¬ÔòÈÏÎª¶ÏÏß
+        if (Local.OnlineFlag == 1) {
+            OnlineCheckFunc();
+        }
 
-		if (Local.OnlineFlag == 1) {
-			OnlineCheckFunc();
-            TalkCtrlFunc();
-		}
+        if (SendTalkInfoFlag) {
+            SendInfoToCenter_Func();	
+            SendTalkInfoFlag = 0;
+        }
 
-		timenum++;
+        if (NeedOpenLock) {
+            SendInfoToCenter_Func();	
+            NeedOpenLock= 0;
+        }
 
-		if (timenum > 0xFFFFFF) {
-			timenum = 0;
-		}
-		usleep((TIMERTIME-10)*1000);
-	}
+        if (Local.OpenD1VideoFlag == 1 && Local.Status != 0 && Local.PlayPicSize == 1) {
+            StartRecVideo(D1_W, D1_H);
+            Local.OpenD1VideoFlag = 0;
+        }
 
-}
-
-//åœ¨çº¿æ£€æŸ¥
-void OnlineCheckFunc(void)
-{
-    int sendlength;
-    int RemotePort;
-	unsigned char send_b[1520];
-    int Status = 0;
-    Status = get_device_status();
-
-	if (Local.Timer1Num > (TIMERPERSEC * 12)) {
-		if (Local.CallConfirmFlag == 0) {
-			if ((Status == CB_ST_CALLING) || (Status == CB_ST_CALLED)
-					|| (Status == CB_ST_TALKING) || (Status == CB_ST_TALKED)) {
-				stop_talk();
-                Status = CB_ST_NULL;
-                set_device_status(Status);
-                cb_opt_function.cb_curr_opt(CB_TALK_STOP, Status);
+        if (LocalCfg.ReportTime != 0 && Local.Status == 0) {
+            if (Local.ReportSend == 1) {
+                if (Local.ReportTimeNum >= (LocalCfg.ReportTime*INTRPERSEC)) {
+                    Local.RandReportTime = (int)(1.0*LocalCfg.ReportTime*rand()/(RAND_MAX+1.0)) + 1;
+                    Local.ReportSend = 0;
+                    Local.ReportTimeNum = 0;
+                }
             }
-			Local.OnlineFlag = 0;
-			LOGD("æ²¡æœ‰æ”¶åˆ°åœ¨çº¿ç¡®è®¤ï¼Œå¼ºåˆ¶ç»“æŸ\n");
-		} else {
-			Local.CallConfirmFlag = 0;
-		}
-		Local.Timer1Num = 0;
+            if (Local.ReportSend == 0) {
+                if (Local.ReportTimeNum >= (Local.RandReportTime*INTRPERSEC)) {
+                    Local.ReportSend = 1;
+                    TimeReportStatusFunc();
+                }
+            }
+            Local.ReportTimeNum ++;
+        }
 
-	} else if ((Local.Timer1Num % (TIMERPERSEC * 2)) == 0) {
-		if ((Status == CB_ST_CALLED) || (Status == CB_ST_TALKED)) {
-			memcpy(send_b, UdpPackageHead, 6);
-			send_b[6] = VIDEOTALK;
-
-			send_b[7] = ASK;
-			send_b[8] = CALLCONFIRM;
-			memcpy(send_b + 9, local_config.address, 20);
-			memcpy(send_b + 29, &locate_ip, 4);
-			memcpy(send_b + 33, remote_info.Addr[0], 20);
-			memcpy(send_b + 53, remote_info.IP[0], 4);
-			send_b[57] = (Local.OnlineNum & 0xFF000000) >> 24;
-			send_b[58] = (Local.OnlineNum & 0x00FF0000) >> 16;
-			send_b[59] = (Local.OnlineNum & 0x0000FF00) >> 8;
-			send_b[60] = Local.OnlineNum & 0x000000FF;
-			Local.OnlineNum++;
-			sendlength = 62;
-			sprintf(RemoteHost, "%d.%d.%d.%d", remote_info.DenIP[0], remote_info.DenIP[1],
-					remote_info.DenIP[2], remote_info.DenIP[3]);
-			RemotePort = RemoteVideoPort;
-			UdpSendBuff(m_VideoSocket, RemoteHost, RemotePort, send_b, sendlength);
-		}
+		timenum ++;
+		if(timenum > 0xFFFFFF)
+		  timenum = 0;     
+		usleep((INTRTIME-10)*1000);
 	}
-    Local.Timer1Num++;
 }
 
-void TalkCtrlFunc(void)
+void OnlineCheckFunc(void) //ÔÚÏßÈ·ÈÏ¼ì²âº¯Êı
 {
-	int CallTimeOut;
-    int Status;
-
-	//1S
-	if ((Local.TimeOut % TIMERPERSEC) == 0) {
-        Status = get_device_status();
-        
-		switch(Status)
+	unsigned char send_b[1520];
+	int sendlength;
+	if(Local.Timer1Num >= INTRPERSEC*6)
+	{
+		if(Local.CallConfirmFlag == 0)
 		{
-			case 1:  //ä¸»å«å¯¹è®²
-			case 2:  //è¢«å«å¯¹è®²
-				CallTimeOut = CALLTIMEOUT;
-                //å‘¼å«è¶…æ—¶
-				if (Local.TimeOut > CallTimeOut) {
-                    LOGD("å‘¼å«è¶…æ—¶\n");
-                    stop_talk();
-                    Status = CB_ST_NULL;
-                    set_device_status(Status);
-                    cb_opt_function.cb_curr_opt(CB_CALL_TIMEOUT, Status);
-                    Local.OnlineFlag = 0;
-				}
-				break;
-			case 5:  //ä¸»å«é€šè¯
-			case 6:  //è¢«å«é€šè¯
-                Local.TalkTimeOut = TALKTIMEOUT;
-				if (Local.TimeOut > Local.TalkTimeOut) {
-					LOGD("é€šè¯è¶…æ—¶\n");
-                    stop_talk();
-                    Status = CB_ST_NULL;
-                    set_device_status(Status);
-                    cb_opt_function.cb_curr_opt(CB_TALK_TIMEOUT, Status);
-					Local.OnlineFlag = 0;
-				}
-				break;
-			default:
-				break;
+			if((Local.Status == 1)||(Local.Status == 2)||(Local.Status == 5)||(Local.Status == 6)
+						||(Local.Status == 7)||(Local.Status == 8)||(Local.Status == 9)||(Local.Status == 10)) //¶Ô½²
+			{
+				TalkEnd_Func();
+				SendHostOrder(0x68, Local.DoorNo, NULL); //·¢ËÍÖ÷¶¯ÃüÁî  ¶Ô·½¹Ò»ú
+			}
+			if((Local.Status == 3)||(Local.Status == 4))  //¼àÊÓ
+			{
+				WatchEnd_Func();
+				SendHostOrder(0x61, Local.DoorNo, NULL); //·¢ËÍÖ÷¶¯ÃüÁî  ¶Ô·½Í£Ö¹¼àÊÓ
+			}
+			Local.OnlineFlag = 0;
+			//Í¨Ñ¶ÖĞ¶Ï
+#ifdef _DEBUG
+			printf("Ã»ÓĞÊÕµ½ÔÚÏßÈ·ÈÏ£¬Ç¿ÖÆ½áÊø\n");
+#endif
 		}
+		else
+		  Local.CallConfirmFlag = 0;
+		Local.Timer1Num = 0;
 	}
+	else
+	  if((Local.Timer1Num %INTRPERSEC)==0)
+	  {
+		  //¶Ô½²Ê±±»½Ğ·½·¢ËÍÔÚÏßÈ·ÈÏ°ü£¬Ã¿ÃëÒ»¸ö
+		  //¼à¿ØÊ±Ö÷¿Ø·½·¢ËÍÔÚÏßÈ·ÈÏ°ü£¬Ã¿ÃëÒ»¸ö
+		  if((Local.Status == 2)||(Local.Status == 6)
+					  ||(Local.Status == 8)||(Local.Status == 10)
+					  ||(Local.Status == 3))
+		  {
+			  //Í·²¿
+			  memcpy(send_b, UdpPackageHead, 6);
+			  //ÃüÁî
+			  if((Local.Status == 2)||(Local.Status == 6)||(Local.Status == 8)||(Local.Status == 10))  //¶Ô½²
+				send_b[6] = VIDEOTALK;
+			  if(Local.Status == 3)  //¼àÊÓ
+				send_b[6] = VIDEOWATCH;
 
-	Local.TimeOut ++;       //ç›‘è§†è¶…æ—¶,  é€šè¯è¶…æ—¶,  å‘¼å«è¶…æ—¶ï¼Œæ— äººæ¥å¬
+			  send_b[7]=ASK;        //Ö÷½Ğ
+			  send_b[8]=CALLCONFIRM;//Í¨»°ÔÚÏßÈ·ÈÏ
+			  //×ÓÃüÁî
+			  if((Local.Status == 1)||(Local.Status == 3)||(Local.Status == 5)
+						  ||(Local.Status == 7)||(Local.Status == 9))  //±¾»úÎªÖ÷½Ğ·½
+			  {
+				  memcpy(send_b+9, LocalCfg.Addr, 20);
+				  memcpy(send_b+29, LocalCfg.IP, 4);
+				  memcpy(send_b+33, Remote.Addr[0], 20);
+				  memcpy(send_b+53, Remote.IP[0], 4);
+			  }
+			  if((Local.Status == 2)||(Local.Status == 4)||(Local.Status == 6)
+						  ||(Local.Status == 8)||(Local.Status == 10))  //±¾»úÎª±»½Ğ·½
+			  {
+				  memcpy(send_b+9, Remote.Addr[0], 20);
+				  memcpy(send_b+29, Remote.IP[0], 4);
+				  memcpy(send_b+33, LocalCfg.Addr, 20);
+				  memcpy(send_b+53, LocalCfg.IP, 4);
+			  }
+			  //È·ÈÏĞòºÅ
+			  send_b[57] = (Local.OnlineNum & 0xFF000000) >> 24;
+			  send_b[58] = (Local.OnlineNum & 0x00FF0000) >> 16;
+			  send_b[59] = (Local.OnlineNum & 0x0000FF00) >> 8;
+			  send_b[60] = Local.OnlineNum & 0x000000FF;
+			  Local.OnlineNum ++;
+			  sendlength=61;
+			  sprintf(RemoteHost, "%d.%d.%d.%d",
+						  Remote.DenIP[0],Remote.DenIP[1],Remote.DenIP[2],Remote.DenIP[3]);
+			  UdpSendBuff(m_VideoSendSocket, RemoteHost, send_b , sendlength);
+		  }
+	  }
+	Local.Timer1Num ++;
+
+	//¶Ô½²¿ØÖÆ£¬ÏÔÊ¾Í¨»°Ê±¼äºÍÅĞ¶Ï³¬Ê±
+	TalkCtrlFunc();
 }
+//---------------------------------------------------------------------------
+void TimeReportStatusFunc(void) //Éè±¸¶¨Ê±±¨¸æ×´Ì¬º¯Êı
+{
+	int i;
+	//Ëø¶¨»¥³âËø
+	pthread_mutex_lock (&Local.udp_lock);
+	//²éÕÒ¿ÉÓÃ·¢ËÍ»º³å²¢Ìî¿Õ
+	for(i=0; i<UDPSENDMAX; i++)
+	  if(Multi_Udp_Buff[i].isValid == 0)
+	  {
+		  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  Multi_Udp_Buff[i].SendNum = 0;   //Ã—Ã®Â¶Ã Â·Â¢6Å½Ã
+		  Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+		  Multi_Udp_Buff[i].CurrOrder = 0;
+		  //ÃÂ·Â²Â¿
+		  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+		  //ÃƒÃ¼ÃÃ®
+		  Multi_Udp_Buff[i].buf[6] = REPORTSTATUS;
+		  Multi_Udp_Buff[i].buf[7] = ASK;    //Ã–Ã·Å“Ã
+
+		  memcpy(Multi_Udp_Buff[i].buf + 8, NullAddr, 20);
+		  memcpy(Multi_Udp_Buff[i].buf + 8, LocalCfg.Addr, 20);
+
+		  memcpy(Multi_Udp_Buff[i].buf + 28, NullAddr, 20);
+		  memcpy(Multi_Udp_Buff[i].buf + 28, "Z0001", 5);
+		  memcpy(Multi_Udp_Buff[i].buf + 48, LocalCfg.Mac_Addr, 6);
+		  //	Multi_Udp_Buff[i].buf[34] = LocalCfg.DefenceStatus;
+		  //	Multi_Udp_Buff[i].buf[35] = LocalCfg.DefenceNum;
+		  //	for(k=0; k<(LocalCfg.DefenceNum*6); k++)
+		  //		memcpy(Multi_Udp_Buff[i].buf + 36 + 10*k, LocalCfg.DefenceInfo[k], 10);
+
+		  Multi_Udp_Buff[i].nlength = 54;
+		  Multi_Udp_Buff[i].DelayTime = 100;
+		  Multi_Udp_Buff[i].isValid = 1;
+		  sem_post(&multi_send_sem);
+		  break;
+	  }
+	//´ò¿ª»¥³âËø
+	pthread_mutex_unlock (&Local.udp_lock);
+}
+//---------------------------------------------------------------------------
+void TalkCtrlFunc(void)  //¶Ô½²¿ØÖÆ£¬ÏÔÊ¾Í¨»°Ê±¼äºÍÅĞ¶Ï³¬Ê±
+{
+	if((Local.TimeOut % INTRPERSEC)==0)
+	  switch(Local.Status)
+	  {
+		  case 1:  //Ö÷½Ğ¶Ô½²
+		  case 2:  //±»½Ğ¶Ô½²
+			  if(Local.TimeOut >= CALLTIMEOUT)
+			  {
+				  //²é¿´ÊÇ·ñÔÚÆäËü×é²¥×éÄÚ
+				  DropMultiGroup(m_VideoSocket, NULL);
+				  //ºô½Ğ³¬Ê±
+				  CallTimeOut_Func();
+				  //ºô½Ğ³¬Ê±
+				  SendHostOrder(0x66, Local.DoorNo, NULL); //·¢ËÍÖ÷¶¯ÃüÁî  ºô½Ğ³¬Ê±
+			  }
+			  break;
+		  case 5:  //Ö÷½ĞÍ¨»°
+		  case 6:  //±»½ĞÍ¨»°
+			  //¼ÆÊ±
+			  if(Local.TimeOut >= TALKTIMEOUT)
+			  {
+				  TalkEnd_Func();
+				  Local.OnlineFlag = 0;
+				  //Í¨»°½áÊø
+				  SendHostOrder(0x68, Local.DoorNo, NULL); //·¢ËÍÖ÷¶¯ÃüÁî  ¶Ô·½Í£Ö¹Í¨»°
+#ifdef _DEBUG
+				  printf("Í¨»°³¬Ê±\n");
+#endif
+			  }
+			  break;
+		  case 3:  //¼àÊÓ    ¼ÆÊ±
+		  case 4:  //±»¼àÊÓ
+			  if(Local.TimeOut >= WATCHTIMEOUT)
+			  {
+				  WatchEnd_Func();
+				  Local.OnlineFlag = 0;
+				  //¼àÊÓ½áÊø
+				  SendHostOrder(0x61, Local.DoorNo, NULL); //·¢ËÍÖ÷¶¯ÃüÁî  ¶Ô·½Í£Ö¹¼àÊÓ
+#ifdef _DEBUG
+				  printf("¼àÊÓ³¬Ê±\n");
+#endif
+			  }
+			  break;
+	  }
+	Local.TimeOut ++;       //¼àÊÓ³¬Ê±,  Í¨»°³¬Ê±,  ºô½Ğ³¬Ê±£¬ÎŞÈË½ÓÌı
+}
+//---------------------------------------------------------------------------
+void SendAlarmFunc(unsigned char doorno, unsigned char AlarmByte) 
+		//void SendAlarmFunc(unsigned char SpecialByte, unsigned char AlarmByte) 
+{
+	int i;
+	char TempName[50];
+	char TempTime[32];
+	time_t t;
+	struct tm *tm_t;
+	sprintf(TempName,"µ¥ÔªÃÅ%c·À²ğ¾¯±¨",doorno);
+	time(&t);
+	tm_t=localtime(&t);
+	sprintf(TempTime, "%02d-%02d %02d:%02d:%02d", tm_t->tm_mon+1,
+				tm_t->tm_mday, tm_t->tm_hour, tm_t->tm_min, tm_t->tm_sec);
+
+	//Ã‹Ã¸Â¶Å¡Â»Â¥Â³Ã¢Ã‹Ã¸
+	pthread_mutex_lock (&Local.udp_lock);
+	//Â²Ã©Ã•Ã’Â¿Ã‰Ã“ÃƒÂ·Â¢Ã‹ÃÂ»ÂºÂ³Ã¥Â²Â¢ÃŒÃ®Â¿Ã•
+	for (i=0; i<UDPSENDMAX; i++)
+	  if (Multi_Udp_Buff[i].isValid == 0)
+	  {   
+		  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  //            printf("\nalarmserver: %d.%d.%d.%d\n",LocalCfg.IP_Server[0],
+		  //                 LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  printf("Multi_Udp_Buff[%d].RemoteHost=%s\n",i,Multi_Udp_Buff[i].RemoteHost);
+		  Multi_Udp_Buff[i].SendNum = 4;   //Ã—Ã®Â¶Ã Â·Â¢6Å½Ã
+		  Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+		  Multi_Udp_Buff[i].CurrOrder = 0;
+		  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+		  //ÃƒÃ¼ÃÃ®
+		  Multi_Udp_Buff[i].buf[6] = ALARM;
+		  Multi_Udp_Buff[i].buf[7] = ASK;    //Ã–Ã·Å“Ã
+		  /////////////////////////////////////paul0620///////////////////////////
+		  memset(Multi_Udp_Buff[i].buf + 8, 0x30, 20); //Ö÷½ĞµØÖ·±àÂë
+		  memcpy(Multi_Udp_Buff[i].buf + 8, LocalCfg.Addr, 12);
+
+		  memset(Multi_Udp_Buff[i].buf + 28, 0x30, 20); //±»½ĞµØÖ·±àÂë
+		  memcpy(Multi_Udp_Buff[i].buf + 28, "Z0001", 5);
+		  memcpy(Multi_Udp_Buff[i].buf + 48, NullAddr, 8);
+		  memcpy(Multi_Udp_Buff[i].buf + 48, LocalCfg.Mac_Addr, 6);
+
+		  Multi_Udp_Buff[i].buf[54] = 0;//LocalCfg.DefenceStatus;     //ÖÕ¶Ë×´Ì¬
+		  Multi_Udp_Buff[i].buf[55] = 1;                //±¨¾¯¸öÊı
+
+		  Multi_Udp_Buff[i].buf[56] = AlarmByte+1;        //·ÀÇø±àºÅ
+
+		  memcpy(Multi_Udp_Buff[i].buf+57,TempName,50);
+		  memcpy(Multi_Udp_Buff[i].buf+107,TempTime,30);
+
+
+		  memset(Multi_Udp_Buff[i].buf+137,0,8); //Ô¤ÁôµÄ8¸ö×Ö½Ú
+
+		  Multi_Udp_Buff[i].nlength = 145;
+		  Multi_Udp_Buff[i].DelayTime = 100;
+		  Multi_Udp_Buff[i].isValid = 1;
+
+		  sem_post(&multi_send_sem);
+		  break;
+	  }
+	//Å½Ã²Â¿ÂªÂ»Â¥Â³Ã¢Ã‹Ã¸
+	pthread_mutex_unlock (&Local.udp_lock);
+	//////·À²ğ
+}
+void SendRobAlarm(unsigned char doorno, char Addr[21])
+{
+	int i;
+	char name[50];
+	char timing[30];
+	time_t t;
+	struct tm *tm_t;
+	time(&t);
+	tm_t=localtime(&t);
+	printf("SENDING ROB\n");
+	sprintf(timing, "%02d-%02d %02d:%02d:%02d", tm_t->tm_mon+1,
+				tm_t->tm_mday, tm_t->tm_hour, tm_t->tm_min, tm_t->tm_sec);
+	sprintf(name,"µ¥ÔªÃÅ%c·À½Ù",doorno);	
+	pthread_mutex_lock (&Local.udp_lock);
+	for (i=0; i<UDPSENDMAX; i++)
+	  if (Multi_Udp_Buff[i].isValid == 0)
+	  {
+		  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  printf("\nalarmserver: %d.%d.%d.%d\n",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+
+		  printf("doorno = %d, Addr = %s\n", doorno,Addr);
+
+		  Multi_Udp_Buff[i].SendNum = 4;   //
+		  Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+		  Multi_Udp_Buff[i].CurrOrder = 0;
+		  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+		  //
+		  Multi_Udp_Buff[i].buf[6] = ALARM;
+		  Multi_Udp_Buff[i].buf[7] = ASK;    //
+		  ///////////////////////////////paul0401 LocalCfg.Addr
+		  //				memset(Multi_Udp_Buff[i].buf + 8,0x30,20);
+
+		  memset(Multi_Udp_Buff[i].buf + 28, 0x30, 40); 
+		  memcpy(Multi_Udp_Buff[i].buf + 8, Addr, 20);
+		  memcpy(Multi_Udp_Buff[i].buf + 28, "Z0001", 5);
+
+
+		  ////////////////////////////////////////////////paul0425
+		  memcpy(Multi_Udp_Buff[i].buf + 48, LocalCfg.Mac_Addr, 6);
+		  Multi_Udp_Buff[i].buf[54] = 5;//LocalCfg.DefenceStatus;     //
+		  Multi_Udp_Buff[i].buf[55] = 1;//SpecialByte;                //
+		  Multi_Udp_Buff[i].buf[56] = 1;// LocalCfg.DefenceNum;        //
+		  memcpy(Multi_Udp_Buff[i].buf+57,name,50);
+		  memcpy(Multi_Udp_Buff[i].buf+107,timing,30);
+		  memset(Multi_Udp_Buff[i].buf+137,0,8); //Ô¤ÁôµÄ8¸ö×Ö½Ú
+
+		  /*/////////////////
+			Multi_Udp_Buff[i].buf[37] = 0;//AlarmByte;
+			Multi_Udp_Buff[i].buf[38] = 0x01;
+		  //////////////////
+		  Multi_Udp_Buff[i].buf[39] = doorno;
+		  Multi_Udp_Buff[i].buf[40] = 0x00;
+
+		  Multi_Udp_Buff[i].nlength = 41;
+		  */
+
+		  Multi_Udp_Buff[i].nlength = 145;
+		  Multi_Udp_Buff[i].DelayTime = 100;
+		  Multi_Udp_Buff[i].isValid = 1;
+		  sem_post(&multi_send_sem);
+		  break;
+	  }
+
+	pthread_mutex_unlock (&Local.udp_lock);
+
+}
+void SendDoorAlarm(unsigned char doorno, char Addr[21])
+{
+	int i;
+	char name[50];
+	char timing[30];
+	time_t t;
+	struct tm *tm_t;
+	time(&t);
+	tm_t=localtime(&t);
+	printf("SENDING DOORALARM\n");
+	sprintf(timing, "%02d-%02d %02d:%02d:%02d", tm_t->tm_mon+1,
+				tm_t->tm_mday, tm_t->tm_hour, tm_t->tm_min, tm_t->tm_sec);
+	sprintf(name,"µ¥ÔªÃÅ%cÃÅ´Å±¨¾¯",doorno);	
+	pthread_mutex_lock (&Local.udp_lock);
+	for (i=0; i<UDPSENDMAX; i++)
+	  if (Multi_Udp_Buff[i].isValid == 0)
+	  {
+		  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  printf("\nalarmserver: %d.%d.%d.%d\n",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  Multi_Udp_Buff[i].SendNum = 4;   //
+		  Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+		  Multi_Udp_Buff[i].CurrOrder = 0;
+		  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+		  Multi_Udp_Buff[i].buf[6] = ALARM;
+		  Multi_Udp_Buff[i].buf[7] = ASK;    //
+		  memset(Multi_Udp_Buff[i].buf + 28, 0x30, 40); 
+		  memset(Multi_Udp_Buff[i].buf + 8, 0x30, 20); 
+		  memcpy(Multi_Udp_Buff[i].buf + 8, LocalCfg.Addr, 11);
+		  memcpy(Multi_Udp_Buff[i].buf + 28, "Z0001", 5);
+		  memcpy(Multi_Udp_Buff[i].buf + 48, LocalCfg.Mac_Addr, 6);
+		  Multi_Udp_Buff[i].buf[54] = 5;//LocalCfg.DefenceStatus;     //
+		  Multi_Udp_Buff[i].buf[55] = 1;//SpecialByte;                //
+		  Multi_Udp_Buff[i].buf[56] = 1;// LocalCfg.DefenceNum;        //
+		  memcpy(Multi_Udp_Buff[i].buf+57,name,50);
+		  memcpy(Multi_Udp_Buff[i].buf+107,timing,30);
+		  memset(Multi_Udp_Buff[i].buf+137,0,8); //Ô¤ÁôµÄ8¸ö×Ö½Ú
+		  Multi_Udp_Buff[i].nlength = 145;
+		  Multi_Udp_Buff[i].DelayTime = 100;
+		  Multi_Udp_Buff[i].isValid = 1;
+		  sem_post(&multi_send_sem);
+		  break;
+	  }
+	pthread_mutex_unlock (&Local.udp_lock);
+}
+#if 1
+void SendPowerAlarm(unsigned char doorno, char Addr[21])
+{
+	int i;
+	char name[50];
+	char timing[30];
+	time_t t;
+	struct tm *tm_t;
+	time(&t);
+	tm_t=localtime(&t);
+	printf("SENDING POWERALARM\n");
+	sprintf(timing, "%02d-%02d %02d:%02d:%02d", tm_t->tm_mon+1,
+				tm_t->tm_mday, tm_t->tm_hour, tm_t->tm_min, tm_t->tm_sec);
+	sprintf(name,"µ¥ÔªÃÅ%cµçÔ´%d±¨¾¯",Local.DoorNo,doorno+1);	
+	pthread_mutex_lock (&Local.udp_lock);
+	for (i=0; i<UDPSENDMAX; i++)
+	  if (Multi_Udp_Buff[i].isValid == 0)
+	  {
+		  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  printf("\nalarmserver: %d.%d.%d.%d\n",LocalCfg.IP_Server[0],
+					  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+		  Multi_Udp_Buff[i].SendNum = 4;   //
+		  Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+		  Multi_Udp_Buff[i].CurrOrder = 0;
+		  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+		  Multi_Udp_Buff[i].buf[6] = ALARM;
+		  Multi_Udp_Buff[i].buf[7] = ASK;    //
+		  memset(Multi_Udp_Buff[i].buf + 28, 0x30, 40); 
+		  memset(Multi_Udp_Buff[i].buf + 8, 0x30, 20); 
+		  memcpy(Multi_Udp_Buff[i].buf + 8, LocalCfg.Addr, 11);
+		  memcpy(Multi_Udp_Buff[i].buf + 28, "Z0001", 5);
+		  memcpy(Multi_Udp_Buff[i].buf + 48, LocalCfg.Mac_Addr, 6);
+		  Multi_Udp_Buff[i].buf[54] = 5;//LocalCfg.DefenceStatus;     //
+		  Multi_Udp_Buff[i].buf[55] = 1;//SpecialByte;                //
+		  Multi_Udp_Buff[i].buf[56] = 1;// LocalCfg.DefenceNum;        //
+		  memcpy(Multi_Udp_Buff[i].buf+57,name,50);
+		  memcpy(Multi_Udp_Buff[i].buf+107,timing,30);
+		  memset(Multi_Udp_Buff[i].buf+137,0,8); //Ô¤ÁôµÄ8¸ö×Ö½Ú
+		  Multi_Udp_Buff[i].nlength = 145;
+		  Multi_Udp_Buff[i].DelayTime = 100;
+		  Multi_Udp_Buff[i].isValid = 1;
+		  sem_post(&multi_send_sem);
+		  break;
+	  }
+	pthread_mutex_unlock (&Local.udp_lock);
+}
+#endif

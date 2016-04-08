@@ -1,391 +1,464 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/time.h>
 #include <semaphore.h>       //sem_t
-#include <pthread.h>       //sem_t
 
-#define _LIB_QSA_DEF_H
-#include "libqsa_common.h"
+#define CommonH
+#include "common.h"
 
-extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
-		unsigned char *buf, int nlength);
-
-void qsa_send_audio(const char * data, int length, int frame_num, const char * ip);
-void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
-
+extern char sPath[80];
+extern char NullAddr[21];   //ø’◊÷∑˚¥Æ
+//paul2.x
+extern char PriMulCast[20];
+int tmpip[3];
+void Call_Func(int uFlag, char *call_addr);    //∫ÙΩ–   1  ÷––ƒ  2 ◊°ªß
+void FindEquip(char *call_addr);    //≤È’“…Ë±∏
+void TalkEnd_Func(void);
+void WatchEnd_Func(void);
+void CallTimeOut_Func(void); //∫ÙΩ–≥¨ ±
 //---------------------------------------------------------------------------
-void start_call(const char * ip, const char * addr, int uFlag) {
-	int i;
-	int j;
-	uint32_t Ip_Int;
-    int Status = 0;
+void Call_Func(int uFlag, char *call_addr)    //∫ÙΩ–   1  ÷––ƒ  2 ◊°ªß
+{
+	int i,j;
+	char Addr[20];
+	int MaxDen = 1;
+	char str[30];
+	time_t t;
+	time(&t);
+	Local.call_tm_t = localtime(&t);
+	///Local.Loading = 10;
+	//zhou101102//±£¥ÊÕ®ª∞ ±º‰
+	sprintf(str,"%04d%02d%02d%02d%02d%02d",
+				Local.call_tm_t->tm_year+1900,
+				Local.call_tm_t->tm_mon + 1,
+				Local.call_tm_t->tm_mday,
+				Local.call_tm_t->tm_hour,
+				Local.call_tm_t->tm_min,
+				Local.call_tm_t->tm_sec);
+	str[14] = 0x30;
+	str[15] = '\0';
 
-    //j = remote_info.DenNum;
-    j = 0;
+	SendTalkInfoFlag = 0;//zhou101102
+	strcpy(SendTalkInfo.StartTime,str);
+	printf("SendTalkInfo.StartTime is %s\n",SendTalkInfo.StartTime);
 
-    if ( 2 == uFlag ) {
+	if((Local.Status == 0)&&((uFlag == 1)||(uFlag == 2)))
+	{
+		if(uFlag == 2)
+		  MaxDen = 4;
+		for(i = 0; i < MaxDen; i++)
+		  TalkDen.ExistFlag[i] = 0;
+		memcpy(Addr,NullAddr,20);
+		j=0;
+		//À¯∂®ª•≥‚À¯
+		pthread_mutex_lock (&Local.udp_lock);
+		//≤È’“ø…”√∑¢ÀÕª∫≥Â≤¢ÃÓø’
+		for(i=0; i<UDPSENDMAX; i++)
+		  if(Multi_Udp_Buff[i].isValid == 0)
+		  {
+			  Multi_Udp_Buff[i].SendNum = 0;
+			  Multi_Udp_Buff[i].m_Socket = m_VideoSendSocket;
+			  Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
+			  //   sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d\0",LocalCfg.IP_Broadcast[0],
+			  //           LocalCfg.IP_Broadcast[1],LocalCfg.IP_Broadcast[2],LocalCfg.IP_Broadcast[3]);
 
-        Status = get_device_status();
+			  strcpy(Multi_Udp_Buff[i].RemoteHost, NSMULTIADDR);
+			  //Õ∑≤ø
+			  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+			  //√¸¡Ó  ,◊”Õ¯∂‡≤•≤È’“
+			  Multi_Udp_Buff[i].buf[6] = NSORDER;
+			  Multi_Udp_Buff[i].buf[7] = ASK;    //÷˜Ω–
 
-        if (Status == CB_ST_NULL) {
-            /* get remote device information */
-            Ip_Int = inet_addr(ip);
+			  memcpy(Multi_Udp_Buff[i].buf+8,LocalCfg.Addr,20);
+			  memcpy(Multi_Udp_Buff[i].buf+28,LocalCfg.IP,4);
+			  memcpy(Remote.Addr[0], NullAddr, 20);
+			  switch(uFlag)
+			  {
+				  case 1: //∫ÙΩ–÷––ƒ
+					  if(call_addr[1]==0x30)
+					  {
+						  Addr[0]='Z';
+					  }
+					  else if(call_addr[1]==0x31)//call the fence
+					  {
+						  Addr[0]='W';
+					  }
+					  Addr[3]=call_addr[2];
+					  Addr[4]=call_addr[3];
+					  memcpy(Remote.Addr[0],Addr,12);
+					  j =  MaxDen;
+					  break;
+				  case 2: //∫ÙΩ–◊°ªß
+					  switch(LocalCfg.Addr[0])
+					  {
+						  case 'M':
+							  memcpy(Remote.Addr[0] , LocalCfg.Addr , 20);
+							  Remote.Addr[0][0] = 'S';
+							  memcpy(Remote.Addr[0] + 7, call_addr, 4);
+							  Remote.Addr[0][11] = '0'+j;
+							  printf("CALL %d buf%d\n",j,i);
+							  ///paul2.x
+							  tmpip[0]=(LocalCfg.Addr[5]-'0')*10+(LocalCfg.Addr[6]-'0');
+							  tmpip[1]=(call_addr[0]-'0')*10+(call_addr[1]-'0');
+							  tmpip[2]=(call_addr[2]-'0')*10+(call_addr[3]-'0');
+							  sprintf(PriMulCast,"239.%d.%d.%d",tmpip[0],tmpip[1],tmpip[2]);
 
-            memcpy(&remote_info.IP[j], &Ip_Int, 4);
-            LOGD("<%s>   %d.%d.%d.%d\n", __FUNCTION__,
-                    remote_info.IP[j][0], remote_info.IP[j][1], 
-                    remote_info.IP[j][2], remote_info.IP[j][3]);
+							  printf("CALL %s,brocast:%s\n",Remote.Addr[0],Multi_Udp_Buff[i].RemoteHost);
+							  break;
+						  case 'W':
+							  if(strlen(call_addr) == 4) //± ˚
+							  {
+								  Remote.Addr[0][0] = 'B';
+								  memcpy(Remote.Addr[0] + 1, call_addr, 4);
+								  Remote.Addr[0][11] = '0'+j;
+							  }
+							  else
+							  {
+								  Remote.Addr[0][0] = 'S';
+								  memcpy(Remote.Addr[0] + 1, call_addr, 10);
+								  Remote.Addr[0][11] = '0'+j;
+							  }
+							  break;
+					  }
+					  break;
+				  case 3:
+					  break;
+				  default:
+					  break;
+			  }
+			  memcpy(Multi_Udp_Buff[i].buf+32,Remote.Addr[0],20);
+			  Remote.IP[0][0] = 0;
+			  Remote.IP[0][1] = 0;
+			  Remote.IP[0][2] = 0;
+			  Remote.IP[0][3] = 0;
+			  memcpy(Multi_Udp_Buff[i].buf+52,Remote.IP[0],4);
 
-            memcpy(&remote_info.DenIP, &remote_info.IP[j], 4);
+			  Multi_Udp_Buff[i].nlength = 56;
+			  Multi_Udp_Buff[i].DelayTime = 100;
+			  Multi_Udp_Buff[i].isValid = 1;
+			  //±£¥Ê∫ÙΩ–µÿ÷∑//zhou101102
+			  memcpy(SendTalkInfo.Addr,Remote.Addr[0],20);
+			  SendTalkInfo.Addr[20] = '\0';
 
-            memcpy(&remote_info.Addr[j], local_config.address, 20);
-            remote_info.Addr[j][0] = 'S';
-            remote_info.Addr[j][7] = addr[0];
-            remote_info.Addr[j][8] = addr[1];
-            remote_info.Addr[j][9] = addr[2];
-            remote_info.Addr[j][10] = addr[3];
-
-            for (i = 0; i < UDPSENDMAX; i++) {
-                if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 3;
-                    Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
-                    Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
-
-                    sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
-                            remote_info.IP[j][0], remote_info.IP[j][1], 
-                            remote_info.IP[j][2], remote_info.IP[j][3]);
-                    memcpy(&Multi_Udp_Buff[i].RemoteIP,
-                            &Multi_Udp_Buff[i].RemoteHost, 20);
-
-                    memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
-                    Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
-                    Multi_Udp_Buff[i].buf[7] = ASK;
-                    Multi_Udp_Buff[i].buf[8] = CALL;
-
-                    memcpy(Multi_Udp_Buff[i].buf + 9, local_config.address, 20);
-                    memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
-                    memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[j], 20);
-                    memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[j], 4);
-                    Multi_Udp_Buff[i].buf[57] = _H264;
-                    memcpy(Multi_Udp_Buff[i].buf + 58, remote_info.IP, 4);
-
-                    Multi_Udp_Buff[i].nlength = 62;
-                    Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
-                    Multi_Udp_Buff[i].SendDelayTime = 0;
-                    Multi_Udp_Buff[i].isValid = 1;
-                    LOGD("<%s>   ÂºÄÂßãÂëºÂè´ÂëΩ‰ª§\n", __FUNCTION__);
-                    sem_post(&multi_send_sem);
-                    break;
-                }
-            }
-        } else {
-            LOGD("I'm is Busy!\n");
-        }
+#ifdef _DEBUG
+			  printf("Looking for the IP via Addr\n");
+#endif
+			  sem_post(&multi_send_sem);
+			  break;
+		  }
+		//¥Úø™ª•≥‚À¯
+		pthread_mutex_unlock (&Local.udp_lock);
+    } else {
+        LOGD("I'm is Busy!\n");
     }
+
+	return;
 }
-
-void stop_talk(void) {
-
+//---------------------------------------------------------------------------
+void FindEquip(char *call_addr)    //≤È’“…Ë±∏
+{
 	int i;
+	if(Local.Status == 0)
+	{
+		//À¯∂®ª•≥‚À¯
+		pthread_mutex_lock (&Local.udp_lock);
+		//≤È’“ø…”√∑¢ÀÕª∫≥Â≤¢ÃÓø’
+		for(i=0; i<UDPSENDMAX; i++)
+			if(Multi_Udp_Buff[i].isValid == 0)
+			{
+				Multi_Udp_Buff[i].SendNum = 0;
+				Multi_Udp_Buff[i].m_Socket = m_VideoSendSocket;
+				Multi_Udp_Buff[i].CurrOrder = FINDEQUIP;
+				// sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d\0",LocalCfg.IP_Broadcast[0],
+				//         LocalCfg.IP_Broadcast[1],LocalCfg.IP_Broadcast[2],LocalCfg.IP_Broadcast[3]);
+				strcpy(Multi_Udp_Buff[i].RemoteHost, NSMULTIADDR);
+				//Õ∑≤ø
+				memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+				//√¸¡Ó  ,◊”Õ¯∂‡≤•≤È’“
+				Multi_Udp_Buff[i].buf[6] = NSORDER;
+				Multi_Udp_Buff[i].buf[7] = ASK;    //÷˜Ω–
 
-	for (i = 0; i < UDPSENDMAX; i++) {
-		if (Multi_Udp_Buff[i].isValid == 0) {
-			memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
-			Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
-			Multi_Udp_Buff[i].buf[7] = ASK;
-			Multi_Udp_Buff[i].buf[8] = CALLEND;
-			Multi_Udp_Buff[i].SendNum = 0;
-			Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
-			Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
-            sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
-                    remote_info.IP[0][0], remote_info.IP[0][1], 
-                    remote_info.IP[0][2], remote_info.IP[0][3]);
-            memcpy(&Multi_Udp_Buff[i].RemoteIP,
-                    &Multi_Udp_Buff[i].RemoteHost, 20);
-            Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
+				memcpy(Multi_Udp_Buff[i].buf+8,LocalCfg.Addr,20);
+				memcpy(Multi_Udp_Buff[i].buf+28,LocalCfg.IP,4);
+				memcpy(Remote.Addr[0], NullAddr, 20);
 
-			memcpy(Multi_Udp_Buff[i].buf + 9, local_config.address, 20);
-			memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
-			memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[0], 20);
-			memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[0], 4);
+				switch(LocalCfg.Addr[0])
+				{
+					case 'M':
+						Remote.Addr[0][0] = 'S';
+						memcpy(Remote.Addr[0] + 1, LocalCfg.Addr + 1, 6);
+						memcpy(Remote.Addr[0] + 7, call_addr, 4);
+						Remote.Addr[0][11] = '0';
+						break;
+					case 'W':
+						if(strlen(call_addr) == 4) //± ˚
+						{
+							Remote.Addr[0][0] = 'B';
+							memcpy(Remote.Addr[0] + 1, call_addr, 4);
+							Remote.Addr[0][11] = '0';
+						}
+						else
+						{
+							Remote.Addr[0][0] = 'S';
+							memcpy(Remote.Addr[0] + 1, call_addr, 10);
+							Remote.Addr[0][11] = '0';
+						}
+						break;
+				}
 
-			Multi_Udp_Buff[i].nlength = 57;
-			Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
-			Multi_Udp_Buff[i].SendDelayTime = 0;
-			Multi_Udp_Buff[i].isValid = 1;
+				memcpy(Multi_Udp_Buff[i].buf+32,Remote.Addr[0],20);
+				Remote.IP[0][0] = 0;
+				Remote.IP[0][1] = 0;
+				Remote.IP[0][2] = 0;
+				Remote.IP[0][3] = 0;
+				memcpy(Multi_Udp_Buff[i].buf+52,Remote.IP[0],4);
 
-            LOGD("<%s>   ÈÄöÁü•ÂØπÊñπÂÖ≥Èó≠ÂØπËÆ≤ÂëºÂè´ ip = %s\n", __FUNCTION__, Multi_Udp_Buff[i].RemoteHost);
-			sem_post(&multi_send_sem);
-			break;
-		}
+				Multi_Udp_Buff[i].nlength = 56;
+				Multi_Udp_Buff[i].DelayTime = 100;
+				Multi_Udp_Buff[i].isValid = 1;
+#ifdef _DEBUG
+				printf("’˝‘⁄≤È’“µÿ÷∑\n");
+#endif
+				sem_post(&multi_send_sem);
+				break;
+			}
+		//¥Úø™ª•≥‚À¯
+		pthread_mutex_unlock (&Local.udp_lock);
+	}
+	else
+#ifdef _DEBUG
+		printf("±æª˙’˝√¶,Œﬁ∑®≤È’“\n");
+#endif
+}
+//---------------------------------------------------------------------------
+void TalkEnd_Func(void)
+{
+	int i,j;
+	int MaxDen;
+	//////paul0302night
+	StopPlayWavFile();  //πÿ±’ªÿ¡Â“Ù  
+#ifdef _DEBUG
+	printf("%d: Local.Status = %d\n", __LINE__, Local.Status);
+#endif
+	if((Local.Status == 1)||(Local.Status == 2)||(Local.Status == 5)||(Local.Status == 6)
+			||(Local.Status == 7)||(Local.Status == 8)||(Local.Status == 9)||(Local.Status == 10))  //◊¥Ã¨Œ™∂‘Ω≤
+	{
+#ifdef _DEBUG
+		printf("Remote.DenNum=%d\n",Remote.DenNum);
+#endif
+		//À¯∂®ª•≥‚À¯
+		pthread_mutex_lock (&Local.udp_lock);
+		j=0;
+		for(i=0; i<UDPSENDMAX; i++)
+		  if(Multi_Udp_Buff[i].isValid == 0)
+		  {
+			  //Õ∑≤ø
+			  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+			  //√¸¡Ó  
+			  Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
+			  Multi_Udp_Buff[i].buf[7] = ASK;    //÷˜Ω–
+			  Multi_Udp_Buff[i].buf[8] = CALLEND;    //CALLEND
+			  Multi_Udp_Buff[i].SendNum = 0;
+			  Multi_Udp_Buff[i].m_Socket = m_VideoSendSocket;
+			  Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
+			  //			sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d\0",Remote.IP[j][0],
+			  //					Remote.IP[j][1],Remote.IP[j][2],Remote.IP[j][3]);
+              /////paul2.x
+              if ((Local.Status == 1) && (TurnToCenter == 0) 
+                      && ((Remote.Addr[0][0]=='S') || (Remote.Addr[0][0]=='s')))
+              {
+                  strcpy(Multi_Udp_Buff[i].RemoteHost,PriMulCast);
+              }
+              else
+              {
+                  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d\0",Remote.IP[j][0],
+                          Remote.IP[j][1],Remote.IP[j][2],Remote.IP[j][3]);
+              }
+
+			  printf("\n%d:%d.%d.%d.%d\n", __LINE__, Remote.IP[j][0],
+						  Remote.IP[j][1],Remote.IP[j][2],Remote.IP[j][3]);
+
+			  //±æª˙Œ™÷˜Ω–∑Ω
+			  if((Local.Status == 1)||(Local.Status == 3)||(Local.Status == 5)||(Local.Status == 7)||(Local.Status == 9))
+			  {
+				  memcpy(Multi_Udp_Buff[i].buf+9,LocalCfg.Addr,20);
+				  memcpy(Multi_Udp_Buff[i].buf+29,LocalCfg.IP,4);
+				  memcpy(Multi_Udp_Buff[i].buf+33,Remote.Addr[j],20);
+				  memcpy(Multi_Udp_Buff[i].buf+53,Remote.IP[j],4);
+			  }
+			  //±æª˙Œ™±ªΩ–∑Ω
+			  if((Local.Status == 2)||(Local.Status == 4)||(Local.Status == 6)||(Local.Status == 8)||(Local.Status == 10))
+			  {
+				  memcpy(Multi_Udp_Buff[i].buf+9,Remote.Addr[j],20);
+				  memcpy(Multi_Udp_Buff[i].buf+29,Remote.IP[j],4);
+				  memcpy(Multi_Udp_Buff[i].buf+33,LocalCfg.Addr,20);
+				  memcpy(Multi_Udp_Buff[i].buf+53,LocalCfg.IP,4);
+			  }
+
+			  Multi_Udp_Buff[i].nlength = 57;
+			  Multi_Udp_Buff[i].DelayTime = 100;
+			  Multi_Udp_Buff[i].isValid = 1;
+			  sem_post(&multi_send_sem);
+			  //                Local.Status = 0;  //◊¥Ã¨Œ™ø’œ–
+			  break;
+		  }
+		//¥Úø™ª•≥‚À¯
+		pthread_mutex_unlock (&Local.udp_lock);
+
 	}
 }
-//-----------------------------------------------------------------------
-//ÂëºÂè´   0 ‰ΩèÊà∑ 1  ‰∏≠ÂøÉ  
-void find_ip(const char * addr, int uFlag) {
-    int i;
-    int Status;
-    char remoteAddr[20];
+//---------------------------------------------------------------------------
+void WatchEnd_Func(void)
+{
+	int i; 
+	if((Local.Status == 3)||(Local.Status == 4))  //◊¥Ã¨Œ™º‡ ”
+	{
+		for(i=0; i<UDPSENDMAX; i++)
+			if(Multi_Udp_Buff[i].isValid == 0)
+			{
+				//À¯∂®ª•≥‚À¯
+				pthread_mutex_lock (&Local.udp_lock);
+				Multi_Udp_Buff[i].SendNum = 0;
+				Multi_Udp_Buff[i].m_Socket = m_VideoSendSocket;
+				Multi_Udp_Buff[i].CurrOrder = VIDEOWATCH;
+				sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d\0",Remote.DenIP[0],
+						Remote.DenIP[1],Remote.DenIP[2],Remote.DenIP[3]);
+				//Õ∑≤ø
+				memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+				//√¸¡Ó 
+				Multi_Udp_Buff[i].buf[6] = VIDEOWATCH;
+				Multi_Udp_Buff[i].buf[7] = ASK;    //÷˜Ω–
+				Multi_Udp_Buff[i].buf[8] = CALLEND;    //CALLEND
 
-    if (addr != NULL) {
+				//±æª˙Œ™÷˜Ω–∑Ω
+				if((Local.Status == 1)||(Local.Status == 3)||(Local.Status == 5)||(Local.Status == 7)||(Local.Status == 9))
+				{
+					memcpy(Multi_Udp_Buff[i].buf+9,LocalCfg.Addr,20);
+					memcpy(Multi_Udp_Buff[i].buf+29,LocalCfg.IP,4);
+					memcpy(Multi_Udp_Buff[i].buf+33,Remote.Addr[0],20);
+					memcpy(Multi_Udp_Buff[i].buf+53,Remote.IP[0],4);
+				}
+				//±æª˙Œ™±ªΩ–∑Ω
+				if((Local.Status == 2)||(Local.Status == 4)||(Local.Status == 6)||(Local.Status == 8)||(Local.Status == 10))
+				{
+					memcpy(Multi_Udp_Buff[i].buf+9,Remote.Addr[0],20);
+					memcpy(Multi_Udp_Buff[i].buf+29,Remote.IP[0],4);
+					memcpy(Multi_Udp_Buff[i].buf+33,LocalCfg.Addr,20);
+					memcpy(Multi_Udp_Buff[i].buf+53,LocalCfg.IP,4);
+				}
 
-        Status = get_device_status();
-        if ((Status == CB_ST_NULL) && (uFlag == 0)) {
-            memcpy(remoteAddr, local_config.address, 20);
-            remoteAddr[0] = 'S';
-            memcpy(remoteAddr + 7, addr, 4);
-            //Êü•ÊâæÂèØÁî®ÂèëÈÄÅÁºìÂÜ≤Âπ∂Â°´Á©∫
-            for (i=0; i<UDPSENDMAX; i++) {
-                if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 0;
-                    Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
-                    Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
-                    strcpy(Multi_Udp_Buff[i].RemoteHost, NSMULTIADDR);
-                    Multi_Udp_Buff[i].RemotePort = LocalVideoPort;
-                    //Â§¥ÈÉ®
-                    memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
-                    //ÂëΩ‰ª§  ,Â≠êÁΩëÂ§öÊí≠Êü•Êâæ
-                    Multi_Udp_Buff[i].buf[6] = NSORDER;
-                    Multi_Udp_Buff[i].buf[7] = ASK;    //‰∏ªÂè´
-                    memcpy(Multi_Udp_Buff[i].buf + 8, local_config.address, 20);
-                    memcpy(Multi_Udp_Buff[i].buf + 28, &locate_ip, 4);
+				Multi_Udp_Buff[i].nlength = 57;
+				Multi_Udp_Buff[i].DelayTime = 100;
+				Multi_Udp_Buff[i].isValid = 1;
 
-                    memcpy(Multi_Udp_Buff[i].buf+32, remoteAddr, 20);
+				//                Local.Status = 0;  //◊¥Ã¨Œ™ø’œ–
+				//¥Úø™ª•≥‚À¯
+				pthread_mutex_unlock (&Local.udp_lock);
+				sem_post(&multi_send_sem);
+				break;
+			}
+	}
 
-                    memcpy(Multi_Udp_Buff[i].buf+52, null_ip, 4);
-
-                    Multi_Udp_Buff[i].nlength = 56;
-                    Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
-                    Multi_Udp_Buff[i].SendDelayTime = 0;
-                    Multi_Udp_Buff[i].isValid = 1;
-
-                    memcpy(remote_info.Addr[0], null_addr, 20);
-                    memcpy(remote_info.Addr[0], addr, 20);
-                    memcpy(remote_info.IP[0], null_ip, 4);
-                    LOGD("<%s>   Ê≠£Âú®Êü•ÊâæÂú∞ÂùÄ : %s\n", __FUNCTION__, addr);
-                    sem_post(&multi_send_sem);
-                    break;
-                }
-            }
-        } else {
-            LOGD("I'm BUSY\n");
-        }
-    } else {
-        LOGD("Addr is NULL\n");
-    }
-}
-
-#define _SEND_VIDEO_TEST 1
-void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
-
-    int j;
-    int TotalPackage; //ÊÄªÂåÖÊï∞
-    unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
-
-    char RemoteHost[20];
-
-    //ÈÄöËØùÊï∞ÊçÆÁªìÊûÑ
-    struct talkdata1 talkdata;
-
-    struct timeval tv;
-    uint32_t nowtime;
-    int Status;
-
-    //LOGD("ÂèëÈÄÅVIDEOÊï∞ÊçÆÔºö%d\n", length);
-
-    gettimeofday(&tv, NULL);
-    nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
-
-    Status = get_device_status();
-
-    if (Status > 0) {
-        //Â§¥ÈÉ®
-        memcpy(mpeg4_out, UdpPackageHead, 6);
-        //ÂëΩ‰ª§
-        mpeg4_out[6] = VIDEOTALK;
-        mpeg4_out[7] = 1;
-        //Â≠êÂëΩ‰ª§
-        mpeg4_out[8] = CALLUP;
-        //IP
-        memcpy(talkdata.HostAddr, local_config.address, 20);
-        memcpy(talkdata.HostIP, &locate_ip, 4);
-        memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
-        memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
-        //Êó∂Èó¥Êà≥
-        talkdata.timestamp = nowtime;
-        //Â∏ßÂ∫èÂè∑
-        talkdata.Frameno = frame_num;
-        //Â∏ßÊï∞ÊçÆÈïøÂ∫¶
-        talkdata.Framelen = length;
-        //Â∏ßÁ±ªÂûã
-        if (frame_type == 5) {
-            talkdata.DataType = 2;
-        } else {
-            talkdata.DataType = 3;
-        }
-
-        //ÂØπÊñπIP
-        /*
-        sprintf(RemoteHost, "%d.%d.%d.%d", 
-                remote_info.DenIP[0], remote_info.DenIP[1],
-                remote_info.DenIP[2], remote_info.DenIP[3]);
-                */
-        strcpy(RemoteHost, ip);
-        LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
-
-#if _SEND_VIDEO_TEST
-
-        if (Status == CB_ST_TALKING) {
-
-            //ÂçïÂåÖÈïøÂ∫¶
-            talkdata.PackLen = VIDEOPACKDATALEN;
-            //ÊÄªÂåÖÊï∞
-            if ((length%talkdata.PackLen) == 0) {
-                TotalPackage = length/talkdata.PackLen;
-            } else {
-                TotalPackage = (length/talkdata.PackLen) + 1;
-            }
-            talkdata.TotalPackage = TotalPackage;
-
-            for (j=1; j<=TotalPackage; j++) {        
-                //ÂåÖÁöÑÈ°∫Â∫è‰ªéÂ§ßÂà∞Â∞è
-                if (j == TotalPackage) {
-                    talkdata.CurrPackage = j;      //ÂΩìÂâçÂåÖ
-                    talkdata.Datalen = length - (j - 1)*talkdata.PackLen;     //Êï∞ÊçÆÈïøÂ∫¶
-                    memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-                    memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
-                            data + (j - 1)*talkdata.PackLen, (length - (j - 1)*talkdata.PackLen));
-
-                    //UDPÂèëÈÄÅ
-                    UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                            mpeg4_out, (9 + sizeof(struct talkdata1) + (length - (j - 1)*talkdata.PackLen)));
-                } else {
-                    talkdata.CurrPackage = j;           //ÂΩìÂâçÂåÖ
-                    talkdata.Datalen = talkdata.PackLen;       //Êï∞ÊçÆÈïøÂ∫¶
-                    memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-                    memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
-                            data + (j - 1)*talkdata.PackLen, talkdata.PackLen);
-
-                    //UDPÂèëÈÄÅ
-                    UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                            mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
-                }
-                //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
-            }
-        } else if (Status == CB_ST_CALLING) {
-
-            //ÂçïÂåÖÈïøÂ∫¶
-            talkdata.PackLen = length;
-            //ÊÄªÂåÖÊï∞
-            talkdata.TotalPackage = 1;
-
-            talkdata.CurrPackage = 1;      //ÂΩìÂâçÂåÖ
-            talkdata.Datalen = length;
-            memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-            memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), data, length);
-
-            //UDPÂèëÈÄÅ
-            UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                    mpeg4_out, (9 + sizeof(struct talkdata1) + length));
-            //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
-        }
-#else
-        //ÂçïÂåÖÈïøÂ∫¶
-        talkdata.PackLen = length;
-        //ÊÄªÂåÖÊï∞
-        talkdata.TotalPackage = 1;
-
-        talkdata.CurrPackage = 1;      //ÂΩìÂâçÂåÖ
-        talkdata.Datalen = length;
-        memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-        memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), data, length);
-
-        //UDPÂèëÈÄÅ
-        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                mpeg4_out, (9 + sizeof(struct talkdata1) + length));
-        //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
+	StopRecVideo();
+	printf("WATCHEND STATUS=0\n");
+	Local.Status = 0;  //◊¥Ã¨Œ™ø’œ–
+#ifdef _DEBUG
+	printf("±æª˙Ω· ¯º‡ ”\n");
 #endif
-    }
 }
-
-#if _REC_FILE
-static FILE* audioFp2 = NULL;
+//---------------------------------------------------------------------------
+//∫ÙΩ–≥¨ ±
+void CallTimeOut_Func(void)
+{
+	int i;
+	TalkEnd_Func();
+	Local.OnlineFlag = 0;
+	SendHostOrder(0x66, Local.DoorNo, NULL); //∑¢ÀÕ÷˜∂Ø√¸¡Ó  ∫ÙΩ–≥¨ ±
+#ifdef _DEBUG
+	printf("∫ÙΩ–≥¨ ±\n");
 #endif
-void qsa_send_audio(const char * data, int length, int frame_num, const char * ip) {
-
-    unsigned char adpcm_out[1600];
-    char RemoteHost[20];
-    //ÈÄöËØùÊï∞ÊçÆÁªìÊûÑ
-    struct talkdata1 talkdata;
-
-    struct timeval tv;
-    uint32_t nowtime;
-    int Status;
-
-    Status = get_device_status();
-    if (Status > 0) {
-
-#if _REC_FILE
-        LOGD("%s: audioFp2: Length = %d \n", __FUNCTION__, length);
-        if (audioFp2 == NULL) {
-            audioFp2 = fopen("/mnt/sdcard/qsa_audio_send_encoded_201602225.pcmu", "wb");
-        }
-        if (audioFp2) {
-            fwrite(data, 1, length, audioFp2);
-        }   
-#endif
-
-        //Â§¥ÈÉ®
-        memcpy(adpcm_out, UdpPackageHead, 6);
-        //ÂëΩ‰ª§
-        adpcm_out[6] = VIDEOTALK;
-        adpcm_out[7] = 1;
-        //Â≠êÂëΩ‰ª§
-        if (Status == 5) { //Êú¨Êú∫‰∏∫‰∏ªÂè´Êñπ
-            adpcm_out[8] = CALLUP;
-            memcpy(talkdata.HostAddr, local_config.address, 20);
-            memcpy(talkdata.HostIP, &locate_ip, 4);
-            memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
-            memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
-        }
-
-        //Êó∂Èó¥Êà≥
-        gettimeofday(&tv, NULL);
-        nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
-        talkdata.timestamp = nowtime;
-
-        //Êï∞ÊçÆÁ±ªÂûã
-        talkdata.DataType = 1;
-        //Â∏ßÂ∫èÂè∑
-        talkdata.Frameno = frame_num;
-        //Â∏ßÊï∞ÊçÆÈïøÂ∫¶
-        talkdata.Framelen = length;
-        //ÊÄªÂåÖÊï∞
-        talkdata.TotalPackage = 1;
-        //ÂΩìÂâçÂåÖ
-        talkdata.CurrPackage = 1;
-        //Êï∞ÊçÆÈïøÂ∫¶
-        talkdata.Datalen = length;
-
-        if (talkdata.Datalen < AUDIOPACKDATALEN) {
-            talkdata.PackLen = length;
-        } else {
-            talkdata.PackLen = AUDIOPACKDATALEN;
-        }
-
-        memcpy(adpcm_out + 9, &talkdata, sizeof(talkdata));
-        memcpy((adpcm_out + 9 + sizeof(struct talkdata1)), data,  length);
-
-        //UDPÂèëÈÄÅ
-        /*
-        sprintf(RemoteHost, "%d.%d.%d.%d", 
-                remote_info.DenIP[0], remote_info.DenIP[1],
-                remote_info.DenIP[2], remote_info.DenIP[3]);
-                */
-        strcpy(RemoteHost, ip);
-        LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
-        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                adpcm_out, 9 + sizeof(struct talkdata1) + length);
-    }
 }
+//---------------------------------------------------------------------------
+////////////////////////////////////
+//zhou101102 ∑¢ÀÕÕ®ª∞–≈œ¢∏¯÷––ƒª˙
+//---------------------------------------------------------------------------
+void SendInfoToCenter_Func(void)  //œÚ÷––ƒ∑¢ÀÕÕ®ª∞–≈œ¢
+{
+	int i;
+	char str[10];
+	int length;
+	//	time_t t;
+	//	time(&t);
+	//	Local.call_tm_t = localtime(&t);//µ±«∞ ±º‰
 
+//	if(Local.Status == 0 || Local.Status == 21 || Local.Status == 22)
+	{
+		printf("SendTalkInfo.Status = %d \nSendTalkInfo.Duration = %d \nSendTalkInfo.Addr = %s \nSendTalkInfo.StartTime = %s \n"
+					,SendTalkInfo.Status,SendTalkInfo.Duration,SendTalkInfo.Addr,SendTalkInfo.StartTime);
+//		printf("Multi_Udp_Buff[i].isValid is %d\n",Multi_Udp_Buff[i].isValid);
+//		usleep(1000*1000);
+		pthread_mutex_lock (&Local.udp_lock);
+//		printf("Testing tag is No.1\n");
+		//¥Úø™ª•≥‚À¯
+		for(i=0; i<UDPSENDMAX; i++)
+		  if(Multi_Udp_Buff[i].isValid == 0)
+		  {
+//			  printf("Testing tag is No.2\n");
+			  ///0803Multi_Udp_Buff[i].SendNum = 0;
+			  Multi_Udp_Buff[i].SendNum = 4;//∑¢2±È
+			  Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+			  //÷––ƒIP
+			  sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d\0",LocalCfg.IP_Server[0],
+						  LocalCfg.IP_Server[1], LocalCfg.IP_Server[2], LocalCfg.IP_Server[3]);
+			  // strcpy(Multi_Udp_Buff[i].RemoteHost, NSMULTIADDR);
+			  //printf("Multi_Udp_Buff[i].RemoteHost is %s\n",Multi_Udp_Buff[i].RemoteHost);
+			  //∞¸Õ∑
+			  memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+			  //
+			  Multi_Udp_Buff[i].buf[6] = SENDTALKINFO;//0x80
+			  Multi_Udp_Buff[i].buf[7] = ASK;//«Î«Û
+
+			  //÷˜Ω–µÿ÷∑
+			  memset(Multi_Udp_Buff[i].buf + 8, 0x30, 20); //±ªΩ–µÿ÷∑±‡¬Î
+			  memcpy(Multi_Udp_Buff[i].buf+8,LocalCfg.Addr,12);
+		//	  memcpy(Remote.Addr[0], NullAddr, 20);
+		//	  Remote.Addr[0][0]='Z';
+			 // memcpy(Remote.Addr[0]+1,CallAddr+1,11);
+			  Multi_Udp_Buff[i].buf[28] = 'Z';
+			  memcpy(Multi_Udp_Buff[i].buf+29,NullAddr,20);
+			  //∫ÙΩ–◊¥Ã¨¡ø 0x01 0x02 0x03 0x04 0x05
+		//	  memcpy(Multi_Udp_Buff[i].buf + 48 ,&SendTalkInfo,4);
+			  memcpy(Multi_Udp_Buff[i].buf + 48, LocalCfg.Mac_Addr,6);//÷˜Ω–Õ¯ø®µÿ÷∑
+			  //∫ÙΩ–¿‡–Õ
+			  Multi_Udp_Buff[i].buf[54] = SendTalkInfo.Status;//◊¥Ã¨
+			  //∫ÙΩ–µÿ÷∑
+			  memset(Multi_Udp_Buff[i].buf + 55, 0x30, 20); //±ªΩ–µÿ÷∑±‡¬Î
+			  memcpy(Multi_Udp_Buff[i].buf+55,SendTalkInfo.Addr,12);
+			  //ø™ º∫ÙΩ– ±º‰
+			  memcpy(Multi_Udp_Buff[i].buf+75,SendTalkInfo.StartTime,15);
+			  // //≤π°Æ\0°Ø
+			  // Multi_Udp_Buff[i].buf[69] = '\0';
+			  //Õ®ª∞ ±≥§
+			  sprintf(str,"%4d\0",SendTalkInfo.Duration);
+			  memset(Multi_Udp_Buff[i].buf + 90, 0x30, 4); //±ªΩ–µÿ÷∑±‡¬Î
+			  memcpy(Multi_Udp_Buff[i].buf+90,str,4);
+
+			  Multi_Udp_Buff[i].nlength = 94;
+			  Multi_Udp_Buff[i].DelayTime = 100;
+			  Multi_Udp_Buff[i].isValid = 1;
+#ifdef _DEBUG
+			  //				printf("√ï√Ω√î√ö¬Ω√¢√é√∂¬µ√ò√ñ¬∑\n");
+#endif
+			  /*
+				 memcpy(Label_CCenter.Text, Remote.Addr[0],12);
+				 Label_CCenter.Text[12]='\0';
+				 ShowLabel(&Label_CCenter, NOREFRESH, cBlack);
+				 */
+			  sem_post(&multi_send_sem);
+			  printf("send the info in %d\n",i);
+			  break;
+		  }
+		//¬¥√≤¬ø¬™¬ª¬•¬≥√¢√ã√∏
+		pthread_mutex_unlock (&Local.udp_lock);
+	}
+
+}

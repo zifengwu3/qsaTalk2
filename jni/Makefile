@@ -6,10 +6,7 @@
 GCC_PATH=/home/l/android/external-toolchain
   
 #共享库文件名，lib*.a
-TARGET_PATH := ../static_libs
 TARGET  := libqsa_talk.a
-SUPPORT_PATH := /media/HDDDISK/static_libs
-TEST_PATH := ./TestDemo
 
 #CROSS_COMPILE=$(GCC_PATH)/bin/arm-linux-gnueabi-
 CROSS_COMPILE=
@@ -23,7 +20,7 @@ LIBS    :=
 LDFLAGS :=
 DEFINES :=
 INCLUDE := -I./c_include/ 
-CFLAGS  := -g -Wall -O3 $(DEFINES) $(INCLUDE)
+CFLAGS  := -Wall -O3 $(DEFINES) $(INCLUDE)
 CXXFLAGS:= $(CFLAGS) -DHAVE_CONFIG_H
   
 #source file
@@ -39,7 +36,7 @@ all : $(TARGET)
   
 objs : $(OBJS)
   
-rebuild: veryclean everything ndk gcc
+rebuild: veryclean everything
 
 clean:
 	rm -fr *.o
@@ -47,14 +44,6 @@ clean:
 veryclean : clean
 	rm -fr $(TARGET)
 
-gcc:
-	$(CC) -pthread -o main $(TEST_PATH)/main.c \
-						   $(TEST_PATH)/timer.c \
-						   $(TEST_PATH)/tty.c \
-						   $(TEST_PATH)/cb_function.c \
-						   $(TEST_PATH)/recvice_udp.c \
-						   $(TEST_PATH)/nalu.c \
-						   $(TARGET)
 ndk:
 	ndk-build -B
 

@@ -1,0 +1,613 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+AFRAMETIME	c_include/sndtools.h	26;"	d
+AFRAMETIME	include/sndtools.h	26;"	d
+ALARM	c_include/libqsa_common.h	42;"	d
+ALARM	include/libqsa_common.h	43;"	d
+ANDROIDJNI_LIB_LOGGER_H	include/log_jni.h	7;"	d
+AR	Makefile	/^AR      := $(CROSS_COMPILE)ar$/;"	m
+ARP_Socket	c_include/libqsa_common.h	/^int ARP_Socket;$/;"	v
+ARP_Socket	include/libqsa_common.h	/^int ARP_Socket;$/;"	v
+ASK	c_include/libqsa_common.h	56;"	d
+ASK	include/libqsa_common.h	57;"	d
+AUDIOBLK	c_include/libqsa_common.h	37;"	d
+AUDIOBLK	c_include/libqsa_common.h	39;"	d
+AUDIOBLK	c_include/sndtools.h	24;"	d
+AUDIOBLK	include/libqsa_common.h	38;"	d
+AUDIOBLK	include/libqsa_common.h	40;"	d
+AUDIOBLK	include/sndtools.h	24;"	d
+AUDIODSP	c_include/sndtools.h	6;"	d
+AUDIODSP	include/sndtools.h	6;"	d
+AUDIODSP1	c_include/sndtools.h	7;"	d
+AUDIODSP1	include/sndtools.h	7;"	d
+AUDIOPACKDATALEN	c_include/libqsa_common.h	34;"	d
+AUDIOPACKDATALEN	include/libqsa_common.h	35;"	d
+AUDIOPLAYBLK	c_include/sndtools.h	21;"	d
+AUDIOPLAYBLK	include/sndtools.h	21;"	d
+AUDIORECBLK	c_include/sndtools.h	20;"	d
+AUDIORECBLK	include/sndtools.h	20;"	d
+AddMultiGroup	udp.c	/^void AddMultiGroup(int m_Socket, char *McastAddr)$/;"	f
+Added	c_include/libqsa_common.h	/^    int Added[10];                \/\/已加入组$/;"	m	struct:Remote1
+Added	include/libqsa_common.h	/^    int Added[10];                \/\/已加入组$/;"	m	struct:Remote1
+Addr	c_include/libqsa_common.h	/^    char Addr[10][21];         \/\/对方Addr$/;"	m	struct:Remote1
+Addr	include/libqsa_common.h	/^    char Addr[10][21];         \/\/对方Addr$/;"	m	struct:Remote1
+AllocNALU	TestDemo/nalu.c	/^NALU_t *AllocNALU(int buffersize)   $/;"	f
+AllocNALU	TestDemo/new_nal.c	/^NALU_t *AllocNALU(int buffersize)$/;"	f
+AssiAddr	c_include/libqsa_common.h	/^	char AssiAddr[20];       \/\/被叫方地址$/;"	m	struct:talkdata1
+AssiAddr	include/libqsa_common.h	/^	char AssiAddr[20];       \/\/被叫方地址$/;"	m	struct:talkdata1
+AssiIP	c_include/libqsa_common.h	/^	unsigned char AssiIP[4]; \/\/被叫方IP地址$/;"	m	struct:talkdata1
+AssiIP	include/libqsa_common.h	/^	unsigned char AssiIP[4]; \/\/被叫方IP地址$/;"	m	struct:talkdata1
+CALL	c_include/libqsa_common.h	59;"	d
+CALL	include/libqsa_common.h	60;"	d
+CALLANSWER	c_include/libqsa_common.h	62;"	d
+CALLANSWER	include/libqsa_common.h	63;"	d
+CALLCONFIRM	c_include/libqsa_common.h	67;"	d
+CALLCONFIRM	include/libqsa_common.h	68;"	d
+CALLDOWN	c_include/libqsa_common.h	66;"	d
+CALLDOWN	include/libqsa_common.h	67;"	d
+CALLEND	c_include/libqsa_common.h	74;"	d
+CALLEND	include/libqsa_common.h	75;"	d
+CALLSTART	c_include/libqsa_common.h	63;"	d
+CALLSTART	include/libqsa_common.h	64;"	d
+CALLTIMEOUT	c_include/libqsa_common.h	25;"	d
+CALLTIMEOUT	include/libqsa_common.h	26;"	d
+CALLUP	c_include/libqsa_common.h	65;"	d
+CALLUP	include/libqsa_common.h	66;"	d
+CALL_DEVICE	c_include/libqsa_callback.h	/^	CALL_DEVICE          \/\/本地呼叫$/;"	e	enum:_CALL_MODE
+CALL_DEVICE	include/libqsa_callback.h	/^	CALL_DEVICE          \/\/本地呼叫$/;"	e	enum:_CALL_MODE
+CALL_MIXER	c_include/libqsa_callback.h	/^	CALL_MIXER = 0,      \/\/混合呼叫模式$/;"	e	enum:_CALL_MODE
+CALL_MIXER	include/libqsa_callback.h	/^	CALL_MIXER = 0,      \/\/混合呼叫模式$/;"	e	enum:_CALL_MODE
+CALL_SIP	c_include/libqsa_callback.h	/^	CALL_SIP,            \/\/SIP呼叫$/;"	e	enum:_CALL_MODE
+CALL_SIP	include/libqsa_callback.h	/^	CALL_SIP,            \/\/SIP呼叫$/;"	e	enum:_CALL_MODE
+CANCELALARM	c_include/libqsa_common.h	43;"	d
+CANCELALARM	include/libqsa_common.h	44;"	d
+CB_ACK_TIMEOUT	c_include/libqsa_callback.h	/^    CB_ACK_TIMEOUT = 11, \/\/发送6次超时$/;"	e	enum:_CB_OPT
+CB_ACK_TIMEOUT	include/libqsa_callback.h	/^    CB_ACK_TIMEOUT = 11, \/\/发送6次超时$/;"	e	enum:_CB_OPT
+CB_CALL_BUSY	c_include/libqsa_callback.h	/^    CB_CALL_BUSY,        \/\/当前正忙回复$/;"	e	enum:_CB_OPT
+CB_CALL_BUSY	include/libqsa_callback.h	/^    CB_CALL_BUSY,        \/\/当前正忙回复$/;"	e	enum:_CB_OPT
+CB_CALL_FAIL	c_include/libqsa_callback.h	/^    CB_CALL_FAIL,		 \/\/呼叫状态异常$/;"	e	enum:_CB_OPT
+CB_CALL_FAIL	include/libqsa_callback.h	/^    CB_CALL_FAIL,		 \/\/呼叫状态异常$/;"	e	enum:_CB_OPT
+CB_CALL_LIFT	c_include/libqsa_callback.h	/^    CB_CALL_LIFT,		 \/\/呼梯回调命令$/;"	e	enum:_CB_OPT
+CB_CALL_LIFT	include/libqsa_callback.h	/^    CB_CALL_LIFT,		 \/\/呼梯回调命令$/;"	e	enum:_CB_OPT
+CB_CALL_OK	c_include/libqsa_callback.h	/^    CB_CALL_OK = 0,      \/\/呼叫成功回复$/;"	e	enum:_CB_OPT
+CB_CALL_OK	include/libqsa_callback.h	/^    CB_CALL_OK = 0,      \/\/呼叫成功回复$/;"	e	enum:_CB_OPT
+CB_CALL_TIMEOUT	c_include/libqsa_callback.h	/^    CB_CALL_TIMEOUT,     \/\/呼叫30秒超时$/;"	e	enum:_CB_OPT
+CB_CALL_TIMEOUT	include/libqsa_callback.h	/^    CB_CALL_TIMEOUT,     \/\/呼叫30秒超时$/;"	e	enum:_CB_OPT
+CB_FORCE_IFRAME	c_include/libqsa_callback.h	/^    CB_FORCE_IFRAME,	 \/\/强制I帧$/;"	e	enum:_CB_OPT
+CB_FORCE_IFRAME	include/libqsa_callback.h	/^    CB_FORCE_IFRAME,	 \/\/强制I帧$/;"	e	enum:_CB_OPT
+CB_IFRAME_READY	c_include/libqsa_callback.h	/^    CB_IFRAME_READY	     \/\/I帧解析OK$/;"	e	enum:_CB_OPT
+CB_IFRAME_READY	include/libqsa_callback.h	/^    CB_IFRAME_READY	     \/\/I帧解析OK$/;"	e	enum:_CB_OPT
+CB_INFO_OK	c_include/libqsa_callback.h	/^    CB_INFO_OK,		     \/\/发送信息回复$/;"	e	enum:_CB_OPT
+CB_INFO_OK	include/libqsa_callback.h	/^    CB_INFO_OK,		     \/\/发送信息回复$/;"	e	enum:_CB_OPT
+CB_OPEN_LOCK	c_include/libqsa_callback.h	/^    CB_OPEN_LOCK,        \/\/开锁回复$/;"	e	enum:_CB_OPT
+CB_OPEN_LOCK	include/libqsa_callback.h	/^    CB_OPEN_LOCK,        \/\/开锁回复$/;"	e	enum:_CB_OPT
+CB_ST_CALLED	c_include/libqsa_callback.h	/^    CB_ST_CALLED,         \/\/当前设备正在被叫$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_CALLED	include/libqsa_callback.h	/^    CB_ST_CALLED,         \/\/当前设备正在被叫$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_CALLING	c_include/libqsa_callback.h	/^    CB_ST_CALLING,        \/\/当前设备正在呼叫其他设备中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_CALLING	include/libqsa_callback.h	/^    CB_ST_CALLING,        \/\/当前设备正在呼叫其他设备中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_FINDING	c_include/libqsa_callback.h	/^    CB_ST_FINDING = 99	  \/\/当前设备正在搜网$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_FINDING	include/libqsa_callback.h	/^    CB_ST_FINDING = 99	  \/\/当前设备正在搜网$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_NULL	c_include/libqsa_callback.h	/^    CB_ST_NULL = 0,       \/\/状态空闲$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_NULL	include/libqsa_callback.h	/^    CB_ST_NULL = 0,       \/\/状态空闲$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_TALKED	c_include/libqsa_callback.h	/^    CB_ST_TALKED, 		  \/\/当前设备正在被叫对讲中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_TALKED	include/libqsa_callback.h	/^    CB_ST_TALKED = 6, 	  \/\/当前设备正在被叫对讲中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_TALKING	c_include/libqsa_callback.h	/^    CB_ST_TALKING,	      \/\/当前设备正在对讲状态中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_TALKING	include/libqsa_callback.h	/^    CB_ST_TALKING,	      \/\/当前设备正在对讲状态中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_WATCHED	c_include/libqsa_callback.h	/^    CB_ST_WATCHED,        \/\/当前设备处于被监视状态中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_WATCHED	include/libqsa_callback.h	/^    CB_ST_WATCHED,        \/\/当前设备处于被监视状态中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_WATCHING	c_include/libqsa_callback.h	/^    CB_ST_WATCHING,	      \/\/当前设备正在监视其他设备中$/;"	e	enum:_CB_CALL_STATUS
+CB_ST_WATCHING	include/libqsa_callback.h	/^    CB_ST_WATCHING,	      \/\/当前设备正在监视其他设备中$/;"	e	enum:_CB_CALL_STATUS
+CB_TALK_OK	c_include/libqsa_callback.h	/^    CB_TALK_OK,          \/\/对讲开始命令回复$/;"	e	enum:_CB_OPT
+CB_TALK_OK	include/libqsa_callback.h	/^    CB_TALK_OK,          \/\/对讲开始命令回复$/;"	e	enum:_CB_OPT
+CB_TALK_STOP	c_include/libqsa_callback.h	/^    CB_TALK_STOP,        \/\/室内机挂机命令$/;"	e	enum:_CB_OPT
+CB_TALK_STOP	include/libqsa_callback.h	/^    CB_TALK_STOP,        \/\/室内机挂机命令$/;"	e	enum:_CB_OPT
+CB_TALK_TIMEOUT	c_include/libqsa_callback.h	/^    CB_TALK_TIMEOUT,     \/\/对讲180秒超时$/;"	e	enum:_CB_OPT
+CB_TALK_TIMEOUT	include/libqsa_callback.h	/^    CB_TALK_TIMEOUT,     \/\/对讲180秒超时$/;"	e	enum:_CB_OPT
+CB_TYPE_AUDIO	c_include/libqsa_callback.h	/^    CB_TYPE_AUDIO = 0$/;"	e	enum:_CB_TYPE_DATA
+CB_TYPE_AUDIO	include/libqsa_callback.h	/^    CB_TYPE_AUDIO = 0$/;"	e	enum:_CB_TYPE_DATA
+CC	Makefile	/^CC      := $(CROSS_COMPILE)gcc$/;"	m
+CFLAGS	Makefile	/^CFLAGS  := -g -Wall -O3 $(DEFINES) $(INCLUDE)$/;"	m
+CROSS_COMPILE	Makefile	/^CROSS_COMPILE=$/;"	m
+CXXFLAGS	Makefile	/^CXXFLAGS:= $(CFLAGS) -DHAVE_CONFIG_H$/;"	m
+CallConfirmFlag	c_include/libqsa_common.h	/^    int CallConfirmFlag; \/\/在线标志$/;"	m	struct:Local1
+CallConfirmFlag	include/libqsa_common.h	/^    int CallConfirmFlag; \/\/在线标志$/;"	m	struct:Local1
+CloseArpSocket	arp.c	/^void CloseArpSocket(void)$/;"	f
+CloseUdpSocket	udp.c	/^void CloseUdpSocket(void) {$/;"	f
+CloseUdpSocketDemo	TestDemo/recvice_udp.c	/^void CloseUdpSocketDemo(void) {$/;"	f
+CreateUdpVideoRcvThread	udp.c	/^void CreateUdpVideoRcvThread(void) {$/;"	f
+CreateUdpVideoRcvThreadDemo	TestDemo/recvice_udp.c	/^void CreateUdpVideoRcvThreadDemo(void) {$/;"	f
+CurrOrder	c_include/libqsa_common.h	/^    int CurrOrder;\/\/当前命令状态,VIDEOTALK VIDEOTALKTRANS VIDEOWATCH VIDEOWATCHTRANS$/;"	m	struct:Multi_Udp_Buff1
+CurrOrder	include/libqsa_common.h	/^    int CurrOrder;\/\/当前命令状态,VIDEOTALK VIDEOTALKTRANS VIDEOWATCH VIDEOWATCHTRANS$/;"	m	struct:Multi_Udp_Buff1
+CurrPackage	c_include/libqsa_common.h	/^	unsigned short CurrPackage;       \/\/当前包数$/;"	m	struct:talkdata1
+CurrPackage	include/libqsa_common.h	/^	unsigned short CurrPackage;       \/\/当前包数$/;"	m	struct:talkdata1
+DEFINES	Makefile	/^DEFINES :=$/;"	m
+DEST_IP	TestDemo/h264.h	21;"	d
+DEST_PORT	TestDemo/h264.h	22;"	d
+DIRECTCALLTIME	c_include/libqsa_common.h	15;"	d
+DIRECTCALLTIME	include/libqsa_common.h	16;"	d
+DataType	c_include/libqsa_common.h	/^	unsigned short DataType;          \/\/数据类型$/;"	m	struct:talkdata1
+DataType	include/libqsa_common.h	/^	unsigned short DataType;          \/\/数据类型$/;"	m	struct:talkdata1
+Datalen	c_include/libqsa_common.h	/^	unsigned short Datalen;           \/\/数据长度$/;"	m	struct:talkdata1
+Datalen	include/libqsa_common.h	/^	unsigned short Datalen;           \/\/数据长度$/;"	m	struct:talkdata1
+DelayTime	c_include/libqsa_common.h	/^    int DelayTime;  \/\/等待时间$/;"	m	struct:Multi_Udp_Buff1
+DelayTime	include/libqsa_common.h	/^    int DelayTime;  \/\/等待时间$/;"	m	struct:Multi_Udp_Buff1
+DenIP	c_include/libqsa_common.h	/^    char DenIP[20];$/;"	m	struct:Multi_Udp_Buff1
+DenIP	c_include/libqsa_common.h	/^    unsigned char DenIP[4]; \/\/对方IP或视频服务器IP$/;"	m	struct:Remote1
+DenIP	include/libqsa_common.h	/^    char DenIP[20];$/;"	m	struct:Multi_Udp_Buff1
+DenIP	include/libqsa_common.h	/^    unsigned char DenIP[4]; \/\/对方IP或视频服务器IP$/;"	m	struct:Remote1
+DenNum	c_include/libqsa_common.h	/^    int DenNum;             \/\/目标数量  主机+副机$/;"	m	struct:Remote1
+DenNum	include/libqsa_common.h	/^    int DenNum;             \/\/目标数量  主机+副机$/;"	m	struct:Remote1
+DropMultiGroup	udp.c	/^void DropMultiGroup(int m_Socket, char *McastAddr)$/;"	f
+E	TestDemo/h264.h	/^	unsigned char E:1;$/;"	m	struct:__anon4
+F	TestDemo/h264.h	/^	unsigned char F:1;    $/;"	m	struct:__anon2
+F	TestDemo/h264.h	/^	unsigned char F:1;    $/;"	m	struct:__anon3
+FINDEQUIP	c_include/libqsa_common.h	54;"	d
+FINDEQUIP	include/libqsa_common.h	55;"	d
+FMT16BITS	c_include/sndtools.h	10;"	d
+FMT16BITS	include/sndtools.h	10;"	d
+FMT16K	c_include/sndtools.h	13;"	d
+FMT16K	include/sndtools.h	13;"	d
+FMT22K	c_include/sndtools.h	14;"	d
+FMT22K	include/sndtools.h	14;"	d
+FMT44K	c_include/sndtools.h	15;"	d
+FMT44K	include/sndtools.h	15;"	d
+FMT8BITS	c_include/sndtools.h	9;"	d
+FMT8BITS	include/sndtools.h	9;"	d
+FMT8K	c_include/sndtools.h	12;"	d
+FMT8K	include/sndtools.h	12;"	d
+FORCEIFRAME	c_include/libqsa_common.h	70;"	d
+FORCEIFRAME	include/libqsa_common.h	71;"	d
+FU_HEADER	TestDemo/h264.h	/^} FU_HEADER; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon4
+FU_INDICATOR	TestDemo/h264.h	/^} FU_INDICATOR; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon3
+FindStartCode2	TestDemo/nalu.c	/^static int FindStartCode2 (unsigned char *Buf)   $/;"	f	file:
+FindStartCode2	TestDemo/new_nal.c	/^static int FindStartCode2 (unsigned char *Buf)$/;"	f	file:
+FindStartCode3	TestDemo/nalu.c	/^static int FindStartCode3 (unsigned char *Buf)   $/;"	f	file:
+FindStartCode3	TestDemo/new_nal.c	/^static int FindStartCode3 (unsigned char *Buf)$/;"	f	file:
+ForceIFrame_Func	udp.c	/^void ForceIFrame_Func(void) \/\/ǿ��I֡$/;"	f
+Framelen	c_include/libqsa_common.h	/^	unsigned int Framelen;            \/\/帧数据长度$/;"	m	struct:talkdata1
+Framelen	include/libqsa_common.h	/^	unsigned int Framelen;            \/\/帧数据长度$/;"	m	struct:talkdata1
+Frameno	c_include/libqsa_common.h	/^	unsigned short Frameno;           \/\/帧序号$/;"	m	struct:talkdata1
+Frameno	include/libqsa_common.h	/^	unsigned short Frameno;           \/\/帧序号$/;"	m	struct:talkdata1
+FreeNALU	TestDemo/nalu.c	/^void FreeNALU(NALU_t *n)   $/;"	f
+FreeNALU	TestDemo/new_nal.c	/^void FreeNALU(NALU_t *n)$/;"	f
+GCC_PATH	Makefile	/^GCC_PATH=\/home\/l\/android\/external-toolchain$/;"	m
+GetAnnexbNALU	TestDemo/nalu.c	/^int GetAnnexbNALU (NALU_t *nalu)   $/;"	f
+GetAnnexbNALU	TestDemo/new_nal.c	/^int GetAnnexbNALU (NALU_t *nalu)$/;"	f
+GroupIP	c_include/libqsa_common.h	/^    unsigned char GroupIP[4]; \/\/GroupIP$/;"	m	struct:Remote1
+GroupIP	include/libqsa_common.h	/^    unsigned char GroupIP[4]; \/\/GroupIP$/;"	m	struct:Remote1
+H264	TestDemo/h264.h	24;"	d
+HostAddr	c_include/libqsa_common.h	/^	char HostAddr[20];       \/\/主叫方地址$/;"	m	struct:talkdata1
+HostAddr	include/libqsa_common.h	/^	char HostAddr[20];       \/\/主叫方地址$/;"	m	struct:talkdata1
+HostIP	c_include/libqsa_common.h	/^	unsigned char HostIP[4]; \/\/主叫方IP地址$/;"	m	struct:talkdata1
+HostIP	include/libqsa_common.h	/^	unsigned char HostIP[4]; \/\/主叫方IP地址$/;"	m	struct:talkdata1
+INCLUDE	Makefile	/^INCLUDE := -I.\/c_include\/ $/;"	m
+INTRPERSEC	c_include/libqsa_common.h	18;"	d
+INTRPERSEC	include/libqsa_common.h	19;"	d
+INTRTIME	c_include/libqsa_common.h	17;"	d
+INTRTIME	include/libqsa_common.h	18;"	d
+IP	c_include/libqsa_common.h	/^    unsigned char IP[10][4];    \/\/对方IP$/;"	m	struct:Remote1
+IP	include/libqsa_common.h	/^    unsigned char IP[10][4];    \/\/对方IP$/;"	m	struct:Remote1
+IP_Group	c_include/libqsa_common.h	/^    unsigned char IP_Group[4];  \/\/组播地址$/;"	m	struct:Local1
+IP_Group	include/libqsa_common.h	/^    unsigned char IP_Group[4];  \/\/组播地址$/;"	m	struct:Local1
+InitArpSocket	arp.c	/^int InitArpSocket(void)$/;"	f
+InitUdpSocket	udp.c	/^int InitUdpSocket(short lPort) {$/;"	f
+InitUdpSocketDemo	TestDemo/recvice_udp.c	/^int InitUdpSocketDemo(short lPort) {$/;"	f
+InitWinsock	TestDemo/new_nal.c	/^BOOL InitWinsock()$/;"	f
+Init_Timer	timer.c	/^int Init_Timer(void) {$/;"	f
+Init_Udp_Send_Task	udp.c	/^int Init_Udp_Send_Task(void) {$/;"	f
+LDFLAGS	Makefile	/^LDFLAGS :=$/;"	m
+LFTMULTIADDR	c_include/libqsa_common.h	31;"	d
+LFTMULTIADDR	include/libqsa_common.h	32;"	d
+LIBS	Makefile	/^LIBS    :=$/;"	m
+LINEUSE	c_include/libqsa_common.h	60;"	d
+LINEUSE	include/libqsa_common.h	61;"	d
+LOCAL_ARM_MODE	Android.mk	/^LOCAL_ARM_MODE := arm$/;"	m
+LOCAL_C_INCLUDES	Android.mk	/^LOCAL_C_INCLUDES := $(QSA_TALK_PATH)\/include$/;"	m
+LOCAL_MODULE	Android.mk	/^LOCAL_MODULE := qsatalk$/;"	m
+LOCAL_MODULE_TAGS	Android.mk	/^LOCAL_MODULE_TAGS := optional$/;"	m
+LOCAL_PATH	Android.mk	/^LOCAL_PATH := $(call my-dir)$/;"	m
+LOCAL_SRC_FILES	Android.mk	/^LOCAL_SRC_FILES := $(QSA_TALK_PATH)\/cb_function.c \\$/;"	m
+LOGD	c_include/libqsa_common.h	11;"	d
+LOGD	include/log_jni.h	52;"	d
+LOGD	include/log_jni.h	55;"	d
+LOGE	include/log_jni.h	82;"	d
+LOGE	include/log_jni.h	85;"	d
+LOGF	include/log_jni.h	92;"	d
+LOGF	include/log_jni.h	95;"	d
+LOGI	include/log_jni.h	62;"	d
+LOGI	include/log_jni.h	65;"	d
+LOGS	include/log_jni.h	102;"	d
+LOGS	include/log_jni.h	105;"	d
+LOGV	include/log_jni.h	41;"	d
+LOGV	include/log_jni.h	44;"	d
+LOGW	include/log_jni.h	72;"	d
+LOGW	include/log_jni.h	75;"	d
+Local	c_include/libqsa_common.h	/^struct Local1 Local;$/;"	v	typeref:struct:Local1
+Local	include/libqsa_common.h	/^struct Local1 Local;$/;"	v	typeref:struct:Local1
+Local1	c_include/libqsa_common.h	/^struct Local1 {$/;"	s
+Local1	include/libqsa_common.h	/^struct Local1 {$/;"	s
+LocalDataPort	c_include/libqsa_common.h	/^int LocalDataPort;   \/\/命令及数据UDP端口$/;"	v
+LocalDataPort	include/libqsa_common.h	/^int LocalDataPort;   \/\/命令及数据UDP端口$/;"	v
+LocalVideoPort	c_include/libqsa_common.h	/^int LocalVideoPort;  \/\/音视频UDP端口$/;"	v
+LocalVideoPort	include/libqsa_common.h	/^int LocalVideoPort;  \/\/音视频UDP端口$/;"	v
+MAXSENDNUM	c_include/libqsa_common.h	20;"	d
+MAXSENDNUM	include/libqsa_common.h	21;"	d
+MAX_RTP_PKT_LENGTH	TestDemo/h264.h	19;"	d
+MONO	c_include/sndtools.h	17;"	d
+MONO	include/sndtools.h	17;"	d
+MULTITTL	c_include/libqsa_common.h	32;"	d
+MULTITTL	include/libqsa_common.h	33;"	d
+MY_LOG_LEVEL	include/log_jni.h	32;"	d
+MY_LOG_LEVEL_DEBUG	include/log_jni.h	18;"	d
+MY_LOG_LEVEL_DEFAULT	include/log_jni.h	16;"	d
+MY_LOG_LEVEL_ERROR	include/log_jni.h	21;"	d
+MY_LOG_LEVEL_FATAL	include/log_jni.h	22;"	d
+MY_LOG_LEVEL_INFO	include/log_jni.h	19;"	d
+MY_LOG_LEVEL_SILENT	include/log_jni.h	23;"	d
+MY_LOG_LEVEL_VERBOSE	include/log_jni.h	17;"	d
+MY_LOG_LEVEL_WARNIG	include/log_jni.h	20;"	d
+MY_LOG_NOOP	include/log_jni.h	25;"	d
+MY_LOG_PRINT	include/log_jni.h	35;"	d
+MY_LOG_TAG	include/log_jni.h	28;"	d
+Multi_Udp_Buff	c_include/libqsa_common.h	/^struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; \/\/10个UDP主动发送缓冲$/;"	v	typeref:struct:Multi_Udp_Buff1
+Multi_Udp_Buff	include/libqsa_common.h	/^struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; \/\/10个UDP主动发送缓冲$/;"	v	typeref:struct:Multi_Udp_Buff1
+Multi_Udp_Buff1	c_include/libqsa_common.h	/^struct Multi_Udp_Buff1 {$/;"	s
+Multi_Udp_Buff1	include/libqsa_common.h	/^struct Multi_Udp_Buff1 {$/;"	s
+NALU_HEADER	TestDemo/h264.h	/^} NALU_HEADER; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon2
+NALU_t	TestDemo/nalu.c	/^} NALU_t;   $/;"	t	typeref:struct:__anon5	file:
+NALU_t	TestDemo/new_nal.c	/^} NALU_t;$/;"	t	typeref:struct:__anon6	file:
+NRI	TestDemo/h264.h	/^	unsigned char NRI:2; $/;"	m	struct:__anon3
+NRI	TestDemo/h264.h	/^    unsigned char NRI:2;$/;"	m	struct:__anon2
+NSMULTIADDR	c_include/libqsa_common.h	30;"	d
+NSMULTIADDR	include/libqsa_common.h	31;"	d
+NSORDER	c_include/libqsa_common.h	52;"	d
+NSORDER	include/libqsa_common.h	53;"	d
+NSSERVERORDER	c_include/libqsa_common.h	53;"	d
+NSSERVERORDER	include/libqsa_common.h	54;"	d
+OBJS	Makefile	/^OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))$/;"	m
+OPENLOCK	c_include/libqsa_common.h	73;"	d
+OPENLOCK	include/libqsa_common.h	74;"	d
+OnlineCheckFunc	timer.c	/^void OnlineCheckFunc(void)$/;"	f
+OnlineFlag	c_include/libqsa_common.h	/^    int OnlineFlag; \/\/需检查在线确认$/;"	m	struct:Local1
+OnlineFlag	include/libqsa_common.h	/^    int OnlineFlag; \/\/需检查在线确认$/;"	m	struct:Local1
+OnlineNum	c_include/libqsa_common.h	/^    int OnlineNum;  \/\/在线确认序号$/;"	m	struct:Local1
+OnlineNum	include/libqsa_common.h	/^    int OnlineNum;  \/\/在线确认序号$/;"	m	struct:Local1
+OpenBitstreamFile	TestDemo/nalu.c	/^void OpenBitstreamFile (char *fn)   $/;"	f
+OpenBitstreamFile	TestDemo/new_nal.c	/^void OpenBitstreamFile (char *fn)$/;"	f
+OpenBitstreamFile1	TestDemo/nalu.c	/^void OpenBitstreamFile1 (char *fn)   $/;"	f
+PACKET_BUFFER_END	TestDemo/h264.h	16;"	d
+PREPARETIMEOUT	c_include/libqsa_common.h	27;"	d
+PREPARETIMEOUT	include/libqsa_common.h	28;"	d
+PackLen	c_include/libqsa_common.h	/^	unsigned short PackLen;       \/\/数据包大小$/;"	m	struct:talkdata1
+PackLen	include/libqsa_common.h	/^	unsigned short PackLen;       \/\/数据包大小$/;"	m	struct:talkdata1
+QSA_TALK_PATH	Android.mk	/^QSA_TALK_PATH := $(LOCAL_PATH)$/;"	m
+QUERYFAIL	c_include/libqsa_common.h	61;"	d
+QUERYFAIL	include/libqsa_common.h	62;"	d
+QUERYSTATUS	c_include/libqsa_common.h	46;"	d
+QUERYSTATUS	include/libqsa_common.h	47;"	d
+R	TestDemo/h264.h	/^	unsigned char R:1;$/;"	m	struct:__anon4
+RANLIB	Makefile	/^RANLIB  := ranlib$/;"	m
+RECORDTIMEOUT	c_include/libqsa_common.h	28;"	d
+RECORDTIMEOUT	include/libqsa_common.h	29;"	d
+REMOTECALLLIFT	c_include/libqsa_common.h	75;"	d
+REMOTECALLLIFT	include/libqsa_common.h	76;"	d
+REMOTELIFT	c_include/libqsa_common.h	76;"	d
+REMOTELIFT	include/libqsa_common.h	77;"	d
+REMOTEOPENLOCK	c_include/libqsa_common.h	68;"	d
+REMOTEOPENLOCK	include/libqsa_common.h	69;"	d
+REPLY	c_include/libqsa_common.h	57;"	d
+REPLY	include/libqsa_common.h	58;"	d
+REPORTSTATUS	c_include/libqsa_common.h	45;"	d
+REPORTSTATUS	include/libqsa_common.h	46;"	d
+RTP_FIXED_HEADER	TestDemo/h264.h	/^} RTP_FIXED_HEADER;$/;"	t	typeref:struct:__anon1
+RcvBufLen	udp.c	/^int RcvBufLen = 1024 * 128;$/;"	v
+RecordPic	c_include/libqsa_common.h	/^	int RecordPic;  \/\/留照片  0 不留  1 呼叫留照片  2 通话留照片$/;"	m	struct:Local1
+RecordPic	include/libqsa_common.h	/^	int RecordPic;  \/\/留照片  0 不留  1 呼叫留照片  2 通话留照片$/;"	m	struct:Local1
+RecvForceIFrame_Func	udp.c	/^void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_NS_Reply_Func	udp.c	/^void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)$/;"	f
+Recv_Talk_Call_Answer_Task	udp.c	/^void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Confirm_Task	udp.c	/^void Recv_Talk_Call_Confirm_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_End_Task	udp.c	/^void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Start_Task	udp.c	/^void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_Task	udp.c	/^void Recv_Talk_Call_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Call_UpDown_Task	udp.c	/^void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,$/;"	f
+Recv_Talk_Line_Use_Task	udp.c	/^void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Recv_Talk_Open_Lock_Task	udp.c	/^void Recv_Talk_Open_Lock_Task(unsigned char *recv_buf, char *cFromIP) {$/;"	f
+Remote1	c_include/libqsa_common.h	/^struct Remote1 {$/;"	s
+Remote1	include/libqsa_common.h	/^struct Remote1 {$/;"	s
+RemoteAudioPort	c_include/libqsa_common.h	/^int RemoteAudioPort;$/;"	v
+RemoteAudioPort	include/libqsa_common.h	/^int RemoteAudioPort;$/;"	v
+RemoteDataPort	c_include/libqsa_common.h	/^int RemoteDataPort;$/;"	v
+RemoteDataPort	include/libqsa_common.h	/^int RemoteDataPort;$/;"	v
+RemoteHost	c_include/libqsa_common.h	/^    char RemoteHost[20];$/;"	m	struct:Multi_Udp_Buff1
+RemoteHost	c_include/libqsa_common.h	/^char RemoteHost[20];$/;"	v
+RemoteHost	include/libqsa_common.h	/^    char RemoteHost[20];$/;"	m	struct:Multi_Udp_Buff1
+RemoteHost	include/libqsa_common.h	/^char RemoteHost[20];$/;"	v
+RemoteIP	c_include/libqsa_common.h	/^    char RemoteIP[20];               $/;"	m	struct:Multi_Udp_Buff1
+RemoteIP	include/libqsa_common.h	/^    char RemoteIP[20];               $/;"	m	struct:Multi_Udp_Buff1
+RemotePort	c_include/libqsa_common.h	/^    int RemotePort;$/;"	m	struct:Multi_Udp_Buff1
+RemotePort	include/libqsa_common.h	/^    int RemotePort;$/;"	m	struct:Multi_Udp_Buff1
+RemoteVideoPort	c_include/libqsa_common.h	/^int RemoteVideoPort;$/;"	v
+RemoteVideoPort	include/libqsa_common.h	/^int RemoteVideoPort;$/;"	v
+S	TestDemo/h264.h	/^	unsigned char S:1;    $/;"	m	struct:__anon4
+SENDMESSAGE	c_include/libqsa_common.h	44;"	d
+SENDMESSAGE	include/libqsa_common.h	45;"	d
+SNDTOOLS_H	c_include/sndtools.h	2;"	d
+SNDTOOLS_H	include/sndtools.h	2;"	d
+SOURCE	Makefile	/^SOURCE  := $(wildcard *.c) $(wildcard *.cpp)$/;"	m
+STERO	c_include/sndtools.h	18;"	d
+STERO	include/sndtools.h	18;"	d
+SUPPORT_PATH	Makefile	/^SUPPORT_PATH := \/media\/HDDDISK\/static_libs$/;"	m
+SendDelayTime	c_include/libqsa_common.h	/^    int SendDelayTime;$/;"	m	struct:Multi_Udp_Buff1
+SendDelayTime	include/libqsa_common.h	/^    int SendDelayTime;$/;"	m	struct:Multi_Udp_Buff1
+SendFreeArp	arp.c	/^void SendFreeArp(void)$/;"	f
+SendNum	c_include/libqsa_common.h	/^    int SendNum; \/\/当前发送次数$/;"	m	struct:Multi_Udp_Buff1
+SendNum	include/libqsa_common.h	/^    int SendNum; \/\/当前发送次数$/;"	m	struct:Multi_Udp_Buff1
+SndBufLen	udp.c	/^int SndBufLen = 1024 * 128;$/;"	v
+Status	c_include/libqsa_common.h	/^    int Status;$/;"	m	struct:Local1
+Status	include/libqsa_common.h	/^    int Status;$/;"	m	struct:Local1
+TAG	include/log_jni.h	10;"	d
+TAIL	c_include/sndtools.h	25;"	d
+TAIL	include/sndtools.h	25;"	d
+TALKTIMEOUT	c_include/libqsa_common.h	26;"	d
+TALKTIMEOUT	include/libqsa_common.h	27;"	d
+TARGET	Makefile	/^TARGET  := libqsa_talk.a$/;"	m
+TARGET_PATH	Makefile	/^TARGET_PATH := ..\/static_libs$/;"	m
+TEST_PATH	Makefile	/^TEST_PATH := .\/TestDemo$/;"	m
+TIMERPERSEC	c_include/libqsa_common.h	22;"	d
+TIMERPERSEC	include/libqsa_common.h	23;"	d
+TIMERTIME	c_include/libqsa_common.h	21;"	d
+TIMERTIME	include/libqsa_common.h	22;"	d
+TYPE	TestDemo/h264.h	/^	unsigned char TYPE:5;$/;"	m	struct:__anon2
+TYPE	TestDemo/h264.h	/^    unsigned char TYPE:5;$/;"	m	struct:__anon3
+TYPE	TestDemo/h264.h	/^    unsigned char TYPE:5;$/;"	m	struct:__anon4
+TalkCtrlFunc	timer.c	/^void TalkCtrlFunc(void)$/;"	f
+TalkEnd_ClearStatus	udp.c	/^void TalkEnd_ClearStatus(void) {$/;"	f
+TalkTimeOut	c_include/libqsa_common.h	/^    int TalkTimeOut; \/\/通话最长时间$/;"	m	struct:Local1
+TalkTimeOut	include/libqsa_common.h	/^    int TalkTimeOut; \/\/通话最长时间$/;"	m	struct:Local1
+TimeOut	c_include/libqsa_common.h	/^    int TimeOut;    \/\/监视超时,  通话超时,  呼叫超时，无人接听$/;"	m	struct:Local1
+TimeOut	include/libqsa_common.h	/^    int TimeOut;    \/\/监视超时,  通话超时,  呼叫超时，无人接听$/;"	m	struct:Local1
+Timer1Num	c_include/libqsa_common.h	/^    int Timer1Num;  \/\/定时器1计数$/;"	m	struct:Local1
+Timer1Num	include/libqsa_common.h	/^    int Timer1Num;  \/\/定时器1计数$/;"	m	struct:Local1
+TotalPackage	c_include/libqsa_common.h	/^	unsigned short TotalPackage;      \/\/总包数$/;"	m	struct:talkdata1
+TotalPackage	include/libqsa_common.h	/^	unsigned short TotalPackage;      \/\/总包数$/;"	m	struct:talkdata1
+UDPSENDMAX	c_include/libqsa_common.h	19;"	d
+UDPSENDMAX	include/libqsa_common.h	20;"	d
+UdpPackageHead	c_include/libqsa_common.h	/^char UdpPackageHead[15];$/;"	v
+UdpPackageHead	include/libqsa_common.h	/^char UdpPackageHead[15];$/;"	v
+UdpRecvFlag	TestDemo/recvice_udp.c	/^short UdpRecvFlag;$/;"	v
+UdpRecvFlag	udp.c	/^short UdpRecvFlag;$/;"	v
+UdpSendBuff	udp.c	/^int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,$/;"	f
+UdpVideoRcvThread	udp.c	/^void UdpVideoRcvThread(void)$/;"	f
+UdpVideoRcvThreadDemo	TestDemo/recvice_udp.c	/^void UdpVideoRcvThreadDemo(void)$/;"	f
+Uninit_Timer	timer.c	/^int Uninit_Timer(void) {$/;"	f
+Uninit_Udp_Send_Task	udp.c	/^int Uninit_Udp_Send_Task(void) {$/;"	f
+VIDEOPACKDATALEN	c_include/libqsa_common.h	35;"	d
+VIDEOPACKDATALEN	include/libqsa_common.h	36;"	d
+VIDEOTALK	c_include/libqsa_common.h	48;"	d
+VIDEOTALK	include/libqsa_common.h	49;"	d
+VIDEOTALKTRANS	c_include/libqsa_common.h	49;"	d
+VIDEOTALKTRANS	include/libqsa_common.h	50;"	d
+VIDEOWATCH	c_include/libqsa_common.h	50;"	d
+VIDEOWATCH	include/libqsa_common.h	51;"	d
+VIDEOWATCHTRANS	c_include/libqsa_common.h	51;"	d
+VIDEOWATCHTRANS	include/libqsa_common.h	52;"	d
+WATCHTIMEOUT	c_include/libqsa_common.h	24;"	d
+WATCHTIMEOUT	include/libqsa_common.h	25;"	d
+ZOOMIN	c_include/libqsa_common.h	72;"	d
+ZOOMIN	include/libqsa_common.h	73;"	d
+ZOOMOUT	c_include/libqsa_common.h	71;"	d
+ZOOMOUT	include/libqsa_common.h	72;"	d
+_CALL_MODE	c_include/libqsa_callback.h	/^enum _CALL_MODE {$/;"	g
+_CALL_MODE	include/libqsa_callback.h	/^enum _CALL_MODE {$/;"	g
+_CB_CALL_STATUS	c_include/libqsa_callback.h	/^enum _CB_CALL_STATUS{$/;"	g
+_CB_CALL_STATUS	include/libqsa_callback.h	/^enum _CB_CALL_STATUS{$/;"	g
+_CB_OPT	c_include/libqsa_callback.h	/^enum _CB_OPT {$/;"	g
+_CB_OPT	include/libqsa_callback.h	/^enum _CB_OPT {$/;"	g
+_CB_TYPE_DATA	c_include/libqsa_callback.h	/^enum _CB_TYPE_DATA {$/;"	g
+_CB_TYPE_DATA	include/libqsa_callback.h	/^enum _CB_TYPE_DATA {$/;"	g
+_FALSE	c_include/libqsa_common.h	12;"	d
+_FALSE	include/libqsa_common.h	12;"	d
+_LIB_QSA_DEF_H	arp.c	6;"	d	file:
+_LIB_QSA_DEF_H	c_include/libqsa_common.h	139;"	d
+_LIB_QSA_DEF_H	cb_function.c	4;"	d	file:
+_LIB_QSA_DEF_H	include/libqsa_common.h	140;"	d
+_LIB_QSA_DEF_H	talk.c	7;"	d	file:
+_LIB_QSA_DEF_H	timer.c	18;"	d	file:
+_LIB_QSA_DEF_H	udp.c	13;"	d	file:
+_REC_FILE	include/libqsa_common.h	15;"	d
+_SEND_VIDEO_TEST	talk.c	174;"	d	file:
+_SOFTWARE_MULTIPLE	c_include/sndtools.h	33;"	d
+_SOFTWARE_MULTIPLE	include/sndtools.h	33;"	d
+_SOFTWARE_REC_MULTIPLE	c_include/sndtools.h	31;"	d
+_SOFTWARE_REC_MULTIPLE	include/sndtools.h	31;"	d
+_TRUE	c_include/libqsa_common.h	13;"	d
+_TRUE	include/libqsa_common.h	13;"	d
+_cb_audio_data	c_include/libqsa_callback.h	/^typedef void ( * _cb_audio_data)(void * data, int length, int type);$/;"	t
+_cb_audio_data	include/libqsa_callback.h	/^typedef void ( * _cb_audio_data)(void * data, int length, int type);$/;"	t
+_cb_devip	c_include/libqsa_callback.h	/^typedef void ( * _cb_devip)(const void * addr, const void * ip, int uFlag);$/;"	t
+_cb_devip	include/libqsa_callback.h	/^typedef void ( * _cb_devip)(const void * addr, const void * ip, int uFlag);$/;"	t
+_cb_function	c_include/libqsa_callback.h	/^struct _cb_function{$/;"	s
+_cb_function	include/libqsa_callback.h	/^struct _cb_function{$/;"	s
+_cb_info	c_include/libqsa_callback.h	/^typedef void ( * _cb_info)(const void * data, const void * ip , int length, int port);$/;"	t
+_cb_info	include/libqsa_callback.h	/^typedef void ( * _cb_info)(const void * data, const void * ip , int length, int port);$/;"	t
+_cb_opt	c_include/libqsa_callback.h	/^typedef void ( * _cb_opt)(int value, int status);$/;"	t
+_cb_opt	include/libqsa_callback.h	/^typedef void ( * _cb_opt)(int value, int status);$/;"	t
+_send_info	c_include/libqsa_callback.h	/^struct _send_info {$/;"	s
+_send_info	include/libqsa_callback.h	/^struct _send_info {$/;"	s
+addr	c_include/libqsa_callback.h	/^    unsigned char addr[4];		 \/\/发送信息的设备房号地址，4位房号地址,需要广告机或上位服务器提供（搜网）$/;"	m	struct:_send_info
+addr	include/libqsa_callback.h	/^    unsigned char addr[4];		 \/\/发送信息的设备房号地址，4位房号地址,需要广告机或上位服务器提供（搜网）$/;"	m	struct:_send_info
+address	c_include/libqsa_callback.h	/^	unsigned char address[20];			\/\/M0101010000100000000$/;"	m	struct:dev_config
+address	include/libqsa_callback.h	/^	unsigned char address[20];			\/\/M0101010000100000000$/;"	m	struct:dev_config
+audioFp2	talk.c	/^static FILE* audioFp2 = NULL;$/;"	v	file:
+bits	TestDemo/nalu.c	/^FILE *bits = NULL;                \/\/!< the bit stream file   $/;"	v
+bits	TestDemo/new_nal.c	/^FILE *bits = NULL;                \/\/!< the bit stream file$/;"	v
+bits1	TestDemo/nalu.c	/^FILE *bits1 = NULL;                \/\/!< the bit stream file   $/;"	v
+buf	TestDemo/nalu.c	/^    char *buf;                    \/\/! contains the first byte followed by the EBSP   $/;"	m	struct:__anon5	file:
+buf	TestDemo/new_nal.c	/^  char *buf;                    \/\/! contains the first byte followed by the EBSP$/;"	m	struct:__anon6	file:
+buf	c_include/libqsa_common.h	/^    unsigned char buf[1500];$/;"	m	struct:Multi_Udp_Buff1
+buf	include/libqsa_common.h	/^    unsigned char buf[1500];$/;"	m	struct:Multi_Udp_Buff1
+cb_audio_data	c_include/libqsa_callback.h	/^    _cb_audio_data cb_audio_data;$/;"	m	struct:_cb_function
+cb_audio_data	include/libqsa_callback.h	/^    _cb_audio_data cb_audio_data;$/;"	m	struct:_cb_function
+cb_curr_opt	c_include/libqsa_callback.h	/^    _cb_opt cb_curr_opt;$/;"	m	struct:_cb_function
+cb_curr_opt	include/libqsa_callback.h	/^    _cb_opt cb_curr_opt;$/;"	m	struct:_cb_function
+cb_devip	c_include/libqsa_callback.h	/^    _cb_devip cb_devip;$/;"	m	struct:_cb_function
+cb_devip	include/libqsa_callback.h	/^    _cb_devip cb_devip;$/;"	m	struct:_cb_function
+cb_info	c_include/libqsa_callback.h	/^    _cb_info cb_info;$/;"	m	struct:_cb_function
+cb_info	include/libqsa_callback.h	/^    _cb_info cb_info;$/;"	m	struct:_cb_function
+cb_opt_function	c_include/libqsa_common.h	/^struct _cb_function cb_opt_function;$/;"	v	typeref:struct:_cb_function
+cb_opt_function	include/libqsa_common.h	/^struct _cb_function cb_opt_function;$/;"	v	typeref:struct:_cb_function
+center_ip	c_include/libqsa_callback.h	/^	unsigned char center_ip[20];			\/\/192.168.10.XX$/;"	m	struct:dev_config
+center_ip	include/libqsa_callback.h	/^	unsigned char center_ip[20];			\/\/192.168.10.XX$/;"	m	struct:dev_config
+configlen	c_include/libqsa_common.h	/^int configlen = sizeof(struct dev_config);            \/\/结构长度$/;"	v
+configlen	include/libqsa_common.h	/^int configlen = sizeof(struct dev_config);            \/\/结构长度$/;"	v
+csrc_len	TestDemo/h264.h	/^    unsigned char csrc_len:4;        \/**\/\/* expect 0 *\/$/;"	m	struct:__anon1
+currpath	c_include/libqsa_common.h	/^char currpath[80];   \/\/自定义路径$/;"	v
+currpath	include/libqsa_common.h	/^char currpath[80];   \/\/自定义路径$/;"	v
+default_cb_audio_data	cb_function.c	/^void default_cb_audio_data(void * data, int length, int type) {$/;"	f
+default_cb_audio_data1	TestDemo/cb_function.c	/^void default_cb_audio_data1(void * data, int length, int type) {$/;"	f
+default_cb_devip	cb_function.c	/^void default_cb_devip(const void * address, const void * ip, int uFlag) {$/;"	f
+default_cb_devip1	TestDemo/cb_function.c	/^void default_cb_devip1(const void * address, const void * ip, int uflag) {$/;"	f
+default_cb_info	cb_function.c	/^void default_cb_info(const void * data, const void * ip, int length, int port) {$/;"	f
+default_cb_info1	TestDemo/cb_function.c	/^void default_cb_info1(const void * data, const void * ip, int length, int port) {$/;"	f
+default_cb_opt	cb_function.c	/^void default_cb_opt(int value, int status) {$/;"	f
+default_cb_opt1	TestDemo/cb_function.c	/^void default_cb_opt1(int value, int status) {$/;"	f
+dev_config	c_include/libqsa_callback.h	/^struct dev_config {$/;"	s
+dev_config	include/libqsa_callback.h	/^struct dev_config {$/;"	s
+dump	TestDemo/nalu.c	/^void dump(NALU_t *n)   $/;"	f
+dump	TestDemo/new_nal.c	/^void dump(NALU_t *n)$/;"	f
+extension	TestDemo/h264.h	/^    unsigned char extension:1;        \/**\/\/* expect 1, see RTP_OP below *\/$/;"	m	struct:__anon1
+find_ip	talk.c	/^void find_ip(const char * addr, int uFlag) {$/;"	f
+forbidden_bit	TestDemo/nalu.c	/^    int forbidden_bit;            \/\/! should be always FALSE   $/;"	m	struct:__anon5	file:
+forbidden_bit	TestDemo/new_nal.c	/^  int forbidden_bit;            \/\/! should be always FALSE$/;"	m	struct:__anon6	file:
+framebuffer	TestDemo/nalu.c	/^char framebuffer[1024*2000];$/;"	v
+fu_hdr	TestDemo/new_nal.c	/^FU_HEADER		*fu_hdr;$/;"	v
+fu_ind	TestDemo/new_nal.c	/^FU_INDICATOR	*fu_ind;$/;"	v
+g_Status	TestDemo/main.c	/^int g_Status = 0;$/;"	v
+g_addr	TestDemo/main.c	/^unsigned char g_addr[30];$/;"	v
+g_ip	TestDemo/main.c	/^unsigned char g_ip[20];$/;"	v
+get_device_config_task	init.c	/^void get_device_config_task(struct dev_config * _config) {$/;"	f
+get_device_status	cb_function.c	/^int get_device_status(void) {$/;"	f
+info2	TestDemo/nalu.c	/^static int info2=0, info3=0;   $/;"	v	file:
+info2	TestDemo/new_nal.c	/^static int info2=0, info3=0;$/;"	v	file:
+info3	TestDemo/nalu.c	/^static int info2=0, info3=0;   $/;"	v	file:
+info3	TestDemo/new_nal.c	/^static int info2=0, info3=0;$/;"	v	file:
+init_config_null_task	init.c	/^void init_config_null_task(void) {$/;"	f
+init_default_remote_task	init.c	/^void init_default_remote_task(void) {$/;"	f
+init_local_param_task	init.c	/^void init_local_param_task(void) {$/;"	f
+init_order	TestDemo/timer.c	/^int init_order(void) {$/;"	f
+init_param_task	init.c	/^int init_param_task(struct dev_config * _config) {$/;"	f
+init_udp_task	udp.c	/^int init_udp_task(void) {$/;"	f
+ip	c_include/libqsa_callback.h	/^	unsigned char ip[20];				\/\/192.168.10.XX$/;"	m	struct:dev_config
+ip	c_include/libqsa_callback.h	/^    unsigned char ip[20];		 \/\/发送信息的设备IP地址，需要广告机或上位服务器提供（搜网）$/;"	m	struct:_send_info
+ip	include/libqsa_callback.h	/^	unsigned char ip[20];				\/\/192.168.10.XX$/;"	m	struct:dev_config
+ip	include/libqsa_callback.h	/^    unsigned char ip[20];		 \/\/发送信息的设备IP地址，需要广告机或上位服务器提供（搜网）$/;"	m	struct:_send_info
+isDirect	c_include/libqsa_common.h	/^    int isDirect;       \/\/是否直通  0 直通  1 中转$/;"	m	struct:Remote1
+isDirect	include/libqsa_common.h	/^    int isDirect;       \/\/是否直通  0 直通  1 中转$/;"	m	struct:Remote1
+isValid	c_include/libqsa_common.h	/^    int isValid; \/\/是否有效$/;"	m	struct:Multi_Udp_Buff1
+isValid	include/libqsa_common.h	/^    int isValid; \/\/是否有效$/;"	m	struct:Multi_Udp_Buff1
+len	TestDemo/nalu.c	/^    unsigned len;                 \/\/! Length of the NAL unit (Excluding the start code, which does not belong to the NALU)   $/;"	m	struct:__anon5	file:
+len	TestDemo/new_nal.c	/^  unsigned len;                 \/\/! Length of the NAL unit (Excluding the start code, which does not belong to the NALU)$/;"	m	struct:__anon6	file:
+length	c_include/libqsa_callback.h	/^    int length;		             \/\/发送的信息的长度，需要上位服务器提供$/;"	m	struct:_send_info
+length	include/libqsa_callback.h	/^    int length;		             \/\/发送的信息的长度，需要上位服务器提供$/;"	m	struct:_send_info
+local_config	c_include/libqsa_common.h	/^struct dev_config local_config;                      \/\/本地通用配置$/;"	v	typeref:struct:dev_config
+local_config	include/libqsa_common.h	/^struct dev_config local_config;                      \/\/本地通用配置$/;"	v	typeref:struct:dev_config
+locate_ip	c_include/libqsa_common.h	/^unsigned char locate_ip[4];$/;"	v
+locate_ip	include/libqsa_common.h	/^unsigned char locate_ip[4];$/;"	v
+lost_packets	TestDemo/nalu.c	/^    unsigned short lost_packets;  \/\/! true, if packet loss is detected   $/;"	m	struct:__anon5	file:
+lost_packets	TestDemo/new_nal.c	/^  unsigned short lost_packets;  \/\/! true, if packet loss is detected$/;"	m	struct:__anon6	file:
+m_DataSocket	c_include/libqsa_common.h	/^int m_DataSocket;$/;"	v
+m_DataSocket	include/libqsa_common.h	/^int m_DataSocket;$/;"	v
+m_Socket	c_include/libqsa_common.h	/^    int m_Socket;$/;"	m	struct:Multi_Udp_Buff1
+m_Socket	include/libqsa_common.h	/^    int m_Socket;$/;"	m	struct:Multi_Udp_Buff1
+m_VideoSocket	c_include/libqsa_common.h	/^int m_VideoSocket;$/;"	v
+m_VideoSocket	include/libqsa_common.h	/^int m_VideoSocket;$/;"	v
+m_VideoSocketDemo	TestDemo/recvice_udp.c	/^int m_VideoSocketDemo;$/;"	v
+mac	c_include/libqsa_callback.h	/^	unsigned char mac[12];			    \/\/00:00:00:36:25:9A$/;"	m	struct:dev_config
+mac	include/libqsa_callback.h	/^	unsigned char mac[12];			    \/\/00:00:00:36:25:9A$/;"	m	struct:dev_config
+main	TestDemo/main.c	/^int main() {$/;"	f
+main	TestDemo/new_nal.c	/^int main(int argc, char* argv[])$/;"	f
+marker	TestDemo/h264.h	/^    unsigned char marker:1;        \/**\/\/* expect 1 *\/$/;"	m	struct:__anon1
+mask	c_include/libqsa_callback.h	/^	unsigned char mask[20];				\/\/255.255.0.0$/;"	m	struct:dev_config
+mask	include/libqsa_callback.h	/^	unsigned char mask[20];				\/\/255.255.0.0$/;"	m	struct:dev_config
+max_size	TestDemo/nalu.c	/^    unsigned max_size;            \/\/! Nal Unit Buffer size   $/;"	m	struct:__anon5	file:
+max_size	TestDemo/new_nal.c	/^  unsigned max_size;            \/\/! Nal Unit Buffer size$/;"	m	struct:__anon6	file:
+multi_send_flag	c_include/libqsa_common.h	/^int multi_send_flag;$/;"	v
+multi_send_flag	include/libqsa_common.h	/^int multi_send_flag;$/;"	v
+multi_send_sem	c_include/libqsa_common.h	/^sem_t multi_send_sem;$/;"	v
+multi_send_sem	include/libqsa_common.h	/^sem_t multi_send_sem;$/;"	v
+multi_send_thread	c_include/libqsa_common.h	/^pthread_t multi_send_thread;$/;"	v
+multi_send_thread	include/libqsa_common.h	/^pthread_t multi_send_thread;$/;"	v
+multi_send_thread_func	udp.c	/^void multi_send_thread_func(void) {$/;"	f
+nal_reference_idc	TestDemo/nalu.c	/^    int nal_reference_idc;        \/\/! NALU_PRIORITY_xxxx   $/;"	m	struct:__anon5	file:
+nal_reference_idc	TestDemo/new_nal.c	/^  int nal_reference_idc;        \/\/! NALU_PRIORITY_xxxx$/;"	m	struct:__anon6	file:
+nal_unit_type	TestDemo/nalu.c	/^    int nal_unit_type;            \/\/! NALU_TYPE_xxxx       $/;"	m	struct:__anon5	file:
+nal_unit_type	TestDemo/new_nal.c	/^  int nal_unit_type;            \/\/! NALU_TYPE_xxxx    $/;"	m	struct:__anon6	file:
+nalu_hdr	TestDemo/new_nal.c	/^NALU_HEADER		*nalu_hdr;$/;"	v
+nlength	c_include/libqsa_common.h	/^    int nlength;$/;"	m	struct:Multi_Udp_Buff1
+nlength	include/libqsa_common.h	/^    int nlength;$/;"	m	struct:Multi_Udp_Buff1
+null_addr	c_include/libqsa_common.h	/^char null_addr[21];   \/\/空字符串$/;"	v
+null_addr	include/libqsa_common.h	/^char null_addr[21];   \/\/空字符串$/;"	v
+null_ip	c_include/libqsa_common.h	/^char null_ip[4];   \/\/空字符串$/;"	v
+null_ip	include/libqsa_common.h	/^char null_ip[4];   \/\/空字符串$/;"	v
+order_thread	TestDemo/timer.c	/^pthread_t order_thread;$/;"	v
+order_thread_flag	TestDemo/timer.c	/^int order_thread_flag;$/;"	v
+order_thread_task	TestDemo/timer.c	/^void order_thread_task(void) {$/;"	f
+padding	TestDemo/h264.h	/^    unsigned char padding:1;        \/**\/\/* expect 0 *\/$/;"	m	struct:__anon1
+payload	TestDemo/h264.h	/^    unsigned char payload:7;        \/**\/\/* RTP_PAYLOAD_RTSP *\/$/;"	m	struct:__anon1
+playh264file	TestDemo/main.c	/^void playh264file(char * filename) {$/;"	f
+port	c_include/libqsa_callback.h	/^    int port;		             \/\/发送信息的设备端口号，由默认值或上位服务器提供$/;"	m	struct:_send_info
+port	include/libqsa_callback.h	/^    int port;		             \/\/发送信息的设备端口号，由默认值或上位服务器提供$/;"	m	struct:_send_info
+qsa_audioFp4	udp.c	/^static FILE* qsa_audioFp4 = NULL;$/;"	v	file:
+qsa_send_audio	talk.c	/^void qsa_send_audio(const char * data, int length, int frame_num, const char * ip) {$/;"	f
+qsa_send_video	talk.c	/^void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {$/;"	f
+remote_info	c_include/libqsa_common.h	/^struct Remote1 remote_info;$/;"	v	typeref:struct:Remote1
+remote_info	include/libqsa_common.h	/^struct Remote1 remote_info;$/;"	v	typeref:struct:Remote1
+route	c_include/libqsa_callback.h	/^	unsigned char route[20];				\/\/192.168.10.1$/;"	m	struct:dev_config
+route	include/libqsa_callback.h	/^	unsigned char route[20];				\/\/192.168.10.1$/;"	m	struct:dev_config
+rtp_hdr	TestDemo/new_nal.c	/^RTP_FIXED_HEADER        *rtp_hdr;$/;"	v
+sPath	c_include/libqsa_common.h	/^char sPath[80];$/;"	v
+sPath	include/libqsa_common.h	/^char sPath[80];$/;"	v
+send_info	init.c	/^void send_info(const char * data, struct _send_info * info) {$/;"	f
+seq_no	TestDemo/h264.h	/^    unsigned short seq_no;            $/;"	m	struct:__anon1
+server_ip	c_include/libqsa_callback.h	/^	unsigned char server_ip[20]; 		\/\/192.168.10.XX$/;"	m	struct:dev_config
+server_ip	include/libqsa_callback.h	/^	unsigned char server_ip[20]; 		\/\/192.168.10.XX$/;"	m	struct:dev_config
+set_cb_function	cb_function.c	/^void set_cb_function(struct _cb_function * p) {$/;"	f
+set_cb_function_default	cb_function.c	/^void set_cb_function_default(struct _cb_function * p) {$/;"	f
+set_device_status	cb_function.c	/^void set_device_status(int uStatus) {$/;"	f
+ssrc	TestDemo/h264.h	/^    unsigned long ssrc;            \/**\/\/* stream number is used here. *\/$/;"	m	struct:__anon1
+start_call	talk.c	/^void start_call(const char * ip, const char * addr, int uFlag) {$/;"	f
+startcodeprefix_len	TestDemo/nalu.c	/^    int startcodeprefix_len;      \/\/! 4 for parameter sets and first slice in picture, 3 for everything else (suggested)   $/;"	m	struct:__anon5	file:
+startcodeprefix_len	TestDemo/new_nal.c	/^  int startcodeprefix_len;      \/\/! 4 for parameter sets and first slice in picture, 3 for everything else (suggested)$/;"	m	struct:__anon6	file:
+stop_talk	talk.c	/^void stop_talk(void) {$/;"	f
+talkdata1	c_include/libqsa_common.h	/^struct talkdata1 {$/;"	s
+talkdata1	include/libqsa_common.h	/^struct talkdata1 {$/;"	s
+timer_thread	timer.c	/^pthread_t timer_thread;$/;"	v
+timer_thread_flag	timer.c	/^int timer_thread_flag;$/;"	v
+timer_thread_task	timer.c	/^void timer_thread_task(void) {$/;"	f
+timestamp	TestDemo/h264.h	/^    unsigned  long timestamp;        $/;"	m	struct:__anon1
+timestamp	c_include/libqsa_common.h	/^	unsigned int timestamp;  \/\/时间戳$/;"	m	struct:talkdata1
+timestamp	include/libqsa_common.h	/^	unsigned int timestamp;  \/\/时间戳$/;"	m	struct:talkdata1
+title	c_include/libqsa_callback.h	/^    char * title[16];		     \/\/发送的信息的标题，需要上位服务器提供$/;"	m	struct:_send_info
+title	include/libqsa_callback.h	/^    char * title[16];		     \/\/发送的信息的标题，需要上位服务器提供$/;"	m	struct:_send_info
+uFlag	c_include/libqsa_callback.h	/^    int uFlag;		             \/\/信息类型，1为私人信息，2为公共信息，3为私人图片信息，4为公共图片信息$/;"	m	struct:_send_info
+uFlag	include/libqsa_callback.h	/^    int uFlag;		             \/\/信息类型，1为私人信息，2为公共信息，3为私人图片信息，4为公共图片信息$/;"	m	struct:_send_info
+udp_lock	c_include/libqsa_common.h	/^    pthread_mutex_t udp_lock;\/\/互斥锁$/;"	m	struct:Local1
+udp_lock	include/libqsa_common.h	/^    pthread_mutex_t udp_lock;\/\/互斥锁$/;"	m	struct:Local1
+udpvideorcvid	TestDemo/recvice_udp.c	/^pthread_t udpvideorcvid;$/;"	v
+udpvideorcvid	udp.c	/^pthread_t udpvideorcvid;$/;"	v
+undefined_ip	c_include/libqsa_callback.h	/^	unsigned char undefined_ip[100];	\/\/192.168.10.XX x 5$/;"	m	struct:dev_config
+undefined_ip	include/libqsa_callback.h	/^	unsigned char undefined_ip[100];	\/\/192.168.10.XX x 5$/;"	m	struct:dev_config
+undefined_param	c_include/libqsa_callback.h	/^	unsigned char undefined_param[100];$/;"	m	struct:dev_config
+undefined_param	include/libqsa_callback.h	/^	unsigned char undefined_param[100];$/;"	m	struct:dev_config
+uninit_order	TestDemo/timer.c	/^int uninit_order(void) {$/;"	f
+uninit_task	init.c	/^int uninit_task(void) {$/;"	f
+uninit_udp_task	udp.c	/^int uninit_udp_task(void) {$/;"	f
+user_main	TestDemo/nalu.c	/^int user_main(int argc, char* argv[])   $/;"	f
+version	TestDemo/h264.h	/^    unsigned char version:2;        \/**\/\/* expect 2 *\/$/;"	m	struct:__anon1
+wavPath	c_include/libqsa_common.h	/^char wavPath[80];$/;"	v
+wavPath	include/libqsa_common.h	/^char wavPath[80];$/;"	v
