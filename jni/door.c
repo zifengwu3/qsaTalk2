@@ -84,17 +84,17 @@ int init_main(int argc, char *argv[])
 	m_EthSocket = 0;    
 	//UDP
 	if (InitUdpSocket(LocalDataPort) == 0) {
-		printf("can't create data socket.\n\r");
+		LOGD("can't create data socket.\n\r");
 		return (0);
 	}
 
 	if (InitUdpSocket(LocalVideoPort) == 0) {
-		printf("can't create video rece socket.\n\r");
+		LOGD("can't create video rece socket.\n\r");
 		return (0);
 	}
 
 	if (InitUdpSocket(8307) == 0) {
-		printf("can't create video send socket.\n\r");
+		LOGD("can't create video send socket.\n\r");
 		return (0);
 	}
 
@@ -116,7 +116,7 @@ int init_main(int argc, char *argv[])
 	pthread_create(&multi_send_thread,&attr,(void *)multi_send_thread_func,NULL);
 	pthread_attr_destroy(&attr);
 	if ( multi_send_thread == 0 ) {
-		printf("无法创建UDP主动命令数据发送线程\n");
+		LOGD("无法创建UDP主动命令数据发送线程\n");
 		return (0);
 	}
 
@@ -133,13 +133,13 @@ int init_main(int argc, char *argv[])
 	pthread_create(&gpio_rcv_thread,&attr,(void *)gpio_rcv_thread_func,NULL);
 	pthread_attr_destroy(&attr);
 	if ( gpio_rcv_thread == 0 ) {
-		printf("无法创建gpio按键处理线程\n");
+		LOGD("无法创建gpio按键处理线程\n");
 		return 0;
 	}
 
 	TimeReportStatusFunc();//设备定时报告状态
 
-	printf("\nVERSION %s\n\n",SOFTWAREVER);
+	LOGD("\nVERSION %s\n\n",SOFTWAREVER);
 
 	return (0);  
 }
@@ -154,8 +154,8 @@ void multi_send_thread_func(void)
     int send_flag = 0;
 
 #ifdef _DEBUG
-	printf("创建主动命令数据发送线程：\n" );
-	printf("multi_send_flag=%d\n",multi_send_flag);
+	LOGD("创建主动命令数据发送线程：\n" );
+	LOGD("multi_send_flag=%d\n",multi_send_flag);
 #endif
 	while(multi_send_flag == 1)
 	{
@@ -166,260 +166,238 @@ void multi_send_thread_func(void)
 		else
 		{
 			HaveDataSend = 1;
-			while(HaveDataSend)
+			while (HaveDataSend)
 			{
-				for(i=0; i<UDPSENDMAX; i++)
-                {
-
-                    if(Multi_Udp_Buff[i].isValid == 1)
-                    {
-#ifdef _DEBUG
-                        //     printf("send Multi_Udp_Buff[i].RemoteHost = %s\n", Multi_Udp_Buff[i].RemoteHost);
-#endif  
-                        if(Multi_Udp_Buff[i].SendNum  < MAXSENDNUM)
-                        {
-                            if((Multi_Udp_Buff[i].SendNum != 0)&&(Multi_Udp_Buff[i].DelayTime > 100))
+				for (i=0; i<UDPSENDMAX; i++) {
+                    if (Multi_Udp_Buff[i].isValid == 1) {
+                        if (Multi_Udp_Buff[i].SendNum  < MAXSENDNUM) {
+                            if ((Multi_Udp_Buff[i].SendNum != 0)&&(Multi_Udp_Buff[i].DelayTime > 100)) {
                                 usleep((Multi_Udp_Buff[i].DelayTime - 100)*1000);
+                            }
                             //UDP发送
                             UdpSendBuff(Multi_Udp_Buff[i].m_Socket, Multi_Udp_Buff[i].RemoteHost,
                                     Multi_Udp_Buff[i].buf , Multi_Udp_Buff[i].nlength);
-                            //UdpSendBuff(m_VideoSendSocket, Multi_Udp_Buff[i].RemoteHost,
-                            //Multi_Udp_Buff[i].buf , Multi_Udp_Buff[i].nlength);
-                            //printf("Multi_Udp_Buff[i].SendNum:%d\n",Multi_Udp_Buff[i].SendNum);
                             Multi_Udp_Buff[i].SendNum++;
 
-                            if((Multi_Udp_Buff[i].buf[6] == NSORDER \
+                            if ((Multi_Udp_Buff[i].buf[6] == NSORDER \
                                         || (Multi_Udp_Buff[i].buf[8] == CALLEND) \
-                                        && (Multi_Udp_Buff[i].buf[6] == VIDEOTALK)))
-                                if(Multi_Udp_Buff[i].SendNum == 6)
-                                {
-                                    if(send_count < 18)
-                                    {
+                                        && (Multi_Udp_Buff[i].buf[6] == VIDEOTALK))) {
+                                if (Multi_Udp_Buff[i].SendNum == 6) {
+                                    if (send_count < 18) {
                                         Multi_Udp_Buff[i].SendNum = 0;
                                         send_count += 6;
-                                    }
-                                    else
+                                    } else {
                                         send_count = 0;
+                                    }
                                     usleep((50+Multi_Udp_Buff[i].SendNum*10)*1000);
-                                }
-                                else
+                                } else {
                                     usleep(50*1000);
+                                }
+                            }
                         }
-                        if(Multi_Udp_Buff[i].SendNum  >= MAXSENDNUM)
-                        {
+
+                        if (Multi_Udp_Buff[i].SendNum  >= MAXSENDNUM) {
                             //锁定互斥锁
                             pthread_mutex_lock (&Local.udp_lock);
                             /* Multi_Udp_Buff[i].isValid = 0; */
-                            if(Multi_Udp_Buff[i].m_Socket == ARP_Socket)
-                            {
+                            if (Multi_Udp_Buff[i].m_Socket == ARP_Socket) {
                                 Multi_Udp_Buff[i].isValid = 0;
 #ifdef _DEBUG
-                                printf("免费ARP发送完成\n");
+                                LOGD("免费ARP发送完成\n");
 #endif
-                            }
-                            else if(Multi_Udp_Buff[i].m_Socket == m_ForbidSocket)
-                            {
-
+                            } else if (Multi_Udp_Buff[i].m_Socket == m_ForbidSocket) {
                                 Multi_Udp_Buff[i].isValid = 0;
-                            }
-                            else
-                            {
+                            } else {
 #ifdef _DEBUG
-                                printf("发送UDP数据: 发送缓冲: %d, 命令: %d.\n",i,Multi_Udp_Buff[i].buf[6]);
+                                LOGD("发送UDP数据: 发送缓冲: %d, 命令: %d.\n",i,Multi_Udp_Buff[i].buf[6]);
 #endif
-                                switch(Multi_Udp_Buff[i].buf[6])
+                                switch (Multi_Udp_Buff[i].buf[6])
                                 {
                                     case NSORDER:
-                                        if(Multi_Udp_Buff[i].CurrOrder == 255) //主机向副机查找
                                         {
-                                            Multi_Udp_Buff[i].isValid = 0;
-#ifdef _DEBUG
-                                            printf("check fail\n");
-#endif
-                                        }
-                                        else
-                                        {
-
-                                            if (Multi_Udp_Buff[i].buf[32] == 'Z')
-                                            {
-                                                Multi_Udp_Buff[i].SendNum = 0;
-                                                memcpy(temp_buf, Multi_Udp_Buff[i].buf, Multi_Udp_Buff[i].nlength);
-                                                sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_NS[0],
-                                                        LocalCfg.IP_NS[1],LocalCfg.IP_NS[2],LocalCfg.IP_NS[3]);
-                                                memcpy(temp_buf + Multi_Udp_Buff[i].nlength, Multi_Udp_Buff[i].RemoteHost, 4);
-                                                temp_buf[7] = REPLY;
-                                                send_flag = 1;
-                                            }
-                                            else
-                                            {
-                                                //若该命令为子网查找，则下一个命令为向服务器查找
-                                                Multi_Udp_Buff[i].SendNum = 0;
-                                                //更改UDP端口
-                                                Multi_Udp_Buff[i].m_Socket = m_DataSocket;
-                                                sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_NS[0],
-                                                        LocalCfg.IP_NS[1],LocalCfg.IP_NS[2],LocalCfg.IP_NS[3]);
-                                                printf("IP:%s\n",Multi_Udp_Buff[i].RemoteHost);
-                                                //命令, 服务器查找
-                                                Multi_Udp_Buff[i].buf[6] = NSSERVERORDER;
-#ifdef _DEBUG
-                                                printf("checking from NS\n");
-                                                /* SendHostOrder(0x63, Local.DoorNo, NULL); //发送主动命令  呼叫失败 */
-#endif
-                                            }
-                                        }
-#if 0
-                                        SendTalkInfo.Status = 0x01;//0x06 call 0x07 pwd
-
-                                        //else
-                                        //		SendTalkInfo.Status = 0x06;//0x06 call 0x07 pwd
-                                        SendTalkInfo.Duration =0x00;
-                                        SendTalkInfoFlag = 1;
-#endif
-                                        break;
-                                    case NSSERVERORDER: //服务器查找
-                                        Multi_Udp_Buff[i].isValid = 0;
-#ifdef _DEBUG
-                                        printf("服务器查找失败\n");
-#endif
-                                        if(Multi_Udp_Buff[i].CurrOrder == FINDEQUIP)
-                                            SendHostOrder(0x5A, Local.DoorNo, Local.FindEquip); //发送主动命令  查找设备失败
-                                        if(Multi_Udp_Buff[i].CurrOrder == VIDEOTALK)
-                                            SendHostOrder(0x63, Local.DoorNo, NULL); //发送主动命令  呼叫失败
-                                        SendTalkInfo.Status = 0x01;//0x06 call 0x07 pwd
-                                        SendTalkInfo.Duration =0x00;
-                                        SendTalkInfoFlag = 1;
-                                        TurnToCenter = 0;
-                                        printf("%d: TurnToCenter = %d\n", __LINE__, TurnToCenter);
-                                        break;
-                                    case FINDEQUIP:    //查找设备
-                                        Multi_Udp_Buff[i].isValid = 0;
-                                        Local.Status = 0;
-
-#ifdef _DEBUG
-                                        printf("查找设备失败, %d\n", Multi_Udp_Buff[i].buf[6]);
-#endif
-                                        SendHostOrder(0x5A, Local.DoorNo, NULL); //发送主动命令  查找设备失败
-                                        break;
-                                    case VIDEOTALK:    //局域网可视对讲
-                                    case VIDEOTALKTRANS:  //局域网可视对讲中转服务
-                                        switch(Multi_Udp_Buff[i].buf[8])
-                                        {
-                                            case CALL:
-                                                if(Multi_Udp_Buff[i].buf[6] == VIDEOTALK)
-                                                {
-                                                    printf("\n%d: Remote.DenNum = %d\n", __LINE__, Remote.DenNum);
-                                                    if(Remote.DenNum == 1)
-                                                    {
-                                                        //若该命令为直通呼叫，则下一个命令为向服务器请求中转
-                                                        Multi_Udp_Buff[i].SendNum = 0;
-                                                        //更改UDP端口
-                                                        Multi_Udp_Buff[i].m_Socket = m_DataSocket;
-                                                        sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
-                                                                LocalCfg.IP_Server[1],LocalCfg.IP_Server[2],LocalCfg.IP_Server[3]);
-                                                        //命令, 服务器中转
-                                                        Multi_Udp_Buff[i].buf[6] = VIDEOTALKTRANS;
-#ifdef _DEBUG
-                                                        printf("正在向主服务器申请对讲中转\n");
-#endif
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    Multi_Udp_Buff[i].isValid = 0;
-                                                    //Local.Status = 0;
-
-#ifdef _DEBUG
-                                                    printf("呼叫失败, %d\n", Multi_Udp_Buff[i].buf[6]);
-#endif
-                                                    SendHostOrder(0x63, Local.DoorNo, NULL); //发送主动命令  呼叫失败
-                                                }
-                                                SendTalkInfo.Status = 0x01;//0x06 call 0x07 pwd
-
-                                                //else
-                                                //		SendTalkInfo.Status = 0x06;//0x06 call 0x07 pwd
-                                                SendTalkInfo.Duration =0x00;
-
-                                                SendTalkInfoFlag = 1;
-                                                break;
-                                            case CALLEND:  //通话结束
-                                                Multi_Udp_Buff[i].isValid = 0;
-                                                Local.OnlineFlag = 0;
-                                                Local.CallConfirmFlag = 0; //设置在线标志
-                                                //对讲结束，清状态和关闭音视频
-                                                TalkEnd_ClearStatus();
-                                                break;
-                                            default: //为其它命令，本次通信结束
+                                            if (Multi_Udp_Buff[i].CurrOrder == 255) {
+                                                //主机向副机查找
                                                 Multi_Udp_Buff[i].isValid = 0;
 #ifdef _DEBUG
-                                                printf("Fail buf%d, 111 %d\n",i, Multi_Udp_Buff[i].buf[8]);
+                                                LOGD("check fail\n");
 #endif
-                                                break;
-                                        }
-
-                                        break;
-                                    case VIDEOWATCH:     //局域网监控
-                                    case VIDEOWATCHTRANS:  //局域网监控中转服务
-                                        switch(Multi_Udp_Buff[i].buf[8])
-                                        {
-                                            case CALL:
-                                                if(Multi_Udp_Buff[i].buf[6] == VIDEOWATCH)
-                                                {
-                                                    //若该命令为直通呼叫，则下一个命令为向服务器请求中转
+                                            } else {
+                                                if (Multi_Udp_Buff[i].buf[32] == 'Z') {
+                                                    Multi_Udp_Buff[i].SendNum = 0;
+                                                    memcpy(temp_buf, Multi_Udp_Buff[i].buf, Multi_Udp_Buff[i].nlength);
+                                                    sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_NS[0],
+                                                            LocalCfg.IP_NS[1],LocalCfg.IP_NS[2],LocalCfg.IP_NS[3]);
+                                                    memcpy(temp_buf + Multi_Udp_Buff[i].nlength, Multi_Udp_Buff[i].RemoteHost, 4);
+                                                    temp_buf[7] = REPLY;
+                                                    send_flag = 1;
+                                                } else {
+                                                    //若该命令为子网查找，则下一个命令为向服务器查找
                                                     Multi_Udp_Buff[i].SendNum = 0;
                                                     //更改UDP端口
                                                     Multi_Udp_Buff[i].m_Socket = m_DataSocket;
-                                                    sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
-                                                            LocalCfg.IP_Server[1],LocalCfg.IP_Server[2],LocalCfg.IP_Server[3]);
-                                                    //命令, 服务器中转
-                                                    Multi_Udp_Buff[i].buf[6] = VIDEOWATCHTRANS;
+                                                    sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_NS[0],
+                                                            LocalCfg.IP_NS[1],LocalCfg.IP_NS[2],LocalCfg.IP_NS[3]);
+                                                    LOGD("IP:%s\n",Multi_Udp_Buff[i].RemoteHost);
+                                                    //命令, 服务器查找
+                                                    Multi_Udp_Buff[i].buf[6] = NSSERVERORDER;
 #ifdef _DEBUG
-                                                    printf("在向主服务器申请监控中转\n");
+                                                    LOGD("checking from NS\n");
 #endif
                                                 }
-                                                else
-                                                {
-                                                    Multi_Udp_Buff[i].isValid = 0;
-                                                    Local.Status = 0;
+                                            }
+                                            break;
+                                        }
+                                    case NSSERVERORDER: //服务器查找
+                                        {
+                                            Multi_Udp_Buff[i].isValid = 0;
 #ifdef _DEBUG
-                                                    printf("监视失败, %d\n", Multi_Udp_Buff[i].buf[6]);
+                                            LOGD("服务器查找失败\n");
 #endif
-                                                }
-                                                break;
-                                            case CALLEND:  //通话结束
-                                                Multi_Udp_Buff[i].isValid = 0;
-                                                Local.OnlineFlag = 0;
-                                                Local.CallConfirmFlag = 0; //设置在线标志
-
-                                                switch(Local.Status)
-                                                {
-                                                    case 3: //本机监视
-                                                        Local.Status = 0;  //状态为空闲
-                                                        //延时清提示信息标志
-                                                        PicStatBuf.Type = 13;
-                                                        PicStatBuf.Time = 0;
-                                                        PicStatBuf.Flag = 1;
-                                                        break;
-                                                    case 4: //本机被监视
-                                                        Local.Status = 0;  //状态为空闲
-                                                        StopRecVideo();
-                                                        break;
-                                                }
-                                                break;
-                                            default: //为其它命令，本次通信结束
-                                                Multi_Udp_Buff[i].isValid = 0;
+                                            if(Multi_Udp_Buff[i].CurrOrder == FINDEQUIP)
+                                                SendHostOrder(0x5A, Local.DoorNo, Local.FindEquip); //发送主动命令  查找设备失败
+                                            if(Multi_Udp_Buff[i].CurrOrder == VIDEOTALK)
+                                                SendHostOrder(0x63, Local.DoorNo, NULL); //发送主动命令  呼叫失败
+                                            SendTalkInfo.Status = 0x01;//0x06 call 0x07 pwd
+                                            SendTalkInfo.Duration =0x00;
+                                            SendTalkInfoFlag = 1;
+                                            TurnToCenter = 0;
+                                            LOGD("%d: TurnToCenter = %d\n", __LINE__, TurnToCenter);
+                                            break;
+                                        }
+                                    case FINDEQUIP:    //查找设备
+                                        {
+                                            Multi_Udp_Buff[i].isValid = 0;
+                                            Local.Status = 0;
 #ifdef _DEBUG
-                                                printf("通信失败, 222%d\n", Multi_Udp_Buff[i].buf[6]);
+                                            LOGD("查找设备失败, %d\n", Multi_Udp_Buff[i].buf[6]);
 #endif
-                                                break;
                                         }
                                         break;
-                                    default: //为其它命令，本次通信结束
-                                        Multi_Udp_Buff[i].isValid = 0;
-                                        //   Local.Status = 0;
+                                    case VIDEOTALK:    //局域网可视对讲
+                                    case VIDEOTALKTRANS:  //局域网可视对讲中转服务
+                                        {
+                                            switch (Multi_Udp_Buff[i].buf[8]) 
+                                            {
+                                                case CALL:
+                                                    {
+                                                        if (Multi_Udp_Buff[i].buf[6] == VIDEOTALK) {
+                                                            LOGD("\n%d: Remote.DenNum = %d\n", __LINE__, Remote.DenNum);
+                                                            if (Remote.DenNum == 1) {
+                                                                //若该命令为直通呼叫，则下一个命令为向服务器请求中转
+                                                                Multi_Udp_Buff[i].SendNum = 0;
+                                                                //更改UDP端口
+                                                                Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+                                                                sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+                                                                        LocalCfg.IP_Server[1],LocalCfg.IP_Server[2],LocalCfg.IP_Server[3]);
+                                                                //命令, 服务器中转
+                                                                Multi_Udp_Buff[i].buf[6] = VIDEOTALKTRANS;
 #ifdef _DEBUG
-                                        printf("通信失败, 333%d\n", Multi_Udp_Buff[i].buf[6]);
+                                                                LOGD("正在向主服务器申请对讲中转\n");
 #endif
-                                        break;
+                                                            }
+                                                        } else {
+                                                            Multi_Udp_Buff[i].isValid = 0;
+#ifdef _DEBUG
+                                                            LOGD("呼叫失败, %d\n", Multi_Udp_Buff[i].buf[6]);
+#endif
+                                                        }
+                                                        SendTalkInfo.Status = 0x01;//0x06 call 0x07 pwd
+                                                        SendTalkInfo.Duration =0x00;
+                                                        SendTalkInfoFlag = 1;
+                                                        break;
+                                                    }
+                                                case CALLEND:  //通话结束
+                                                    {
+                                                        Multi_Udp_Buff[i].isValid = 0;
+                                                        Local.OnlineFlag = 0;
+                                                        Local.CallConfirmFlag = 0; //设置在线标志
+                                                        //对讲结束，清状态和关闭音视频
+                                                        TalkEnd_ClearStatus();
+                                                        break;
+                                                    }
+                                                default: //为其它命令，本次通信结束
+                                                    {
+                                                        Multi_Udp_Buff[i].isValid = 0;
+#ifdef _DEBUG
+                                                        LOGD("send fail buf%d, 111 %d\n",i, Multi_Udp_Buff[i].buf[8]);
+#endif
+                                                        break;
+                                                    }
+                                            }
+                                            break;
+                                        }
+                                    case VIDEOWATCH:     //局域网监控
+                                    case VIDEOWATCHTRANS:  //局域网监控中转服务
+                                        {
+                                            switch (Multi_Udp_Buff[i].buf[8])
+                                            {
+                                                case CALL:
+                                                    {
+                                                        if(Multi_Udp_Buff[i].buf[6] == VIDEOWATCH)
+                                                        {
+                                                            //若该命令为直通呼叫，则下一个命令为向服务器请求中转
+                                                            Multi_Udp_Buff[i].SendNum = 0;
+                                                            //更改UDP端口
+                                                            Multi_Udp_Buff[i].m_Socket = m_DataSocket;
+                                                            sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",LocalCfg.IP_Server[0],
+                                                                    LocalCfg.IP_Server[1],LocalCfg.IP_Server[2],LocalCfg.IP_Server[3]);
+                                                            //命令, 服务器中转
+                                                            Multi_Udp_Buff[i].buf[6] = VIDEOWATCHTRANS;
+#ifdef _DEBUG
+                                                            LOGD("在向主服务器申请监控中转\n");
+#endif
+                                                        }
+                                                        else
+                                                        {
+                                                            Multi_Udp_Buff[i].isValid = 0;
+                                                            Local.Status = 0;
+#ifdef _DEBUG
+                                                            LOGD("监视失败, %d\n", Multi_Udp_Buff[i].buf[6]);
+#endif
+                                                        }
+                                                        break;
+                                                    }
+                                                case CALLEND:  //通话结束
+                                                    {
+                                                        Multi_Udp_Buff[i].isValid = 0;
+                                                        Local.OnlineFlag = 0;
+                                                        Local.CallConfirmFlag = 0; //设置在线标志
+
+                                                        switch (Local.Status)
+                                                        {
+                                                            case 3: //本机监视
+                                                                {
+                                                                    Local.Status = 0;  //状态为空闲
+                                                                    break;
+                                                                }
+                                                            case 4: //本机被监视
+                                                                {
+                                                                    Local.Status = 0;  //状态为空闲
+                                                                    StopRecVideo();
+                                                                    break;
+                                                                }
+                                                        }
+                                                        break;
+                                                    }
+                                                default: //为其它命令，本次通信结束
+                                                    {
+                                                        Multi_Udp_Buff[i].isValid = 0;
+#ifdef _DEBUG
+                                                        LOGD("通信失败, 222%d\n", Multi_Udp_Buff[i].buf[6]);
+#endif
+                                                        break;
+                                                    }
+                                            }
+                                            break;
+                                        }
+                                    default: //为其它命令，本次通信结束
+                                        {
+                                            Multi_Udp_Buff[i].isValid = 0;
+#ifdef _DEBUG
+                                            LOGD("通信失败, 333%d\n", Multi_Udp_Buff[i].buf[6]);
+#endif
+                                            break;
+                                        }
                                 }
                             }
                             //打开互斥锁
@@ -428,20 +406,19 @@ void multi_send_thread_func(void)
                     }
                 }
 
-                if (send_flag == 1)
-                {
+                if (send_flag == 1) {
                     send_flag = 0;
                     RecvNSReply_Func(temp_buf, NULL, m_VideoSendSocket);
                 }
+
                 //判断数据是否全部发送完，若是，线程终止
                 HaveDataSend = 0;
-                for(i=0; i<UDPSENDMAX; i++)
-                    if(Multi_Udp_Buff[i].isValid == 1)
-                    {
-					  HaveDataSend = 1;
-					  break;
-				  }
-
+                for (i=0; i<UDPSENDMAX; i++) {
+                    if (Multi_Udp_Buff[i].isValid == 1) {
+                        HaveDataSend = 1;
+                        break;
+                    }
+                }
 				usleep(50*1000);
 			}
 		}

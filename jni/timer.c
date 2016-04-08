@@ -26,29 +26,29 @@ typedef unsigned char u8;
 void OnlineCheckFunc(void); //在线确认检测函数
 void TimeReportStatusFunc(void); //设备定时报告状态函数
 
-int CursorFlag;
-int ShowCursor; //是否显示光标
-void ShowCursorFunc(void);  //显示输入光标函数
 void TalkCtrlFunc(void);  //对讲控制，显示通话时间和判断超时
 
-//---------------------------------------------------------------------------
-void gpio_rcv_thread_func(void)
+int timer_thread_flag;
+pthread_t timer_thread;
+void timer_rcv_thread_task(void);
+
+
+void timer_rcv_thread_task(void)
 {
 	int timenum;  //计数
 
 #ifdef _DEBUG
-	printf("创建GPIO接收线程：\n" );
-	printf("gpio_rcv_flag=%d\n",gpio_rcv_flag);
+	printf("创建timer接收线程：\n" );
+	printf("timer_rcv_flag=%d\n",timer_rcv_flag);
 #endif
 
 	timenum = 0;
-	//光标
-	CursorFlag = 1;
-	while(gpio_rcv_flag)
+	while (timer_rcv_flag)
 	{
         //连续6秒没有收到在线确认，则认为断线
         if (Local.OnlineFlag == 1) {
             OnlineCheckFunc();
+            TalkCtrlFunc();
         }
 
         if (SendTalkInfoFlag) {
@@ -68,14 +68,14 @@ void gpio_rcv_thread_func(void)
 
         if (LocalCfg.ReportTime != 0 && Local.Status == 0) {
             if (Local.ReportSend == 1) {
-                if (Local.ReportTimeNum >= (LocalCfg.ReportTime*INTRPERSEC)) {
+                if (Local.ReportTimeNum >= (LocalCfg.ReportTime*TIMERPERSEC)) {
                     Local.RandReportTime = (int)(1.0*LocalCfg.ReportTime*rand()/(RAND_MAX+1.0)) + 1;
                     Local.ReportSend = 0;
                     Local.ReportTimeNum = 0;
                 }
             }
             if (Local.ReportSend == 0) {
-                if (Local.ReportTimeNum >= (Local.RandReportTime*INTRPERSEC)) {
+                if (Local.ReportTimeNum >= (Local.RandReportTime*TIMERPERSEC)) {
                     Local.ReportSend = 1;
                     TimeReportStatusFunc();
                 }
@@ -86,7 +86,7 @@ void gpio_rcv_thread_func(void)
 		timenum ++;
 		if(timenum > 0xFFFFFF)
 		  timenum = 0;     
-		usleep((INTRTIME-10)*1000);
+		usleep((TIMERTIME-10)*1000);
 	}
 }
 
@@ -94,7 +94,7 @@ void OnlineCheckFunc(void) //在线确认检测函数
 {
 	unsigned char send_b[1520];
 	int sendlength;
-	if(Local.Timer1Num >= INTRPERSEC*6)
+	if(Local.Timer1Num >= TIMERPERSEC*6)
 	{
 		if(Local.CallConfirmFlag == 0)
 		{
@@ -120,7 +120,7 @@ void OnlineCheckFunc(void) //在线确认检测函数
 		Local.Timer1Num = 0;
 	}
 	else
-	  if((Local.Timer1Num %INTRPERSEC)==0)
+	  if((Local.Timer1Num %TIMERPERSEC)==0)
 	  {
 		  //对讲时被叫方发送在线确认包，每秒一个
 		  //监控时主控方发送在线确认包，每秒一个
@@ -168,10 +168,8 @@ void OnlineCheckFunc(void) //在线确认检测函数
 		  }
 	  }
 	Local.Timer1Num ++;
-
-	//对讲控制，显示通话时间和判断超时
-	TalkCtrlFunc();
 }
+
 //---------------------------------------------------------------------------
 void TimeReportStatusFunc(void) //设备定时报告状态函数
 {
@@ -216,7 +214,7 @@ void TimeReportStatusFunc(void) //设备定时报告状态函数
 //---------------------------------------------------------------------------
 void TalkCtrlFunc(void)  //对讲控制，显示通话时间和判断超时
 {
-	if((Local.TimeOut % INTRPERSEC)==0)
+	if((Local.TimeOut % TIMERPERSEC)==0)
 	  switch(Local.Status)
 	  {
 		  case 1:  //主叫对讲

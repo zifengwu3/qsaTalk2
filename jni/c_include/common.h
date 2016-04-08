@@ -4,7 +4,6 @@
 #include <pthread.h>       //sem_t
 #include <semaphore.h>       //sem_t
 #include <arpa/inet.h>
-#include "sndtools.h"
 
 #define _DEBUG           //调试模式
 #define HARDWAREVER "M-HW VER 1.0"    //硬件版本
@@ -197,51 +196,11 @@
 #define OPENLOCK         17
 #define CALLEND          30     //通话结束
 
-#define SAVEMAX  10     //FLASH存储缓冲最大值
 #define UDPSENDMAX  50  //UDP多次发送缓冲最大值
-#define COMMSENDMAX  20  //COMM多次发送缓冲最大值
-#define DISPARTMAX  10   //拆分包发送缓冲
 #define MAXCOMMSENDNUM  3
 #define MAXSENDNUM  6  //最大发送次数
 //按钮压下时间
 #define DELAYTIME  300
-
-//视频常量
-#define cWhite  1
-#define cYellow 2
-#define cCyan   3
-#define cGreen  4
-#define cMagenta  5
-#define cRed      6
-#define cBlue     7
-#define cBlack    8
-#define	FB_DEV	"/dev/fb0"
-#define MAXPIXELS (1280*1024)  /* Maximum size of final image */
-#define VIDEO_PICTURE_QUEUE_SIZE_MAX 20
-
-#define CONFLICTARP  0x8950
-#define FLCD_GET_DATA_SEP   0x46db
-#define FLCD_GET_DATA       0x46dc
-#define FLCD_SET_FB_NUM     0x46dd
-#define FLCD_SWITCH_MODE    0x46de
-#define FLCD_CLOSE_PANEL    0x46df
-#define FLCD_BYPASS    0x46e0
-#define FLCD_OPEN	0x46fa
-#define FLCD_CLOSE	0x46fb
-
-#define DEVICE_GPIO                "/dev/gpio"
-#define IO_PUT                 0
-#define IO_CLEAR               3
-#define IO_READ         4
-#define IO_SETINOUT     5
-#define IO_TRIGGERMODE  6
-#define IO_EDGE         7
-#define IO_SETSCANVALUE     8
-#define IO_SETVALUE     9
-
-//20080401 设置PMU，关闭不用的时钟
-#define CLOSE_PMU1  0x2255
-#define CLOSE_PMU2  0x2256
 
 #define NMAX 512*64  //AUDIOBLK*64  //音频环形缓冲区大小
 #define G711NUM  64*512/AUDIOBLK       //音频接收缓冲区个数 未解码   10
@@ -253,149 +212,11 @@
 #define PACKDATALEN  1200   //数据包大小
 #define MAXPACKNUM  100     //帧最大数据包数量
 
-//////////////////paul0518 for update//////////////////
-#define DOWNLOADFILE  224    //下载应用程序
-#define DOWNLOADIMAGE  225    //下载系统映像
-#define STARTDOWN  1       //开始下载
-#define DOWN       2       //下载
-#define DOWNFINISHONE       3  //下载完成一个
-#define STOPDOWN       10      //停止下载
-#define DOWNFINISHALL       20 //全部完成下载
-#define DOWNFAIL         21 //下载失败  设备－》管理中心
-
-#define ERASEFLASH  31    //正在删除Flash
-#define WRITEFLASH  32    //正在写Flash
-#define CHECKFLASH  33    //正在校验Flash
-#define ENDFLASH  34      //完成写Image
-#define ERRORFLASH  35      //操作Image失败
-
-struct downfile1
-{
-	char FlagText[20];     //标志字符串
-	char FileName[20];
-	unsigned int Filelen;            //文件大小
-	unsigned short TotalPackage;      //总包数
-	unsigned short CurrPackage;       //当前包数
-	unsigned short Datalen;           //数据长度
-}__attribute__ ((packed));
-///////////////paul0902///////////////////////
-struct TalkDen1{
-	unsigned char IP[10][4];    //对方IP
-	char Addr[10][21];         //对方Addr
-	int ExistFlag[10];          //目标是否存在
-};
-////////////////////////////////////////////////////////////////
-
 struct TimeStamp1{
 	unsigned int OldCurrVideo;     //上一次当前视频时间
 	unsigned int CurrVideo;
 	unsigned int OldCurrAudio;     //上一次当前音频时间
 	unsigned int CurrAudio;
-};
-//视频采集缓冲
-struct videobuf1
-{
-	int iput; // 环形缓冲区的当前放入位置
-	int iget; // 缓冲区的当前取出位置
-	int n; // 环形缓冲区中的元素总数量
-	uint32_t timestamp[VNUM]; //时间戳
-	uint32_t frameno[VNUM];   //帧序号
-	unsigned char *buffer_y[VNUM];//[VIDEOMAX];
-	unsigned char *buffer_u[VNUM];//[VIDEOMAX/4];
-	unsigned char *buffer_v[VNUM];//[VIDEOMAX/4];
-};
-//视频接收缓冲  未解码
-struct tempvideobuf1
-{
-	//  int iput;                     // 环形缓冲区的当前放入位置
-	//  int iget;                     // 缓冲区的当前取出位置
-	//  int n;                        // 环形缓冲区中的元素总数量
-	uint32_t timestamp;  //时间戳
-	uint32_t frameno;       //帧序号
-	short TotalPackage;     //总包数
-	uint8_t CurrPackage[MAXPACKNUM]; //当前包   1 已接收  0 未接收
-	int Len;                //帧数据长度
-	uint8_t isFull;                  //该帧已接收完全
-	unsigned char *buffer;//[VIDEOMAX];
-	unsigned char frame_flag;             //帧标志 音频帧 I帧 P帧  
-};                            //     [MP4VNUM]
-//视频接收缓冲 链表
-typedef struct node2{
-	struct tempvideobuf1 Content;
-	struct node2 *llink, *rlink;
-}TempVideoNode1;
-//视频播放缓冲
-struct videoplaybuf1
-{
-	uint8_t isUse;     //该帧已解码未播放,缓冲区不可用
-	uint32_t timestamp; //时间戳
-	uint32_t frameno;   //帧序号
-	unsigned char *buffer;//[VIDEOMAX];
-	unsigned char frame_flag;             //帧标志 音频帧 I帧 P帧
-};
-//同步播放结构
-struct _SYNC
-{
-	pthread_cond_t cond;       //同步线程条件变量
-	pthread_condattr_t cond_attr;
-	pthread_mutex_t lock;      //互斥锁
-	pthread_mutex_t audio_rec_lock;//[VPLAYNUM];//音频录制互斥锁
-	pthread_mutex_t audio_play_lock;//[VPLAYNUM];//音频播放互斥锁
-	pthread_mutex_t video_rec_lock;//[VPLAYNUM];//视频录制互斥锁
-	pthread_mutex_t video_play_lock;//[VPLAYNUM];//视频播放互斥锁
-	pthread_mutex_t lmovie_lock;//[VPLAYNUM];//存储留影互斥锁
-	unsigned int count;        //计数
-	uint8_t isDecodeVideo;     //视频已解码一帧  解码线程-->同步线程
-	uint8_t isPlayVideo;       //视频已播放一帧  播放线程-->同步线程
-	uint8_t isDecodeAudio;     //音频已解码一帧  解码线程-->同步线程
-	uint8_t isPlayAudio;       //音频已播放一帧  播放线程-->同步线程
-};
-
-//加缓冲锁? 
-struct audiobuf1
-{
-	int iput; // 环形缓冲区的当前放入位置
-	int iget; // 缓冲区的当前取出位置 
-	int n; // 环形缓冲区中的元素总数量
-	uint32_t timestamp[NMAX/AUDIOBLK]; //时间戳
-	uint32_t frameno[NMAX/AUDIOBLK];   //帧序号
-	unsigned char buffer[NMAX];
-};
-
-//音频接收缓冲  未解码
-struct tempaudiobuf1
-{
-	uint32_t timestamp;  //时间戳
-	uint32_t frameno;       //帧序号
-	short TotalPackage;     //总包数
-	uint8_t CurrPackage[MAXPACKNUM]; //当前包   1 已接收  0 未接收
-	int Len;                //帧数据长度
-	uint8_t isFull;                  //该帧已接收完全
-	unsigned char *buffer;//[AUDIOBLK];
-	unsigned char frame_flag;             //帧标志 音频帧 I帧 P帧
-};                            //     [MP4VNUM]
-//音频接收缓冲 链表
-typedef struct node3{
-	struct tempaudiobuf1 Content;
-	struct node3 *llink, *rlink;
-}TempAudioNode1; 
-
-//音频播放缓冲
-struct audioplaybuf1
-{
-	uint8_t isUse;     //该帧已解码未播放,缓冲区不可用
-	uint32_t timestamp; //时间戳
-	uint32_t frameno;   //帧序号
-	unsigned char *buffer;//[VIDEOMAX];
-};
-
-//家庭留言缓冲
-struct wavbuf1
-{
-	int iput; // 环形缓冲区的当前放入位置
-	int iget; // 缓冲区的当前取出位置
-	int n; // 环形缓冲区中的元素总数量
-	unsigned char *buffer;
 };
 
 struct WaveFileHeader
@@ -419,36 +240,6 @@ struct WaveFileHeader
 	char chDATA[4];
 	uint32_t dwDATALen;
 };
-
-struct flcd_data
-{
-	unsigned int buf_len;
-	unsigned int uv_offset;
-	unsigned int frame_no;
-	unsigned int mp4_map_dma[VIDEO_PICTURE_QUEUE_SIZE_MAX];
-};
-
-
-/*typedef */struct fcap_frame_buff
-{
-	unsigned int phyAddr;
-	unsigned int mmapAddr;   //length per dma buffer
-	unsigned int frame_no;
-};
-//////////////////////updatemcu
-struct update_mcu
-{
-	char Type;
-	int Length;
-	int Pack;
-	short Curr;
-	int commfd;
-	char FromIP[20];
-	int  Socket;
-	char Towho[4];
-	char McuData[100*1024];
-};
-////////////////////////////////////
 
 struct Local1{
 	int Status;
@@ -490,11 +281,7 @@ struct Local1{
 	int OpenDoorFlag; //开锁标志 0 未开锁  1 开锁延时中  2 开锁中
 	int OpenDoorTime; //时间
 	//在GPIO线程中查询各线程是否运行
-	int Key_Press_Run_Flag;
-	int Save_File_Run_Flag;
-	int Dispart_Send_Run_Flag;
 	int Multi_Send_Run_Flag;
-	int Multi_Comm_Send_Run_Flag;
 
 	int nowvideoframeno;   //当前视频帧编号
 	int nowaudioframeno;   //当前音频帧编号
@@ -673,11 +460,6 @@ int DeltaLen;  //数据包有效数据偏移量
 
 struct tm *curr_tm_t;
 
-int temp_video_n;      //视频接收缓冲个数
-TempVideoNode1 *TempVideoNode_h;    //视频接收缓冲列表  
-int temp_audio_n;      //音频接收缓冲个数
-TempAudioNode1 *TempAudioNode_h;    //音频接收缓冲列表
-
 //系统初始化标志
 int InitSuccFlag;
 //本机状态设置
@@ -695,10 +477,6 @@ struct RecvIDCardNo1 RecvIDCardNo;
 //远端地址
 struct Remote1 Remote;
 char NullAddr[21];   //空字符串
-//COMM
-int Comm2fd;  //串口2句柄
-int Comm3fd;  //串口3句柄
-int Comm4fd;  //串口4句柄
 //免费ARP
 int ARP_Socket;
 //检测网络连接
@@ -710,26 +488,13 @@ int LocalDataPort;   //命令及数据UDP端口
 int LocalVideoPort;  //音视频UDP端口
 int RemoteDataPort;
 int RemoteVideoPort;
-/////////////////////////////
-int m_ForbidSocket;
-int LocalForbidPort;
-int RemoteForbidPort;
-//////////////////////////////
 int m_VideoSendSocket;
-//////////////////////////////
 char RemoteHost[20];
 char sPath[80];
 char wavPath[80];
 char UdpPackageHead[15];
 //状态提示信息缓冲
 struct PicStatBuf1 PicStatBuf;
-
-//FLASH存储线程
-int save_file_flag;
-pthread_t save_file_thread;
-void save_file_thread_func(void);
-sem_t save_file_sem;
-struct Save_File_Buff1 Save_File_Buff[SAVEMAX]; //FLASH存储缓冲最大值
 
 //主动命令数据发送线程：终端主动发送命令，如延时一段没收到回应，则多次发送
 //用于UDP和Comm通信
@@ -739,22 +504,8 @@ void multi_send_thread_func(void);
 sem_t multi_send_sem;
 struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10个UDP主动发送缓冲
 
-//主动命令数据发送线程：终端主动发送命令，如延时一段没收到回应，则多次发送
-//用于UDP和Comm通信
-int multi_comm_send_flag;
-pthread_t multi_comm_send_thread;
-void multi_comm_send_thread_func(void);
-sem_t multi_comm_send_sem;
-struct Multi_Comm_Buff1 Multi_Comm_Buff[COMMSENDMAX]; //10个COMM主动发送缓冲
-
 //watchdog
 int watchdog_fd;
-
-//gpio 按键
-int gpio_fd;
-int gpio_rcv_flag;
-pthread_t gpio_rcv_thread;
-void gpio_rcv_thread_func(void);
 
 int OpenLockTime[4];       //开锁时间
 char OpenLockTimeText[4][20];  //文本
@@ -774,11 +525,6 @@ extern int DeltaLen;  //数据包有效数据偏移量
 
 extern struct tm *curr_tm_t;
 
-extern int temp_video_n;      //视频接收缓冲个数
-extern TempVideoNode1 *TempVideoNode_h;    //视频接收缓冲列表  
-extern int temp_audio_n;      //音频接收缓冲个数
-extern TempAudioNode1 *TempAudioNode_h;    //音频接收缓冲列表
-
 //系统初始化标志
 extern int InitSuccFlag;
 //本机状态设置
@@ -795,10 +541,6 @@ extern struct RecvIDCardNo1 RecvIDCardNo;
 //远端地址
 extern struct Remote1 Remote;
 extern char NullAddr[21];   //空字符串
-//COMM
-extern int Comm2fd;  //串口2句柄
-extern int Comm3fd;  //串口3句柄
-extern int Comm4fd;  //串口4句柄
 //免费ARP
 extern int ARP_Socket;
 //检测网络连接
@@ -810,26 +552,13 @@ extern int LocalDataPort;   //命令及数据UDP端?
 extern int LocalVideoPort;  //音视频UDP端口
 extern int RemoteDataPort;
 extern int RemoteVideoPort;
-////////////
 extern int m_VideoSendSocket;
-//////////////////////
-extern int m_ForbidSocket;
-extern int LocalForbidPort;
-extern int RemoteForbidPort; 
-/////////////////
 extern char RemoteHost[20];
 extern char sPath[80];
 extern char wavPath[80];
 extern char UdpPackageHead[15];
 //状态提示信息缓冲
 extern struct PicStatBuf1 PicStatBuf;
-//FLASH存储线程
-extern int save_file_flag;
-extern pthread_t save_file_thread;
-extern void save_file_thread_func(void);
-extern sem_t save_file_sem;
-extern struct Save_File_Buff1 Save_File_Buff[SAVEMAX]; //FLASH存储缓冲最大值
-
 //主动命令数据发送线程：终端主动发送命令，如延时一段没收到回应，则多次发送
 //用于UDP和Comm通信
 extern int multi_send_flag;
@@ -837,22 +566,9 @@ extern pthread_t multi_send_thread;
 extern void multi_send_thread_func(void);
 extern sem_t multi_send_sem;
 extern struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10个UDP主动发送缓冲
-//主动命令数据发送线程：终端主动发送命令，如延时一段没收到回应，则多次发送
-//用于UDP和Comm通信
-extern int multi_comm_send_flag;
-extern pthread_t multi_comm_send_thread;
-extern void multi_comm_send_thread_func(void);
-extern sem_t multi_comm_send_sem;
-extern struct Multi_Comm_Buff1 Multi_Comm_Buff[COMMSENDMAX]; //10个COMM主动发送缓冲
 
 //watchdog
 extern int watchdog_fd;  
-
-//gpio 按键
-extern int gpio_fd;
-extern int gpio_rcv_flag;
-extern pthread_t gpio_rcv_thread;
-extern void gpio_rcv_thread_func(void);
 
 extern int OpenLockTime[4];       //开锁时间
 extern char OpenLockTimeText[4][20];  //文本
