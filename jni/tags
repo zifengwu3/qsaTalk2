@@ -6,26 +6,26 @@
 !_TAG_PROGRAM_VERSION	5.9~svn20110310	//
 AFRAMETIME	c_include/sndtools.h	26;"	d
 AFRAMETIME	include/sndtools.h	26;"	d
-ALARM	c_include/libqsa_common.h	42;"	d
-ALARM	include/libqsa_common.h	43;"	d
+ALARM	c_include/libqsa_common.h	45;"	d
+ALARM	include/libqsa_common.h	46;"	d
 ANDROIDJNI_LIB_LOGGER_H	include/log_jni.h	7;"	d
 AR	Makefile	/^AR      := $(CROSS_COMPILE)ar$/;"	m
 ARP_Socket	c_include/libqsa_common.h	/^int ARP_Socket;$/;"	v
 ARP_Socket	include/libqsa_common.h	/^int ARP_Socket;$/;"	v
-ASK	c_include/libqsa_common.h	56;"	d
-ASK	include/libqsa_common.h	57;"	d
-AUDIOBLK	c_include/libqsa_common.h	37;"	d
-AUDIOBLK	c_include/libqsa_common.h	39;"	d
+ASK	c_include/libqsa_common.h	59;"	d
+ASK	include/libqsa_common.h	60;"	d
+AUDIOBLK	c_include/libqsa_common.h	40;"	d
+AUDIOBLK	c_include/libqsa_common.h	42;"	d
 AUDIOBLK	c_include/sndtools.h	24;"	d
-AUDIOBLK	include/libqsa_common.h	38;"	d
-AUDIOBLK	include/libqsa_common.h	40;"	d
+AUDIOBLK	include/libqsa_common.h	41;"	d
+AUDIOBLK	include/libqsa_common.h	43;"	d
 AUDIOBLK	include/sndtools.h	24;"	d
 AUDIODSP	c_include/sndtools.h	6;"	d
 AUDIODSP	include/sndtools.h	6;"	d
 AUDIODSP1	c_include/sndtools.h	7;"	d
 AUDIODSP1	include/sndtools.h	7;"	d
-AUDIOPACKDATALEN	c_include/libqsa_common.h	34;"	d
-AUDIOPACKDATALEN	include/libqsa_common.h	35;"	d
+AUDIOPACKDATALEN	c_include/libqsa_common.h	37;"	d
+AUDIOPACKDATALEN	include/libqsa_common.h	38;"	d
 AUDIOPLAYBLK	c_include/sndtools.h	21;"	d
 AUDIOPLAYBLK	include/sndtools.h	21;"	d
 AUDIORECBLK	c_include/sndtools.h	20;"	d
@@ -41,30 +41,30 @@ AssiAddr	c_include/libqsa_common.h	/^	char AssiAddr[20];       \/\/被叫方地�
 AssiAddr	include/libqsa_common.h	/^	char AssiAddr[20];       \/\/被叫方地址$/;"	m	struct:talkdata1
 AssiIP	c_include/libqsa_common.h	/^	unsigned char AssiIP[4]; \/\/被叫方IP地址$/;"	m	struct:talkdata1
 AssiIP	include/libqsa_common.h	/^	unsigned char AssiIP[4]; \/\/被叫方IP地址$/;"	m	struct:talkdata1
-CALL	c_include/libqsa_common.h	59;"	d
-CALL	include/libqsa_common.h	60;"	d
-CALLANSWER	c_include/libqsa_common.h	62;"	d
-CALLANSWER	include/libqsa_common.h	63;"	d
-CALLCONFIRM	c_include/libqsa_common.h	67;"	d
-CALLCONFIRM	include/libqsa_common.h	68;"	d
-CALLDOWN	c_include/libqsa_common.h	66;"	d
-CALLDOWN	include/libqsa_common.h	67;"	d
-CALLEND	c_include/libqsa_common.h	74;"	d
-CALLEND	include/libqsa_common.h	75;"	d
-CALLSTART	c_include/libqsa_common.h	63;"	d
-CALLSTART	include/libqsa_common.h	64;"	d
-CALLTIMEOUT	c_include/libqsa_common.h	25;"	d
-CALLTIMEOUT	include/libqsa_common.h	26;"	d
-CALLUP	c_include/libqsa_common.h	65;"	d
-CALLUP	include/libqsa_common.h	66;"	d
+CALL	c_include/libqsa_common.h	62;"	d
+CALL	include/libqsa_common.h	63;"	d
+CALLANSWER	c_include/libqsa_common.h	65;"	d
+CALLANSWER	include/libqsa_common.h	66;"	d
+CALLCONFIRM	c_include/libqsa_common.h	70;"	d
+CALLCONFIRM	include/libqsa_common.h	71;"	d
+CALLDOWN	c_include/libqsa_common.h	69;"	d
+CALLDOWN	include/libqsa_common.h	70;"	d
+CALLEND	c_include/libqsa_common.h	77;"	d
+CALLEND	include/libqsa_common.h	78;"	d
+CALLSTART	c_include/libqsa_common.h	66;"	d
+CALLSTART	include/libqsa_common.h	67;"	d
+CALLTIMEOUT	c_include/libqsa_common.h	28;"	d
+CALLTIMEOUT	include/libqsa_common.h	29;"	d
+CALLUP	c_include/libqsa_common.h	68;"	d
+CALLUP	include/libqsa_common.h	69;"	d
 CALL_DEVICE	c_include/libqsa_callback.h	/^	CALL_DEVICE          \/\/本地呼叫$/;"	e	enum:_CALL_MODE
 CALL_DEVICE	include/libqsa_callback.h	/^	CALL_DEVICE          \/\/本地呼叫$/;"	e	enum:_CALL_MODE
 CALL_MIXER	c_include/libqsa_callback.h	/^	CALL_MIXER = 0,      \/\/混合呼叫模式$/;"	e	enum:_CALL_MODE
 CALL_MIXER	include/libqsa_callback.h	/^	CALL_MIXER = 0,      \/\/混合呼叫模式$/;"	e	enum:_CALL_MODE
 CALL_SIP	c_include/libqsa_callback.h	/^	CALL_SIP,            \/\/SIP呼叫$/;"	e	enum:_CALL_MODE
 CALL_SIP	include/libqsa_callback.h	/^	CALL_SIP,            \/\/SIP呼叫$/;"	e	enum:_CALL_MODE
-CANCELALARM	c_include/libqsa_common.h	43;"	d
-CANCELALARM	include/libqsa_common.h	44;"	d
+CANCELALARM	c_include/libqsa_common.h	46;"	d
+CANCELALARM	include/libqsa_common.h	47;"	d
 CB_ACK_TIMEOUT	c_include/libqsa_callback.h	/^    CB_ACK_TIMEOUT = 11, \/\/发送6次超时$/;"	e	enum:_CB_OPT
 CB_ACK_TIMEOUT	include/libqsa_callback.h	/^    CB_ACK_TIMEOUT = 11, \/\/发送6次超时$/;"	e	enum:_CB_OPT
 CB_CALL_BUSY	c_include/libqsa_callback.h	/^    CB_CALL_BUSY,        \/\/当前正忙回复$/;"	e	enum:_CB_OPT
@@ -127,8 +127,8 @@ CurrPackage	include/libqsa_common.h	/^	unsigned short CurrPackage;       \/\/当
 DEFINES	Makefile	/^DEFINES :=$/;"	m
 DEST_IP	TestDemo/h264.h	21;"	d
 DEST_PORT	TestDemo/h264.h	22;"	d
-DIRECTCALLTIME	c_include/libqsa_common.h	15;"	d
-DIRECTCALLTIME	include/libqsa_common.h	16;"	d
+DIRECTCALLTIME	c_include/libqsa_common.h	18;"	d
+DIRECTCALLTIME	include/libqsa_common.h	19;"	d
 DataType	c_include/libqsa_common.h	/^	unsigned short DataType;          \/\/数据类型$/;"	m	struct:talkdata1
 DataType	include/libqsa_common.h	/^	unsigned short DataType;          \/\/数据类型$/;"	m	struct:talkdata1
 Datalen	c_include/libqsa_common.h	/^	unsigned short Datalen;           \/\/数据长度$/;"	m	struct:talkdata1
@@ -145,8 +145,8 @@ DropMultiGroup	udp.c	/^void DropMultiGroup(int m_Socket, char *McastAddr)$/;"	f
 E	TestDemo/h264.h	/^	unsigned char E:1;$/;"	m	struct:__anon4
 F	TestDemo/h264.h	/^	unsigned char F:1;    $/;"	m	struct:__anon2
 F	TestDemo/h264.h	/^	unsigned char F:1;    $/;"	m	struct:__anon3
-FINDEQUIP	c_include/libqsa_common.h	54;"	d
-FINDEQUIP	include/libqsa_common.h	55;"	d
+FINDEQUIP	c_include/libqsa_common.h	57;"	d
+FINDEQUIP	include/libqsa_common.h	58;"	d
 FMT16BITS	c_include/sndtools.h	10;"	d
 FMT16BITS	include/sndtools.h	10;"	d
 FMT16K	c_include/sndtools.h	13;"	d
@@ -159,8 +159,8 @@ FMT8BITS	c_include/sndtools.h	9;"	d
 FMT8BITS	include/sndtools.h	9;"	d
 FMT8K	c_include/sndtools.h	12;"	d
 FMT8K	include/sndtools.h	12;"	d
-FORCEIFRAME	c_include/libqsa_common.h	70;"	d
-FORCEIFRAME	include/libqsa_common.h	71;"	d
+FORCEIFRAME	c_include/libqsa_common.h	73;"	d
+FORCEIFRAME	include/libqsa_common.h	74;"	d
 FU_HEADER	TestDemo/h264.h	/^} FU_HEADER; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon4
 FU_INDICATOR	TestDemo/h264.h	/^} FU_INDICATOR; \/**\/\/* 1 BYTES *\/$/;"	t	typeref:struct:__anon3
 FindStartCode2	TestDemo/nalu.c	/^static int FindStartCode2 (unsigned char *Buf)   $/;"	f	file:
@@ -185,10 +185,10 @@ HostAddr	include/libqsa_common.h	/^	char HostAddr[20];       \/\/主叫方地址
 HostIP	c_include/libqsa_common.h	/^	unsigned char HostIP[4]; \/\/主叫方IP地址$/;"	m	struct:talkdata1
 HostIP	include/libqsa_common.h	/^	unsigned char HostIP[4]; \/\/主叫方IP地址$/;"	m	struct:talkdata1
 INCLUDE	Makefile	/^INCLUDE := -I.\/c_include\/ $/;"	m
-INTRPERSEC	c_include/libqsa_common.h	18;"	d
-INTRPERSEC	include/libqsa_common.h	19;"	d
-INTRTIME	c_include/libqsa_common.h	17;"	d
-INTRTIME	include/libqsa_common.h	18;"	d
+INTRPERSEC	c_include/libqsa_common.h	21;"	d
+INTRPERSEC	include/libqsa_common.h	22;"	d
+INTRTIME	c_include/libqsa_common.h	20;"	d
+INTRTIME	include/libqsa_common.h	21;"	d
 IP	c_include/libqsa_common.h	/^    unsigned char IP[10][4];    \/\/对方IP$/;"	m	struct:Remote1
 IP	include/libqsa_common.h	/^    unsigned char IP[10][4];    \/\/对方IP$/;"	m	struct:Remote1
 IP_Group	c_include/libqsa_common.h	/^    unsigned char IP_Group[4];  \/\/组播地址$/;"	m	struct:Local1
@@ -200,11 +200,11 @@ InitWinsock	TestDemo/new_nal.c	/^BOOL InitWinsock()$/;"	f
 Init_Timer	timer.c	/^int Init_Timer(void) {$/;"	f
 Init_Udp_Send_Task	udp.c	/^int Init_Udp_Send_Task(void) {$/;"	f
 LDFLAGS	Makefile	/^LDFLAGS :=$/;"	m
-LFTMULTIADDR	c_include/libqsa_common.h	31;"	d
-LFTMULTIADDR	include/libqsa_common.h	32;"	d
+LFTMULTIADDR	c_include/libqsa_common.h	34;"	d
+LFTMULTIADDR	include/libqsa_common.h	35;"	d
 LIBS	Makefile	/^LIBS    :=$/;"	m
-LINEUSE	c_include/libqsa_common.h	60;"	d
-LINEUSE	include/libqsa_common.h	61;"	d
+LINEUSE	c_include/libqsa_common.h	63;"	d
+LINEUSE	include/libqsa_common.h	64;"	d
 LOCAL_ARM_MODE	Android.mk	/^LOCAL_ARM_MODE := arm$/;"	m
 LOCAL_C_INCLUDES	Android.mk	/^LOCAL_C_INCLUDES := $(QSA_TALK_PATH)\/include$/;"	m
 LOCAL_MODULE	Android.mk	/^LOCAL_MODULE := qsatalk$/;"	m
@@ -234,13 +234,13 @@ LocalDataPort	c_include/libqsa_common.h	/^int LocalDataPort;   \/\/命令及数�
 LocalDataPort	include/libqsa_common.h	/^int LocalDataPort;   \/\/命令及数据UDP端口$/;"	v
 LocalVideoPort	c_include/libqsa_common.h	/^int LocalVideoPort;  \/\/音视频UDP端口$/;"	v
 LocalVideoPort	include/libqsa_common.h	/^int LocalVideoPort;  \/\/音视频UDP端口$/;"	v
-MAXSENDNUM	c_include/libqsa_common.h	20;"	d
-MAXSENDNUM	include/libqsa_common.h	21;"	d
+MAXSENDNUM	c_include/libqsa_common.h	23;"	d
+MAXSENDNUM	include/libqsa_common.h	24;"	d
 MAX_RTP_PKT_LENGTH	TestDemo/h264.h	19;"	d
 MONO	c_include/sndtools.h	17;"	d
 MONO	include/sndtools.h	17;"	d
-MULTITTL	c_include/libqsa_common.h	32;"	d
-MULTITTL	include/libqsa_common.h	33;"	d
+MULTITTL	c_include/libqsa_common.h	35;"	d
+MULTITTL	include/libqsa_common.h	36;"	d
 MY_LOG_LEVEL	include/log_jni.h	32;"	d
 MY_LOG_LEVEL_DEBUG	include/log_jni.h	18;"	d
 MY_LOG_LEVEL_DEFAULT	include/log_jni.h	16;"	d
@@ -262,15 +262,15 @@ NALU_t	TestDemo/nalu.c	/^} NALU_t;   $/;"	t	typeref:struct:__anon5	file:
 NALU_t	TestDemo/new_nal.c	/^} NALU_t;$/;"	t	typeref:struct:__anon6	file:
 NRI	TestDemo/h264.h	/^	unsigned char NRI:2; $/;"	m	struct:__anon3
 NRI	TestDemo/h264.h	/^    unsigned char NRI:2;$/;"	m	struct:__anon2
-NSMULTIADDR	c_include/libqsa_common.h	30;"	d
-NSMULTIADDR	include/libqsa_common.h	31;"	d
-NSORDER	c_include/libqsa_common.h	52;"	d
-NSORDER	include/libqsa_common.h	53;"	d
-NSSERVERORDER	c_include/libqsa_common.h	53;"	d
-NSSERVERORDER	include/libqsa_common.h	54;"	d
+NSMULTIADDR	c_include/libqsa_common.h	33;"	d
+NSMULTIADDR	include/libqsa_common.h	34;"	d
+NSORDER	c_include/libqsa_common.h	55;"	d
+NSORDER	include/libqsa_common.h	56;"	d
+NSSERVERORDER	c_include/libqsa_common.h	56;"	d
+NSSERVERORDER	include/libqsa_common.h	57;"	d
 OBJS	Makefile	/^OBJS    := $(patsubst %.c,%.o,$(patsubst %.cpp,%.o,$(SOURCE)))$/;"	m
-OPENLOCK	c_include/libqsa_common.h	73;"	d
-OPENLOCK	include/libqsa_common.h	74;"	d
+OPENLOCK	c_include/libqsa_common.h	76;"	d
+OPENLOCK	include/libqsa_common.h	77;"	d
 OnlineCheckFunc	timer.c	/^void OnlineCheckFunc(void)$/;"	f
 OnlineFlag	c_include/libqsa_common.h	/^    int OnlineFlag; \/\/需检查在线确认$/;"	m	struct:Local1
 OnlineFlag	include/libqsa_common.h	/^    int OnlineFlag; \/\/需检查在线确认$/;"	m	struct:Local1
@@ -280,29 +280,29 @@ OpenBitstreamFile	TestDemo/nalu.c	/^void OpenBitstreamFile (char *fn)   $/;"	f
 OpenBitstreamFile	TestDemo/new_nal.c	/^void OpenBitstreamFile (char *fn)$/;"	f
 OpenBitstreamFile1	TestDemo/nalu.c	/^void OpenBitstreamFile1 (char *fn)   $/;"	f
 PACKET_BUFFER_END	TestDemo/h264.h	16;"	d
-PREPARETIMEOUT	c_include/libqsa_common.h	27;"	d
-PREPARETIMEOUT	include/libqsa_common.h	28;"	d
+PREPARETIMEOUT	c_include/libqsa_common.h	30;"	d
+PREPARETIMEOUT	include/libqsa_common.h	31;"	d
 PackLen	c_include/libqsa_common.h	/^	unsigned short PackLen;       \/\/数据包大小$/;"	m	struct:talkdata1
 PackLen	include/libqsa_common.h	/^	unsigned short PackLen;       \/\/数据包大小$/;"	m	struct:talkdata1
 QSA_TALK_PATH	Android.mk	/^QSA_TALK_PATH := $(LOCAL_PATH)$/;"	m
-QUERYFAIL	c_include/libqsa_common.h	61;"	d
-QUERYFAIL	include/libqsa_common.h	62;"	d
-QUERYSTATUS	c_include/libqsa_common.h	46;"	d
-QUERYSTATUS	include/libqsa_common.h	47;"	d
+QUERYFAIL	c_include/libqsa_common.h	64;"	d
+QUERYFAIL	include/libqsa_common.h	65;"	d
+QUERYSTATUS	c_include/libqsa_common.h	49;"	d
+QUERYSTATUS	include/libqsa_common.h	50;"	d
 R	TestDemo/h264.h	/^	unsigned char R:1;$/;"	m	struct:__anon4
 RANLIB	Makefile	/^RANLIB  := ranlib$/;"	m
-RECORDTIMEOUT	c_include/libqsa_common.h	28;"	d
-RECORDTIMEOUT	include/libqsa_common.h	29;"	d
-REMOTECALLLIFT	c_include/libqsa_common.h	75;"	d
-REMOTECALLLIFT	include/libqsa_common.h	76;"	d
-REMOTELIFT	c_include/libqsa_common.h	76;"	d
-REMOTELIFT	include/libqsa_common.h	77;"	d
-REMOTEOPENLOCK	c_include/libqsa_common.h	68;"	d
-REMOTEOPENLOCK	include/libqsa_common.h	69;"	d
-REPLY	c_include/libqsa_common.h	57;"	d
-REPLY	include/libqsa_common.h	58;"	d
-REPORTSTATUS	c_include/libqsa_common.h	45;"	d
-REPORTSTATUS	include/libqsa_common.h	46;"	d
+RECORDTIMEOUT	c_include/libqsa_common.h	31;"	d
+RECORDTIMEOUT	include/libqsa_common.h	32;"	d
+REMOTECALLLIFT	c_include/libqsa_common.h	78;"	d
+REMOTECALLLIFT	include/libqsa_common.h	79;"	d
+REMOTELIFT	c_include/libqsa_common.h	79;"	d
+REMOTELIFT	include/libqsa_common.h	80;"	d
+REMOTEOPENLOCK	c_include/libqsa_common.h	71;"	d
+REMOTEOPENLOCK	include/libqsa_common.h	72;"	d
+REPLY	c_include/libqsa_common.h	60;"	d
+REPLY	include/libqsa_common.h	61;"	d
+REPORTSTATUS	c_include/libqsa_common.h	48;"	d
+REPORTSTATUS	include/libqsa_common.h	49;"	d
 RTP_FIXED_HEADER	TestDemo/h264.h	/^} RTP_FIXED_HEADER;$/;"	t	typeref:struct:__anon1
 RcvBufLen	udp.c	/^int RcvBufLen = 1024 * 128;$/;"	v
 RecordPic	c_include/libqsa_common.h	/^	int RecordPic;  \/\/留照片  0 不留  1 呼叫留照片  2 通话留照片$/;"	m	struct:Local1
@@ -334,8 +334,8 @@ RemotePort	include/libqsa_common.h	/^    int RemotePort;$/;"	m	struct:Multi_Udp_
 RemoteVideoPort	c_include/libqsa_common.h	/^int RemoteVideoPort;$/;"	v
 RemoteVideoPort	include/libqsa_common.h	/^int RemoteVideoPort;$/;"	v
 S	TestDemo/h264.h	/^	unsigned char S:1;    $/;"	m	struct:__anon4
-SENDMESSAGE	c_include/libqsa_common.h	44;"	d
-SENDMESSAGE	include/libqsa_common.h	45;"	d
+SENDMESSAGE	c_include/libqsa_common.h	47;"	d
+SENDMESSAGE	include/libqsa_common.h	48;"	d
 SNDTOOLS_H	c_include/sndtools.h	2;"	d
 SNDTOOLS_H	include/sndtools.h	2;"	d
 SOURCE	Makefile	/^SOURCE  := $(wildcard *.c) $(wildcard *.cpp)$/;"	m
@@ -353,15 +353,15 @@ Status	include/libqsa_common.h	/^    int Status;$/;"	m	struct:Local1
 TAG	include/log_jni.h	10;"	d
 TAIL	c_include/sndtools.h	25;"	d
 TAIL	include/sndtools.h	25;"	d
-TALKTIMEOUT	c_include/libqsa_common.h	26;"	d
-TALKTIMEOUT	include/libqsa_common.h	27;"	d
+TALKTIMEOUT	c_include/libqsa_common.h	29;"	d
+TALKTIMEOUT	include/libqsa_common.h	30;"	d
 TARGET	Makefile	/^TARGET  := libqsa_talk.a$/;"	m
 TARGET_PATH	Makefile	/^TARGET_PATH := ..\/static_libs$/;"	m
 TEST_PATH	Makefile	/^TEST_PATH := .\/TestDemo$/;"	m
-TIMERPERSEC	c_include/libqsa_common.h	22;"	d
-TIMERPERSEC	include/libqsa_common.h	23;"	d
-TIMERTIME	c_include/libqsa_common.h	21;"	d
-TIMERTIME	include/libqsa_common.h	22;"	d
+TIMERPERSEC	c_include/libqsa_common.h	25;"	d
+TIMERPERSEC	include/libqsa_common.h	26;"	d
+TIMERTIME	c_include/libqsa_common.h	24;"	d
+TIMERTIME	include/libqsa_common.h	25;"	d
 TYPE	TestDemo/h264.h	/^	unsigned char TYPE:5;$/;"	m	struct:__anon2
 TYPE	TestDemo/h264.h	/^    unsigned char TYPE:5;$/;"	m	struct:__anon3
 TYPE	TestDemo/h264.h	/^    unsigned char TYPE:5;$/;"	m	struct:__anon4
@@ -375,8 +375,8 @@ Timer1Num	c_include/libqsa_common.h	/^    int Timer1Num;  \/\/定时器1计数$/
 Timer1Num	include/libqsa_common.h	/^    int Timer1Num;  \/\/定时器1计数$/;"	m	struct:Local1
 TotalPackage	c_include/libqsa_common.h	/^	unsigned short TotalPackage;      \/\/总包数$/;"	m	struct:talkdata1
 TotalPackage	include/libqsa_common.h	/^	unsigned short TotalPackage;      \/\/总包数$/;"	m	struct:talkdata1
-UDPSENDMAX	c_include/libqsa_common.h	19;"	d
-UDPSENDMAX	include/libqsa_common.h	20;"	d
+UDPSENDMAX	c_include/libqsa_common.h	22;"	d
+UDPSENDMAX	include/libqsa_common.h	23;"	d
 UdpPackageHead	c_include/libqsa_common.h	/^char UdpPackageHead[15];$/;"	v
 UdpPackageHead	include/libqsa_common.h	/^char UdpPackageHead[15];$/;"	v
 UdpRecvFlag	TestDemo/recvice_udp.c	/^short UdpRecvFlag;$/;"	v
@@ -386,22 +386,22 @@ UdpVideoRcvThread	udp.c	/^void UdpVideoRcvThread(void)$/;"	f
 UdpVideoRcvThreadDemo	TestDemo/recvice_udp.c	/^void UdpVideoRcvThreadDemo(void)$/;"	f
 Uninit_Timer	timer.c	/^int Uninit_Timer(void) {$/;"	f
 Uninit_Udp_Send_Task	udp.c	/^int Uninit_Udp_Send_Task(void) {$/;"	f
-VIDEOPACKDATALEN	c_include/libqsa_common.h	35;"	d
-VIDEOPACKDATALEN	include/libqsa_common.h	36;"	d
-VIDEOTALK	c_include/libqsa_common.h	48;"	d
-VIDEOTALK	include/libqsa_common.h	49;"	d
-VIDEOTALKTRANS	c_include/libqsa_common.h	49;"	d
-VIDEOTALKTRANS	include/libqsa_common.h	50;"	d
-VIDEOWATCH	c_include/libqsa_common.h	50;"	d
-VIDEOWATCH	include/libqsa_common.h	51;"	d
-VIDEOWATCHTRANS	c_include/libqsa_common.h	51;"	d
-VIDEOWATCHTRANS	include/libqsa_common.h	52;"	d
-WATCHTIMEOUT	c_include/libqsa_common.h	24;"	d
-WATCHTIMEOUT	include/libqsa_common.h	25;"	d
-ZOOMIN	c_include/libqsa_common.h	72;"	d
-ZOOMIN	include/libqsa_common.h	73;"	d
-ZOOMOUT	c_include/libqsa_common.h	71;"	d
-ZOOMOUT	include/libqsa_common.h	72;"	d
+VIDEOPACKDATALEN	c_include/libqsa_common.h	38;"	d
+VIDEOPACKDATALEN	include/libqsa_common.h	39;"	d
+VIDEOTALK	c_include/libqsa_common.h	51;"	d
+VIDEOTALK	include/libqsa_common.h	52;"	d
+VIDEOTALKTRANS	c_include/libqsa_common.h	52;"	d
+VIDEOTALKTRANS	include/libqsa_common.h	53;"	d
+VIDEOWATCH	c_include/libqsa_common.h	53;"	d
+VIDEOWATCH	include/libqsa_common.h	54;"	d
+VIDEOWATCHTRANS	c_include/libqsa_common.h	54;"	d
+VIDEOWATCHTRANS	include/libqsa_common.h	55;"	d
+WATCHTIMEOUT	c_include/libqsa_common.h	27;"	d
+WATCHTIMEOUT	include/libqsa_common.h	28;"	d
+ZOOMIN	c_include/libqsa_common.h	75;"	d
+ZOOMIN	include/libqsa_common.h	76;"	d
+ZOOMOUT	c_include/libqsa_common.h	74;"	d
+ZOOMOUT	include/libqsa_common.h	75;"	d
 _CALL_MODE	c_include/libqsa_callback.h	/^enum _CALL_MODE {$/;"	g
 _CALL_MODE	include/libqsa_callback.h	/^enum _CALL_MODE {$/;"	g
 _CB_CALL_STATUS	c_include/libqsa_callback.h	/^enum _CB_CALL_STATUS{$/;"	g
@@ -412,15 +412,19 @@ _CB_TYPE_DATA	c_include/libqsa_callback.h	/^enum _CB_TYPE_DATA {$/;"	g
 _CB_TYPE_DATA	include/libqsa_callback.h	/^enum _CB_TYPE_DATA {$/;"	g
 _FALSE	c_include/libqsa_common.h	12;"	d
 _FALSE	include/libqsa_common.h	12;"	d
+_H264	c_include/libqsa_common.h	16;"	d
+_H264	include/libqsa_common.h	16;"	d
 _LIB_QSA_DEF_H	arp.c	6;"	d	file:
-_LIB_QSA_DEF_H	c_include/libqsa_common.h	139;"	d
+_LIB_QSA_DEF_H	c_include/libqsa_common.h	142;"	d
 _LIB_QSA_DEF_H	cb_function.c	4;"	d	file:
-_LIB_QSA_DEF_H	include/libqsa_common.h	140;"	d
+_LIB_QSA_DEF_H	include/libqsa_common.h	143;"	d
 _LIB_QSA_DEF_H	talk.c	7;"	d	file:
 _LIB_QSA_DEF_H	timer.c	18;"	d	file:
 _LIB_QSA_DEF_H	udp.c	13;"	d	file:
-_REC_FILE	include/libqsa_common.h	15;"	d
-_SEND_VIDEO_TEST	talk.c	174;"	d	file:
+_MEPG2	c_include/libqsa_common.h	15;"	d
+_MEPG2	include/libqsa_common.h	15;"	d
+_REC_FILE	include/libqsa_common.h	18;"	d
+_SEND_VIDEO_TEST	talk.c	178;"	d	file:
 _SOFTWARE_MULTIPLE	c_include/sndtools.h	33;"	d
 _SOFTWARE_MULTIPLE	include/sndtools.h	33;"	d
 _SOFTWARE_REC_MULTIPLE	c_include/sndtools.h	31;"	d
@@ -463,6 +467,7 @@ cb_opt_function	c_include/libqsa_common.h	/^struct _cb_function cb_opt_function;
 cb_opt_function	include/libqsa_common.h	/^struct _cb_function cb_opt_function;$/;"	v	typeref:struct:_cb_function
 center_ip	c_include/libqsa_callback.h	/^	unsigned char center_ip[20];			\/\/192.168.10.XX$/;"	m	struct:dev_config
 center_ip	include/libqsa_callback.h	/^	unsigned char center_ip[20];			\/\/192.168.10.XX$/;"	m	struct:dev_config
+closetty	TestDemo/tty.c	/^void closetty(int fd) {$/;"	f
 configlen	c_include/libqsa_common.h	/^int configlen = sizeof(struct dev_config);            \/\/结构长度$/;"	v
 configlen	include/libqsa_common.h	/^int configlen = sizeof(struct dev_config);            \/\/结构长度$/;"	v
 csrc_len	TestDemo/h264.h	/^    unsigned char csrc_len:4;        \/**\/\/* expect 0 *\/$/;"	m	struct:__anon1
@@ -488,6 +493,7 @@ framebuffer	TestDemo/nalu.c	/^char framebuffer[1024*2000];$/;"	v
 fu_hdr	TestDemo/new_nal.c	/^FU_HEADER		*fu_hdr;$/;"	v
 fu_ind	TestDemo/new_nal.c	/^FU_INDICATOR	*fu_ind;$/;"	v
 g_Status	TestDemo/main.c	/^int g_Status = 0;$/;"	v
+g_Value	TestDemo/main.c	/^int g_Value = 0;$/;"	v
 g_addr	TestDemo/main.c	/^unsigned char g_addr[30];$/;"	v
 g_ip	TestDemo/main.c	/^unsigned char g_ip[20];$/;"	v
 get_device_config_task	init.c	/^void get_device_config_task(struct dev_config * _config) {$/;"	f
@@ -554,12 +560,12 @@ null_addr	c_include/libqsa_common.h	/^char null_addr[21];   \/\/空字符串$/;"
 null_addr	include/libqsa_common.h	/^char null_addr[21];   \/\/空字符串$/;"	v
 null_ip	c_include/libqsa_common.h	/^char null_ip[4];   \/\/空字符串$/;"	v
 null_ip	include/libqsa_common.h	/^char null_ip[4];   \/\/空字符串$/;"	v
+opentty	TestDemo/tty.c	/^int opentty(char * tty, int fd) {$/;"	f
 order_thread	TestDemo/timer.c	/^pthread_t order_thread;$/;"	v
 order_thread_flag	TestDemo/timer.c	/^int order_thread_flag;$/;"	v
 order_thread_task	TestDemo/timer.c	/^void order_thread_task(void) {$/;"	f
 padding	TestDemo/h264.h	/^    unsigned char padding:1;        \/**\/\/* expect 0 *\/$/;"	m	struct:__anon1
 payload	TestDemo/h264.h	/^    unsigned char payload:7;        \/**\/\/* RTP_PAYLOAD_RTSP *\/$/;"	m	struct:__anon1
-playh264file	TestDemo/main.c	/^void playh264file(char * filename) {$/;"	f
 port	c_include/libqsa_callback.h	/^    int port;		             \/\/发送信息的设备端口号，由默认值或上位服务器提供$/;"	m	struct:_send_info
 port	include/libqsa_callback.h	/^    int port;		             \/\/发送信息的设备端口号，由默认值或上位服务器提供$/;"	m	struct:_send_info
 qsa_audioFp4	udp.c	/^static FILE* qsa_audioFp4 = NULL;$/;"	v	file:

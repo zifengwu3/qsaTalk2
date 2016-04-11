@@ -15,7 +15,6 @@
 #define _MEPG2 0
 #define _H264  1
 
-#define _REC_FILE 0
 #define DIRECTCALLTIME  600 
 
 #define INTRTIME 50       //线程50ms
@@ -78,6 +77,7 @@
 #define CALLEND          30     //通话结束
 #define REMOTECALLLIFT   20
 #define REMOTELIFT		 30
+#define LIFT		     110
 
 struct Remote1 {
     int DenNum;             //目标数量  主机+副机

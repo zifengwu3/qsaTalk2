@@ -77,6 +77,7 @@
 #define CALLEND          30     //通话结束
 #define REMOTECALLLIFT   20
 #define REMOTELIFT		 30
+#define LIFT		     110
 
 struct Remote1 {
     int DenNum;             //目标数量  主机+副机

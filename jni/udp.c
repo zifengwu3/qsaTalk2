@@ -21,6 +21,7 @@ int RcvBufLen = 1024 * 128;
 
 short UdpRecvFlag;
 pthread_t udpvideorcvid;
+pthread_t udpdatarcvid;
 
 int InitUdpSocket(short lPort);
 void CloseUdpSocket(void);
@@ -30,6 +31,8 @@ int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 //UDP音视频接收线程函数
 void CreateUdpVideoRcvThread(void);
 void UdpVideoRcvThread(void);
+void CreateUdpDataRcvThread(void);
+void UdpDataRcvThread(void);
 
 void AddMultiGroup(int m_Socket, char *McastAddr);
 void DropMultiGroup(int m_Socket, char *McastAddr);
@@ -49,6 +52,7 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
 		int length);
 void TalkEnd_ClearStatus(void);
 void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP);
+void Recv_Open_Lock_Func(unsigned char *recv_buf);
 
 int init_udp_task(void);
 int Init_Udp_Send_Task(void);
@@ -58,6 +62,13 @@ int init_udp_task(void) {
     // Recvice
     if (InitUdpSocket(LocalVideoPort) == 0) {
         LOGD("can't create video rece socket.\n\r");
+        return _FALSE;
+    } else {
+        LOGD("create video recvice socket.\n\r");
+    }
+
+    if (InitUdpSocket(LocalDataPort) == 0) {
+        LOGD("can't create data rece socket.\n\r");
         return _FALSE;
     } else {
         LOGD("create video recvice socket.\n\r");
@@ -257,12 +268,19 @@ int InitUdpSocket(short lPort) {
 		m_VideoSocket = m_Socket;
 		CreateUdpVideoRcvThread();
 	}
+
+    if (lPort == LocalDataPort) {
+		m_DataSocket = m_Socket;
+		CreateUdpDataRcvThread();
+	}
+
 	return _TRUE;
 }
 
 void CloseUdpSocket(void) {
 	UdpRecvFlag = 0;
 	close(m_VideoSocket);
+	close(m_DataSocket);
 }
 
 int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
@@ -287,7 +305,8 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 	return nSize;
 }
 
-void CreateUdpVideoRcvThread(void) {
+void CreateUdpVideoRcvThread(void) 
+{
 	int ret;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
@@ -337,6 +356,77 @@ void DropMultiGroup(int m_Socket, char *McastAddr)
 				sizeof(mcast)) < 0) {
 			LOGD("drop multicast error.\n\r");
 			return;
+		}
+	}
+}
+
+void CreateUdpDataRcvThread()
+{
+	int ret;
+	pthread_attr_t attr;
+	pthread_attr_init(&attr);
+	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
+	ret = pthread_create(&udpdatarcvid, &attr, (void *)UdpDataRcvThread,
+            NULL);
+	pthread_attr_destroy(&attr);
+#ifdef _DEBUG
+	LOGD("Create UDP data pthread!\n");
+#endif
+	if(ret != 0){
+		LOGD("Create data pthread error!\n");
+		exit(1);
+	}
+}
+
+void UdpDataRcvThread(void)
+{
+	char FromIP[20];
+	struct sockaddr_in c_addr;
+	socklen_t addr_len;
+	int len;
+	unsigned char buff[8096];
+
+    LOGD("This is udp video pthread.\n");
+	UdpRecvFlag = 1;
+
+	addr_len = sizeof(c_addr);
+	while (UdpRecvFlag == 1) {
+		len = recvfrom(m_DataSocket, buff, sizeof(buff) - 1, 0,
+				(struct sockaddr *) &c_addr, &addr_len);
+		if (len < 0) {
+			perror("recvfrom");
+			continue;
+		}
+		buff[len] = '\0';
+
+		strcpy(FromIP, inet_ntoa(c_addr.sin_addr));
+
+		if ((buff[0] == UdpPackageHead[0]) 
+                && (buff[1] == UdpPackageHead[1])
+				&& (buff[2] == UdpPackageHead[2])
+				&& (buff[3] == UdpPackageHead[3])
+				&& (buff[4] == UdpPackageHead[4])
+                && (buff[5] == UdpPackageHead[5])) {
+
+            LOGD("FromIP:%s, buff[8] = 0x%02X\n", FromIP, buff[8]);
+
+            switch (buff[6]) {
+                case LIFT:
+					switch (buff[8])
+					{
+						case OPENLOCK:
+							Recv_Open_Lock_Func(buff);
+							break;
+					}
+					break;
+                default:
+                    break;
+            }
+        }
+
+		if (strcmp((char *)buff, "exit") == 0) {
+			LOGD("recvfrom888888888\n");
+			UdpRecvFlag = 0;
 		}
 	}
 }
@@ -713,7 +803,7 @@ void Recv_Talk_Open_Lock_Task(unsigned char *recv_buf, char *cFromIP) {
     int Status = 0;
     Status = get_device_status();
 
-	if (((Status == CB_ST_CALLING) || (Status == CB_ST_TALKING)) && (recv_buf[7] == ASK)) {
+	if (((Status == CB_ST_CALLING) || (Status == CB_ST_CALLED) || (Status == CB_ST_TALKED) || (Status == CB_ST_TALKING)) && (recv_buf[7] == ASK)) {
 		memcpy(send_b, recv_buf, 57);
 		send_b[7] = REPLY;
 		sendlength = 57;
@@ -838,6 +928,38 @@ void Recv_Talk_Call_UpDown_Task(unsigned char *recv_buf, char *cFromIP,
         }
     }
     return;
+}
+
+void Recv_Open_Lock_Func(unsigned char *recv_buf)
+{
+	int i;
+
+	//锁定互斥锁
+	pthread_mutex_lock (&Local.udp_lock);
+
+    //本机主动
+    if(recv_buf[7] == REPLY) {
+        for(i=0; i<UDPSENDMAX; i++) {
+            if(Multi_Udp_Buff[i].isValid == 1) {
+                if(Multi_Udp_Buff[i].m_Socket == m_DataSocket) {
+                    if(Multi_Udp_Buff[i].SendNum  < MAXSENDNUM) {
+                        if((Multi_Udp_Buff[i].buf[6] == LIFT)) {
+                            if(Multi_Udp_Buff[i].buf[7] == ASK) {
+                                if(Multi_Udp_Buff[i].buf[8] == OPENLOCK) {
+                                    Multi_Udp_Buff[i].isValid = 0;
+                                    LOGD("other open lock\n");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+	//打开互斥锁
+	pthread_mutex_unlock (&Local.udp_lock);
 }
 
 void ForceIFrame_Func(void) //强制I帧
