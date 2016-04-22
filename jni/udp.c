@@ -196,7 +196,7 @@ void multi_send_thread_func(void) {
                     break;
                 }
             }
-            usleep(100*1000);
+            usleep(50*1000);
         }
 	}
 }
@@ -667,18 +667,16 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 			if (Multi_Udp_Buff[i].isValid == 1) {
 				if (Multi_Udp_Buff[i].m_Socket == m_VideoSocket) {
 					if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
-						if ((Multi_Udp_Buff[i].buf[6] == VIDEOTALK)
-								|| (Multi_Udp_Buff[i].buf[6] == VIDEOTALKTRANS)) {
+						if (Multi_Udp_Buff[i].buf[6] == VIDEOTALK) {
 							if (Multi_Udp_Buff[i].buf[7] == ASK) {
 								if (Multi_Udp_Buff[i].buf[8] == CALL) {
 										Multi_Udp_Buff[i].isValid = 0;
                                         if (remote_info.DenNum == 1) {
                                             Status = get_device_status();
-                                            if (Status == CB_ST_FINDING) {
-                                                Status = CB_ST_NULL;
-                                                set_device_status(Status);
-                                                cb_opt_function.cb_curr_opt(CB_CALL_BUSY, Status);
-                                            }
+
+                                            Status = CB_ST_NULL;
+                                            set_device_status(Status);
+                                            cb_opt_function.cb_curr_opt(CB_CALL_BUSY, Status);
                                         }
                                         break;
 								}
