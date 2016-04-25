@@ -14,7 +14,8 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
 void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
 
 //---------------------------------------------------------------------------
-void start_call(const char * ip, const char * addr, int uFlag) {
+void start_call(const char * ip, const char * addr, int uFlag) 
+{
 	int i;
 	int j;
 	uint32_t Ip_Int;
@@ -28,6 +29,8 @@ void start_call(const char * ip, const char * addr, int uFlag) {
         Status = get_device_status();
 
         if (Status == CB_ST_NULL) {
+
+            pthread_mutex_lock(&Local.udp_lock);
             /* get remote device information */
             Ip_Int = inet_addr(ip);
 
@@ -78,51 +81,64 @@ void start_call(const char * ip, const char * addr, int uFlag) {
                     break;
                 }
             }
+            pthread_mutex_unlock(&Local.udp_lock);
         } else {
             LOGD("I'm is Busy!\n");
         }
     }
 }
 
-void stop_talk(void) {
+void stop_talk(void) 
+{
 
 	int i;
+    int Status;
 
-	for (i = 0; i < UDPSENDMAX; i++) {
-		if (Multi_Udp_Buff[i].isValid == 0) {
-			memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
-			Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
-			Multi_Udp_Buff[i].buf[7] = ASK;
-			Multi_Udp_Buff[i].buf[8] = CALLEND;
-			Multi_Udp_Buff[i].SendNum = 0;
-			Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
-			Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
-            sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
-                    remote_info.IP[0][0], remote_info.IP[0][1], 
-                    remote_info.IP[0][2], remote_info.IP[0][3]);
-            memcpy(&Multi_Udp_Buff[i].RemoteIP,
-                    &Multi_Udp_Buff[i].RemoteHost, 20);
-            Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
+    Status = get_device_status();
 
-			memcpy(Multi_Udp_Buff[i].buf + 9, local_config.address, 20);
-			memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
-			memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[0], 20);
-			memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[0], 4);
+    if (Status > CB_ST_NULL) {
 
-			Multi_Udp_Buff[i].nlength = 57;
-			Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
-			Multi_Udp_Buff[i].SendDelayTime = 0;
-			Multi_Udp_Buff[i].isValid = 1;
+        pthread_mutex_lock(&Local.udp_lock);
 
-            LOGD("<%s>   通知对方关闭对讲呼叫 ip = %s\n", __FUNCTION__, Multi_Udp_Buff[i].RemoteHost);
-			sem_post(&multi_send_sem);
-			break;
-		}
-	}
+        for (i = 0; i < UDPSENDMAX; i++) {
+            if (Multi_Udp_Buff[i].isValid == 0) {
+                memcpy(Multi_Udp_Buff[i].buf, UdpPackageHead, 6);
+                Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
+                Multi_Udp_Buff[i].buf[7] = ASK;
+                Multi_Udp_Buff[i].buf[8] = CALLEND;
+                Multi_Udp_Buff[i].SendNum = 0;
+                Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
+                Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
+                sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
+                        remote_info.IP[0][0], remote_info.IP[0][1], 
+                        remote_info.IP[0][2], remote_info.IP[0][3]);
+                memcpy(&Multi_Udp_Buff[i].RemoteIP,
+                        &Multi_Udp_Buff[i].RemoteHost, 20);
+                Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
+
+                memcpy(Multi_Udp_Buff[i].buf + 9, local_config.address, 20);
+                memcpy(Multi_Udp_Buff[i].buf + 29, &locate_ip, 4);
+                memcpy(Multi_Udp_Buff[i].buf + 33, remote_info.Addr[0], 20);
+                memcpy(Multi_Udp_Buff[i].buf + 53, remote_info.IP[0], 4);
+
+                Multi_Udp_Buff[i].nlength = 57;
+                Multi_Udp_Buff[i].DelayTime = DIRECTCALLTIME;
+                Multi_Udp_Buff[i].SendDelayTime = 0;
+                Multi_Udp_Buff[i].isValid = 1;
+
+                LOGD("<%s>   通知对方关闭对讲呼叫 ip = %s\n", __FUNCTION__, Multi_Udp_Buff[i].RemoteHost);
+                sem_post(&multi_send_sem);
+                break;
+            }
+        }
+
+        pthread_mutex_unlock(&Local.udp_lock);
+    }
 }
 //-----------------------------------------------------------------------
 //呼叫   0 住户 1  中心  
-void find_ip(const char * addr, int uFlag) {
+void find_ip(const char * addr, int uFlag) 
+{
     int i;
     int Status;
     char remoteAddr[20];
@@ -131,6 +147,9 @@ void find_ip(const char * addr, int uFlag) {
 
         Status = get_device_status();
         if ((Status == CB_ST_NULL) && (uFlag == 0)) {
+
+            pthread_mutex_lock(&Local.udp_lock);
+
             memcpy(remoteAddr, local_config.address, 20);
             remoteAddr[0] = 'S';
             memcpy(remoteAddr + 7, addr, 4);
@@ -167,6 +186,8 @@ void find_ip(const char * addr, int uFlag) {
                     break;
                 }
             }
+
+            pthread_mutex_unlock(&Local.udp_lock);
         } else {
             LOGD("I'm BUSY\n");
         }
@@ -386,6 +407,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
+
     }
 }
 
