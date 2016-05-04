@@ -28,7 +28,7 @@ int main() {
     int rntval = 0;
 
     memset(&config, 0x00, sizeof(struct dev_config));
-    strcpy(config.address, "M00010100000000000000");
+    strcpy(config.address, "M06010100000000000000");
     //Ip_Int = inet_addr("192.168.10.97");
     //memcpy(config.ip, &Ip_Int, 4);
     memcpy(config.ip, ip, 20);
@@ -42,7 +42,7 @@ int main() {
     set_cb_function(&p);
 
     g_Status = CB_ST_NULL;
-    strcpy(g_addr, "0606");
+    strcpy(g_addr, "2222");
     //strcpy(g_ip, "192.168.11.188");
     //
     //

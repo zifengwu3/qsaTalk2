@@ -9,6 +9,7 @@
 #include "libqsa_callback.h"
 
 #define LOGD printf
+
 #define _FALSE 0
 #define _TRUE  1
 
@@ -26,13 +27,13 @@
 
 #define WATCHTIMEOUT  30*(1000/INTRTIME)    //监视最长时间
 #define CALLTIMEOUT  25*(1000/INTRTIME)     //呼叫最长时间
-#define TALKTIMEOUT  130*(1000/INTRTIME)//30*20     //通话最长时间
+#define TALKTIMEOUT  180*(1000/INTRTIME)//30*20     //通话最长时间
 #define PREPARETIMEOUT  10*(1000/INTRTIME)     //留影留言预备最长时间
 #define RECORDTIMEOUT  30*(1000/INTRTIME)     //留影留言最长时间
 
 #define NSMULTIADDR  "238.9.9.1"//"192.168.10.255"  //NS组播地址
 #define LFTMULTIADDR  "238.9.9.2"//"192.168.10.255"  //NS组播地址
-#define MULTITTL   5      //组播TTL值
+#define MULTITTL   10      //组播TTL值
 
 #define AUDIOPACKDATALEN  1200   //数据包大小
 #define VIDEOPACKDATALEN  4096   //数据包大小
