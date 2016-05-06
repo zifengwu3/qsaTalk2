@@ -344,7 +344,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
-            LOGD("%s:%d send_buf[61] = %d, PackLen = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61], talkdata.PackLen);
+            LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d\n", 
+                    __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage);
         }
 #endif
 #else
