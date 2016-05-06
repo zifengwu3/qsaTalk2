@@ -238,6 +238,11 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         talkdata.Frameno = frame_num;
         //帧数据长度
         talkdata.Framelen = length;
+        /*
+        if (talkdata.Framelen < 512) {
+            talkdata.Framelen = 512;
+        }
+        */
         //帧类型
         if (frame_type == 5) {
             talkdata.DataType = 2;
@@ -329,7 +334,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
                 memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
                         data + (j - 1)*talkdata.PackLen, (length - (j - 1)*talkdata.PackLen));
-
                 //UDP发送
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + (length - (j - 1)*talkdata.PackLen)));
@@ -344,8 +348,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
-            LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d\n", 
-                    __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage);
+            LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
+                    __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
         }
 #endif
 #else
