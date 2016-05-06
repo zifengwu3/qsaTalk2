@@ -199,7 +199,7 @@ void find_ip(const char * addr, int uFlag)
 #define _SEND_VIDEO_TEST 1
 void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
 
-    int j;
+    int i, j;
     int TotalPackage; //总包数
     unsigned char mpeg4_out[length + sizeof(struct talkdata1) + 20];
 
@@ -347,6 +347,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 //UDP发送
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
+                for(i = 10000; i > 0; i-- );
             }
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
