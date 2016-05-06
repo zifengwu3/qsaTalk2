@@ -255,7 +255,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
 
 #if _SEND_VIDEO_TEST
-
+#if 0
         if (Status == CB_ST_TALKING) {
 
             //单包长度
@@ -310,6 +310,43 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                     mpeg4_out, (9 + sizeof(struct talkdata1) + length));
             //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
         }
+#else 
+        //单包长度
+        talkdata.PackLen = VIDEOPACKDATALEN;
+        //总包数
+        if ((length%talkdata.PackLen) == 0) {
+            TotalPackage = length/talkdata.PackLen;
+        } else {
+            TotalPackage = (length/talkdata.PackLen) + 1;
+        }
+        talkdata.TotalPackage = TotalPackage;
+
+        for (j=1; j<=TotalPackage; j++) {        
+            //包的顺序从大到小
+            if (j == TotalPackage) {
+                talkdata.CurrPackage = j;      //当前包
+                talkdata.Datalen = length - (j - 1)*talkdata.PackLen;     //数据长度
+                memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
+                memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
+                        data + (j - 1)*talkdata.PackLen, (length - (j - 1)*talkdata.PackLen));
+
+                //UDP发送
+                UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
+                        mpeg4_out, (9 + sizeof(struct talkdata1) + (length - (j - 1)*talkdata.PackLen)));
+            } else {
+                talkdata.CurrPackage = j;           //当前包
+                talkdata.Datalen = talkdata.PackLen;       //数据长度
+                memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
+                memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
+                        data + (j - 1)*talkdata.PackLen, talkdata.PackLen);
+
+                //UDP发送
+                UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
+                        mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
+            }
+            //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
+        }
+#endif
 #else
         //单包长度
         talkdata.PackLen = length;
