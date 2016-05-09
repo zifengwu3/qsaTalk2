@@ -16,8 +16,8 @@
 extern void SendFreeArp(void);
 
 //UDP
-int SndBufLen = 1024 * 128;
-int RcvBufLen = 1024 * 128;
+int SndBufLen = 1024 * 127;
+int RcvBufLen = 1024 * 127;
 
 short UdpRecvFlag;
 pthread_t udpvideorcvid;
@@ -231,9 +231,9 @@ int InitUdpSocket(short lPort) {
 	s_addr.sin_addr.s_addr = INADDR_ANY; //inet_addr(LocalIP);//INADDR_ANY;
 
 	iLen = sizeof((char *) &nZero); //  SO_SNDBUF
-	nZero = SndBufLen; //128K
+	nZero = SndBufLen; //127K
 	setsockopt(m_Socket, SOL_SOCKET, SO_SNDBUF, (char*) &nZero, iLen);
-	nZero = RcvBufLen; //128K
+	nZero = RcvBufLen; //127K
 	setsockopt(m_Socket, SOL_SOCKET, SO_RCVBUF, (char*) &nZero, iLen);
 
 	ttl = MULTITTL;
