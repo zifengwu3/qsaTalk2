@@ -36,8 +36,7 @@
 #define MULTITTL   10      //组播TTL值
 
 #define AUDIOPACKDATALEN  1200   //数据包大小
-//#define VIDEOPACKDATALEN  4096   //数据包大小
-#define VIDEOPACKDATALEN  1200   //数据包大小
+#define VIDEOPACKDATALEN  1350   //数据包大小
 #ifdef _AUDIO_BUF_48MS
 #define AUDIOBLK (128*6)   //每帧48ms
 #else
