@@ -260,7 +260,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 
         //单包长度
         if (Status == CB_ST_TALKING) {
-            talkdata.PackLen = (VIDEOPACKDATALEN * 4);
+            talkdata.PackLen = (VIDEOPACKDATALEN * 2);
         } else {
             talkdata.PackLen = VIDEOPACKDATALEN;
         }
@@ -293,7 +293,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 //UDP发送
                 UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
-                for(i = 15000; i > 0; i-- );
+                for(i = 20000; i > 0; i-- );
             }
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
