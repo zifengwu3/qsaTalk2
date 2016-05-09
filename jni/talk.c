@@ -196,7 +196,6 @@ void find_ip(const char * addr, int uFlag)
     }
 }
 
-#define _SEND_VIDEO_TEST 1
 void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
 
     int i, j;
@@ -259,63 +258,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         strcpy(RemoteHost, ip);
         LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
 
-#if _SEND_VIDEO_TEST
-#if 0
-        if (Status == CB_ST_TALKING) {
-
-            //单包长度
-            talkdata.PackLen = VIDEOPACKDATALEN;
-            //总包数
-            if ((length%talkdata.PackLen) == 0) {
-                TotalPackage = length/talkdata.PackLen;
-            } else {
-                TotalPackage = (length/talkdata.PackLen) + 1;
-            }
-            talkdata.TotalPackage = TotalPackage;
-
-            for (j=1; j<=TotalPackage; j++) {        
-                //包的顺序从大到小
-                if (j == TotalPackage) {
-                    talkdata.CurrPackage = j;      //当前包
-                    talkdata.Datalen = length - (j - 1)*talkdata.PackLen;     //数据长度
-                    memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-                    memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
-                            data + (j - 1)*talkdata.PackLen, (length - (j - 1)*talkdata.PackLen));
-
-                    //UDP发送
-                    UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                            mpeg4_out, (9 + sizeof(struct talkdata1) + (length - (j - 1)*talkdata.PackLen)));
-                } else {
-                    talkdata.CurrPackage = j;           //当前包
-                    talkdata.Datalen = talkdata.PackLen;       //数据长度
-                    memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-                    memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), 
-                            data + (j - 1)*talkdata.PackLen, talkdata.PackLen);
-
-                    //UDP发送
-                    UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                            mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
-                }
-                //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
-            }
-        } else if (Status == CB_ST_CALLING) {
-
-            //单包长度
-            talkdata.PackLen = length;
-            //总包数
-            talkdata.TotalPackage = 1;
-
-            talkdata.CurrPackage = 1;      //当前包
-            talkdata.Datalen = length;
-            memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-            memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), data, length);
-
-            //UDP发送
-            UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                    mpeg4_out, (9 + sizeof(struct talkdata1) + length));
-            //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
-        }
-#else 
         //单包长度
         talkdata.PackLen = VIDEOPACKDATALEN;
         //总包数
@@ -352,23 +294,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
         }
-#endif
-#else
-        //单包长度
-        talkdata.PackLen = length;
-        //总包数
-        talkdata.TotalPackage = 1;
-
-        talkdata.CurrPackage = 1;      //当前包
-        talkdata.Datalen = length;
-        memcpy(mpeg4_out + 9, &talkdata, sizeof(talkdata));
-        memcpy(mpeg4_out + 9 + sizeof(struct talkdata1), data, length);
-
-        //UDP发送
-        UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
-                mpeg4_out, (9 + sizeof(struct talkdata1) + length));
-        //LOGD("%s:%d send_buf[61] = %d\n", __FUNCTION__, __LINE__, mpeg4_out[61]);
-#endif
     }
 }
 
@@ -385,6 +310,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     struct timeval tv;
     uint32_t nowtime;
     int Status;
+    int i;
 
     Status = get_device_status();
     if (Status > 0) {
@@ -450,7 +376,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-
+        for(i = 15000; i > 0; i-- );
     }
 }
 
