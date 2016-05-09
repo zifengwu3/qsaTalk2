@@ -256,10 +256,14 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 remote_info.DenIP[2], remote_info.DenIP[3]);
                 */
         strcpy(RemoteHost, ip);
-        LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
+        //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
 
         //单包长度
-        talkdata.PackLen = VIDEOPACKDATALEN;
+        if (Status == CB_ST_TALKING) {
+            talkdata.PackLen = (VIDEOPACKDATALEN * 4);
+        } else {
+            talkdata.PackLen = VIDEOPACKDATALEN;
+        }
         //总包数
         if ((length%talkdata.PackLen) == 0) {
             TotalPackage = length/talkdata.PackLen;
@@ -373,10 +377,10 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
                 remote_info.DenIP[2], remote_info.DenIP[3]);
                 */
         strcpy(RemoteHost, ip);
-        LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
+        //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-        for(i = 15000; i > 0; i-- );
+        for(i = 10000; i > 0; i-- );
     }
 }
 
