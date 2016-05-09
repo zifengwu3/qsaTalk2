@@ -33,7 +33,7 @@
 
 #define NSMULTIADDR  "238.9.9.1"//"192.168.10.255"  //NS组播地址
 #define LFTMULTIADDR  "238.9.9.2"//"192.168.10.255"  //NS组播地址
-#define MULTITTL   10      //组播TTL值
+#define MULTITTL   7      //组播TTL值
 
 #define AUDIOPACKDATALEN  1200   //数据包大小
 #define VIDEOPACKDATALEN  1350   //数据包大小
