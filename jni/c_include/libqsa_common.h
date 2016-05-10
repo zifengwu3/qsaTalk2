@@ -105,6 +105,8 @@ struct Local1 {
     int TalkTimeOut; //通话最长时间
 
     pthread_mutex_t udp_lock;//互斥锁
+    pthread_mutex_t udp_audio_send_lock;//互斥锁
+    pthread_mutex_t udp_video_send_lock;//互斥锁
 };
 
 //UDP主动命令数据发送结构

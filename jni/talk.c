@@ -135,7 +135,7 @@ void stop_talk(void)
         pthread_mutex_unlock(&Local.udp_lock);
     }
 }
-//-----------------------------------------------------------------------
+
 //呼叫   0 住户 1  中心  
 void find_ip(const char * addr, int uFlag) 
 {
@@ -219,6 +219,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     Status = get_device_status();
 
     if (Status > 0) {
+
+        pthread_mutex_lock(&Local.udp_video_send_lock);
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
         //命令
@@ -295,13 +297,19 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
             if (talkdata.DataType == 2) {
-                for(i = 120000; i > 0; i-- );
+                if (talkdata.Frameno < 2) {
+                    for(i = 120000; i > 0; i-- );
+                } else {
+                    for(i = 80000; i > 0; i-- );
+                }
             } else {
                 for(i = 30000; i > 0; i-- );
             }
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
         }
+
+        pthread_mutex_unlock(&Local.udp_video_send_lock);
     }
 }
 
@@ -322,6 +330,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     Status = get_device_status();
     if (Status > 0) {
 
+        pthread_mutex_lock(&Local.udp_audio_send_lock);
 #if _REC_FILE
         LOGD("%s: audioFp2: Length = %d \n", __FUNCTION__, length);
         if (audioFp2 == NULL) {
@@ -331,6 +340,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
             fwrite(data, 1, length, audioFp2);
         }   
 #endif
+
 
         //头部
         memcpy(adpcm_out, UdpPackageHead, 6);
@@ -383,7 +393,9 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-        for(i = 15000; i > 0; i-- );
+        for(i = 25000; i > 0; i-- );
+
+        pthread_mutex_unlock(&Local.udp_audio_send_lock);
     }
 }
 

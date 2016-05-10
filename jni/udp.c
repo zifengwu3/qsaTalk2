@@ -308,6 +308,9 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 void CreateUdpVideoRcvThread(void) 
 {
 	int ret;
+
+	pthread_mutex_init(&Local.udp_video_send_lock, NULL);
+	pthread_mutex_init(&Local.udp_audio_send_lock, NULL);
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
 	pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED);
