@@ -295,9 +295,9 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
             if (talkdata.DataType == 2) {
-                for(i = 100000; i > 0; i-- );
+                for(i = 120000; i > 0; i-- );
             } else {
-                for(i = 25000; i > 0; i-- );
+                for(i = 30000; i > 0; i-- );
             }
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
@@ -383,7 +383,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-        for(i = 25000; i > 0; i-- );
+        for(i = 15000; i > 0; i-- );
     }
 }
 
