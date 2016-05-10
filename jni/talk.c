@@ -297,7 +297,12 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
 
-            for(i = 150000; i > 0; i-- );
+            if (talkdata.DataType == 2) {
+                for(i = 200000; i > 0; i-- );
+            } else {
+                for(i = 100000; i > 0; i-- );
+            }
+
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
         }
