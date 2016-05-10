@@ -299,7 +299,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                for(i = 300000; i > 0; i-- );
+                for(i = 500000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }
