@@ -221,6 +221,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     if (Status > 0) {
 
         pthread_mutex_lock(&Local.udp_video_send_lock);
+
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
         //命令
@@ -298,7 +299,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                for(i = 200000; i > 0; i-- );
+                for(i = 300000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }
