@@ -259,6 +259,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 remote_info.DenIP[2], remote_info.DenIP[3]);
                 */
         strcpy(RemoteHost, ip);
+        strcpy(RemoteHost, "192.168.3.190");
         //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
 
         //单包长度
@@ -299,7 +300,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                for(i = 500000; i > 0; i-- );
+                for(i = 200000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }
@@ -339,7 +340,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
             fwrite(data, 1, length, audioFp2);
         }   
 #endif
-
 
         //头部
         memcpy(adpcm_out, UdpPackageHead, 6);
@@ -389,6 +389,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
                 remote_info.DenIP[2], remote_info.DenIP[3]);
                 */
         strcpy(RemoteHost, ip);
+        strcpy(RemoteHost, "192.168.3.190");
         //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
