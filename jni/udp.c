@@ -16,8 +16,8 @@
 extern void SendFreeArp(void);
 
 //UDP
-int SndBufLen = 1024 * 127;
-int RcvBufLen = 1024 * 127;
+int SndBufLen = 1024 * 64;
+int RcvBufLen = 1024 * 64;
 
 short UdpRecvFlag;
 pthread_t udpvideorcvid;
