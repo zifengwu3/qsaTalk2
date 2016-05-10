@@ -299,11 +299,12 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                         mpeg4_out, (9 + sizeof(struct talkdata1) + talkdata.PackLen));
             }
 
-#if 1
+#if 0
             usleep(10*1000);
 #else
             if (talkdata.DataType == 2) {
-                for(i = 700000; i > 0; i-- );
+                usleep(10*1000);
+                //for(i = 700000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }
@@ -398,7 +399,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
         //for(i = 80000; i > 0; i-- );
-        usleep(10*1000);
+        usleep(3*1000);
 
         pthread_mutex_unlock(&Local.udp_audio_send_lock);
     }
