@@ -220,8 +220,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 
     if (Status > 0) {
 
-        //pthread_mutex_lock(&Local.udp_video_send_lock);
-        pthread_mutex_lock(&Local.udp_lock);
+        pthread_mutex_lock(&Local.udp_video_send_lock);
 
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
@@ -301,7 +300,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                usleep(10*1000);
+                usleep(5*1000);
+                //for(i = 700000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }
@@ -310,8 +310,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
         }
 
-        //pthread_mutex_unlock(&Local.udp_video_send_lock);
-        pthread_mutex_unlock(&Local.udp_lock);
+        pthread_mutex_unlock(&Local.udp_video_send_lock);
     }
 }
 
