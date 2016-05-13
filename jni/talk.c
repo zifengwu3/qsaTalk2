@@ -301,14 +301,16 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                usleep(5*1000);
-                //for(i = 700000; i > 0; i-- );
+                //usleep(5*1000);
+                for(i = 500000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }
 
+#if 0
             LOGD("%s:%d send_buf[61] = %d, length = %d, PackLen = %d, TotalPackage = %d, FrameLen = %d\n", 
                     __FUNCTION__, __LINE__, mpeg4_out[61], length, talkdata.PackLen, talkdata.TotalPackage, talkdata.Framelen);
+#endif
         }
 
         pthread_mutex_unlock(&Local.udp_video_send_lock);
