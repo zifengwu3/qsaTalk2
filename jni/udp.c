@@ -128,6 +128,7 @@ void multi_send_thread_func(void) {
     LOGD("create multi send thread \n");
 
 	while (multi_send_flag == 1) {
+
 		sem_wait(&multi_send_sem);
 		HaveDataSend = 1;
         while (HaveDataSend) {
@@ -143,7 +144,7 @@ void multi_send_thread_func(void) {
                                         Multi_Udp_Buff[i].nlength);
                             }
                         }
-                        Multi_Udp_Buff[i].SendDelayTime += 100;
+                        Multi_Udp_Buff[i].SendDelayTime += 10;
                         if (Multi_Udp_Buff[i].SendDelayTime
                                 >= Multi_Udp_Buff[i].DelayTime) {
                             Multi_Udp_Buff[i].SendDelayTime = 0;
@@ -196,7 +197,6 @@ void multi_send_thread_func(void) {
                     break;
                 }
             }
-            usleep(50*1000);
         }
 	}
 }
