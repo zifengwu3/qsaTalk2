@@ -300,7 +300,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                usleep(7*1000);
+                usleep(5*1000);
                 //for(i = 700000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
