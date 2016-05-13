@@ -27,11 +27,13 @@ void start_call(const char * ip, const char * addr, int uFlag)
 
     LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
     if ( 2 == uFlag ) {
-
+        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
         Status = get_device_status();
+        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
         if (Status == CB_ST_NULL) {
-
+            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
             pthread_mutex_lock(&Local.udp_lock);
+            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
             /* get remote device information */
             Ip_Int = inet_addr(ip);
 
@@ -90,12 +92,16 @@ void start_call(const char * ip, const char * addr, int uFlag)
                     break;
                 }
             }
+            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
             pthread_mutex_unlock(&Local.udp_lock);
+            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
         } else {
+            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
             LOGD("I'm is Busy!\n");
         }
         LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
     }
+    LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
 }
 
 void stop_talk(void) 
