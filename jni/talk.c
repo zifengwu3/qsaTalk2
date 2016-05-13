@@ -25,7 +25,7 @@ void start_call(const char * ip, const char * addr, int uFlag)
     //j = remote_info.DenNum;
     j = 0;
 
-    LOGD("[%d]<%s>: ip = %s, addr = %s\n", __FUNCTION__, ip, addr);
+    LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
     if ( 2 == uFlag ) {
 
         Status = get_device_status();
@@ -94,7 +94,7 @@ void start_call(const char * ip, const char * addr, int uFlag)
         } else {
             LOGD("I'm is Busy!\n");
         }
-        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __FUNCTION__, ip, addr);
+        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
     }
 }
 
