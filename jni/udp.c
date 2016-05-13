@@ -144,7 +144,7 @@ void multi_send_thread_func(void) {
                                         Multi_Udp_Buff[i].nlength);
                             }
                         }
-                        Multi_Udp_Buff[i].SendDelayTime += 10;
+                        Multi_Udp_Buff[i].SendDelayTime += 100;
                         if (Multi_Udp_Buff[i].SendDelayTime
                                 >= Multi_Udp_Buff[i].DelayTime) {
                             Multi_Udp_Buff[i].SendDelayTime = 0;
@@ -197,6 +197,7 @@ void multi_send_thread_func(void) {
                     break;
                 }
             }
+            usleep(40*1000);
         }
 	}
 }

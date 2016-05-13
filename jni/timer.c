@@ -73,7 +73,6 @@ void timer_thread_task(void) {
 		}
 		usleep((TIMERTIME-10)*1000);
 	}
-
 }
 
 //在线检查

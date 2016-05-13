@@ -50,7 +50,7 @@ void start_call(const char * ip, const char * addr, int uFlag)
 
             for (i = 0; i < UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 3;
+                    Multi_Udp_Buff[i].SendNum = 5;
                     Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                     Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
 
@@ -106,7 +106,8 @@ void stop_talk(void)
                 Multi_Udp_Buff[i].buf[6] = VIDEOTALK;
                 Multi_Udp_Buff[i].buf[7] = ASK;
                 Multi_Udp_Buff[i].buf[8] = CALLEND;
-                Multi_Udp_Buff[i].SendNum = 0;
+
+                Multi_Udp_Buff[i].SendNum = 5;
                 Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                 Multi_Udp_Buff[i].RemotePort = RemoteVideoPort;
                 sprintf(Multi_Udp_Buff[i].RemoteHost, "%d.%d.%d.%d",
@@ -156,7 +157,7 @@ void find_ip(const char * addr, int uFlag)
             //查找可用发送缓冲并填空
             for (i=0; i<UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 0) {
-                    Multi_Udp_Buff[i].SendNum = 0;
+                    Multi_Udp_Buff[i].SendNum = 5;
                     Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
                     Multi_Udp_Buff[i].CurrOrder = VIDEOTALK;
                     strcpy(Multi_Udp_Buff[i].RemoteHost, NSMULTIADDR);
@@ -394,8 +395,8 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-        //for(i = 80000; i > 0; i-- );
-        usleep(3*1000);
+        for(i = 80000; i > 0; i-- );
+        //usleep(3*1000);
 
         pthread_mutex_unlock(&Local.udp_audio_send_lock);
     }
