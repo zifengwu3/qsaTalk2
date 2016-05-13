@@ -25,10 +25,10 @@ void start_call(const char * ip, const char * addr, int uFlag)
     //j = remote_info.DenNum;
     j = 0;
 
+    LOGD("[%d]<%s>: ip = %s, addr = %s\n", __FUNCTION__, ip, addr);
     if ( 2 == uFlag ) {
 
         Status = get_device_status();
-
         if (Status == CB_ST_NULL) {
 
             pthread_mutex_lock(&Local.udp_lock);
@@ -94,6 +94,7 @@ void start_call(const char * ip, const char * addr, int uFlag)
         } else {
             LOGD("I'm is Busy!\n");
         }
+        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __FUNCTION__, ip, addr);
     }
 }
 
