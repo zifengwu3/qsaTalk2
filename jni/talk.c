@@ -339,6 +339,9 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         }
 
         pthread_mutex_unlock(&Local.udp_video_send_lock);
+    } else {
+        Status = get_device_status();
+        cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
     }
 }
 
@@ -426,6 +429,9 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         //usleep(3*1000);
 
         pthread_mutex_unlock(&Local.udp_audio_send_lock);
+    } else {
+        Status = get_device_status();
+        cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
     }
 }
 
