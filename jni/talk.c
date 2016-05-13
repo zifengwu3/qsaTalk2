@@ -7,6 +7,7 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
+#define _CROSS_SEND_FLAG 0
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
 
@@ -77,7 +78,15 @@ void start_call(const char * ip, const char * addr, int uFlag)
                     Multi_Udp_Buff[i].SendDelayTime = 0;
                     Multi_Udp_Buff[i].isValid = 1;
                     LOGD("<%s>   开始呼叫命令\n", __FUNCTION__);
+#if _CROSS_SEND_FLAG
                     sem_post(&multi_send_sem);
+#else
+                    UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
+                            Multi_Udp_Buff[i].RemoteHost,
+                            Multi_Udp_Buff[i].RemotePort,
+                            Multi_Udp_Buff[i].buf,
+                            Multi_Udp_Buff[i].nlength);
+#endif
                     break;
                 }
             }
@@ -128,7 +137,15 @@ void stop_talk(void)
                 Multi_Udp_Buff[i].isValid = 1;
 
                 LOGD("<%s>   通知对方关闭对讲呼叫 ip = %s\n", __FUNCTION__, Multi_Udp_Buff[i].RemoteHost);
+#if _CROSS_SEND_FLAG
                 sem_post(&multi_send_sem);
+#else
+                UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
+                        Multi_Udp_Buff[i].RemoteHost,
+                        Multi_Udp_Buff[i].RemotePort,
+                        Multi_Udp_Buff[i].buf,
+                        Multi_Udp_Buff[i].nlength);
+#endif
                 break;
             }
         }
@@ -183,7 +200,15 @@ void find_ip(const char * addr, int uFlag)
                     memcpy(remote_info.Addr[0], addr, 20);
                     memcpy(remote_info.IP[0], null_ip, 4);
                     LOGD("<%s>   正在查找地址 : %s\n", __FUNCTION__, addr);
+#if _CROSS_SEND_FLAG
                     sem_post(&multi_send_sem);
+#else
+                    UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
+                            Multi_Udp_Buff[i].RemoteHost,
+                            Multi_Udp_Buff[i].RemotePort,
+                            Multi_Udp_Buff[i].buf,
+                            Multi_Udp_Buff[i].nlength);
+#endif
                     break;
                 }
             }
@@ -301,8 +326,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
             }
 
             if (talkdata.DataType == 2) {
-                //usleep(5*1000);
-                for(i = 500000; i > 0; i-- );
+                usleep(5*1000);
+                //for(i = 500000; i > 0; i-- );
             } else {
                 for(i = 100000; i > 0; i-- );
             }

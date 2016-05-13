@@ -75,7 +75,7 @@ int init_udp_task(void) {
     }
 
     // Send
-    Init_Udp_Send_Task();
+    //Init_Udp_Send_Task();
 
     // Add Multiaddr
 	AddMultiGroup(m_VideoSocket, NSMULTIADDR);  
@@ -135,15 +135,14 @@ void multi_send_thread_func(void) {
             for (i = 0; i < UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 1) {
                     if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
-                        if (Multi_Udp_Buff[i].isValid == 1) {
-                            if (Multi_Udp_Buff[i].SendDelayTime == 0) {
-                                UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
-                                        Multi_Udp_Buff[i].RemoteHost,
-                                        Multi_Udp_Buff[i].RemotePort,
-                                        Multi_Udp_Buff[i].buf,
-                                        Multi_Udp_Buff[i].nlength);
-                            }
+                        if (Multi_Udp_Buff[i].SendDelayTime == 0) {
+                            UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
+                                    Multi_Udp_Buff[i].RemoteHost,
+                                    Multi_Udp_Buff[i].RemotePort,
+                                    Multi_Udp_Buff[i].buf,
+                                    Multi_Udp_Buff[i].nlength);
                         }
+
                         Multi_Udp_Buff[i].SendDelayTime += 100;
                         if (Multi_Udp_Buff[i].SendDelayTime
                                 >= Multi_Udp_Buff[i].DelayTime) {
@@ -197,7 +196,7 @@ void multi_send_thread_func(void) {
                     break;
                 }
             }
-            usleep(40*1000);
+            usleep(100*1000);
         }
 	}
 }
@@ -295,7 +294,6 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 
 	nSize = sendto(m_Socket, buf, nlength, 0, (struct sockaddr*) &To,
 			sizeof(struct sockaddr));
-
 #if 0
     if ((buf[8] != CALLUP) && (buf[8] != CALLDOWN)) {
         LOGD("&&& SEND VIDEO &&& nSize = %d, nlength = %d, RemoteHost = %s, RemotePort = %d, buf[8] = %02X\n",
