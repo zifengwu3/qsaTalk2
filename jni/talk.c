@@ -10,6 +10,8 @@
 #define _CROSS_SEND_FLAG 0
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
+extern void pthread_lock(const char * function_name, int line);
+extern void pthread_unlock(const char * function_name, int line);
 
 void qsa_send_audio(const char * data, int length, int frame_num, const char * ip);
 void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip);
@@ -25,15 +27,10 @@ void start_call(const char * ip, const char * addr, int uFlag)
     //j = remote_info.DenNum;
     j = 0;
 
-    LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
     if ( 2 == uFlag ) {
-        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
         Status = get_device_status();
-        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
         if (Status == CB_ST_NULL) {
-            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
-            pthread_mutex_lock(&Local.udp_lock);
-            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
+            pthread_lock(__FUNCTION__, __LINE__);
             /* get remote device information */
             Ip_Int = inet_addr(ip);
 
@@ -92,16 +89,11 @@ void start_call(const char * ip, const char * addr, int uFlag)
                     break;
                 }
             }
-            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
-            pthread_mutex_unlock(&Local.udp_lock);
-            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
+            pthread_unlock(__FUNCTION__, __LINE__);
         } else {
-            LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
             LOGD("I'm is Busy!\n");
         }
-        LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
     }
-    LOGD("[%d]<%s>: ip = %s, addr = %s\n", __LINE__, __FUNCTION__, ip, addr);
 }
 
 void stop_talk(void) 
@@ -114,7 +106,7 @@ void stop_talk(void)
 
     if (Status > CB_ST_NULL) {
 
-        pthread_mutex_lock(&Local.udp_lock);
+        pthread_lock(__FUNCTION__, __LINE__);
 
         for (i = 0; i < UDPSENDMAX; i++) {
             if (Multi_Udp_Buff[i].isValid == 0) {
@@ -157,7 +149,7 @@ void stop_talk(void)
             }
         }
 
-        pthread_mutex_unlock(&Local.udp_lock);
+        pthread_unlock(__FUNCTION__, __LINE__);
     }
 }
 
@@ -173,7 +165,7 @@ void find_ip(const char * addr, int uFlag)
         Status = get_device_status();
         if ((Status == CB_ST_NULL) && (uFlag == 0)) {
 
-            pthread_mutex_lock(&Local.udp_lock);
+            pthread_lock(__FUNCTION__, __LINE__);
 
             memcpy(remoteAddr, local_config.address, 20);
             remoteAddr[0] = 'S';
@@ -220,7 +212,7 @@ void find_ip(const char * addr, int uFlag)
                 }
             }
 
-            pthread_mutex_unlock(&Local.udp_lock);
+            pthread_unlock(__FUNCTION__, __LINE__);
         } else {
             LOGD("I'm BUSY\n");
         }
@@ -334,7 +326,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 
             if (talkdata.DataType == 2) {
                 if (talkdata.Frameno == 1) {
-                    for(i = 200000; i > 0; i--);
+                    //for(i = 200000; i > 0; i--);
+                    usleep(5*1000);
                 }
             }
 
@@ -431,8 +424,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         //LOGD("RemoteHost = %s, ip = %s\n", RemoteHost, ip);
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
-        for(i = 80000; i > 0; i-- );
-        //usleep(3*1000);
 
         pthread_mutex_unlock(&Local.udp_audio_send_lock);
     } else {

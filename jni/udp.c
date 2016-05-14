@@ -57,6 +57,8 @@ void Recv_Open_Lock_Func(unsigned char *recv_buf);
 int init_udp_task(void);
 int Init_Udp_Send_Task(void);
 int Uninit_Udp_Send_Task(void);
+void pthread_lock(const char * function_name, int line);
+void pthread_unlock(const char * function_name, int line);
 //---------------------------------------------------------------------------
 int init_udp_task(void) {
     // Recvice
@@ -152,7 +154,7 @@ void multi_send_thread_func(void) {
                     }
 
                     if (Multi_Udp_Buff[i].SendNum >= MAXSENDNUM) {
-                        pthread_mutex_lock (&Local.udp_lock);
+                        pthread_lock(__FUNCTION__, __LINE__);
                         switch (Multi_Udp_Buff[i].buf[6]) {
                             case VIDEOTALK:
                                 switch (Multi_Udp_Buff[i].buf[8]) {
@@ -184,7 +186,7 @@ void multi_send_thread_func(void) {
 #endif
                                 break;
                         }
-                        pthread_mutex_unlock (&Local.udp_lock);
+                        pthread_unlock(__FUNCTION__, __LINE__);
                     }
                 }
             }
@@ -218,7 +220,7 @@ int InitUdpSocket(short lPort) {
 	int ttl;
     int iLen;
 
-	if ((m_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+	if ((m_Socket = socket(AF_INET, SOCK_DGRAM, 0)) == (-1)) {
 		LOGD("Create socket error\r\n");
 		return _FALSE;
 	} else {
@@ -581,7 +583,7 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
     LOGD("\n%s \n", __FUNCTION__);
 
 	//锁定互斥锁
-	pthread_mutex_lock (&Local.udp_lock);
+    pthread_lock(__FUNCTION__, __LINE__);
 
     for(i=0; i<UDPSENDMAX; i++) {
         if(Multi_Udp_Buff[i].isValid == 1) {
@@ -615,7 +617,7 @@ void Recv_NS_Reply_Func(unsigned char *recv_buf, char *cFromIP, int m_Socket)
     }
 
 	//打开互斥锁
-	pthread_mutex_unlock (&Local.udp_lock);
+    pthread_unlock(__FUNCTION__, __LINE__);
 
 	if (isAddrOK == 1) {
         //收到正确的解析回应
@@ -663,7 +665,7 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 	int i;
     int Status;
 
-	pthread_mutex_lock(&Local.udp_lock);
+    pthread_lock(__FUNCTION__, __LINE__);
 	if (recv_buf[7] == ASK) {
 		for (i = 0; i < UDPSENDMAX; i++) {
 			if (Multi_Udp_Buff[i].isValid == 1) {
@@ -689,7 +691,7 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 			}
 		}
 	}
-	pthread_mutex_unlock(&Local.udp_lock);
+    pthread_unlock(__FUNCTION__, __LINE__);
 }
 
 //-----------------------------------------------------------------------
@@ -701,7 +703,7 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 	sprintf(RemoteIP, "%d.%d.%d.%d", recv_buf[53], recv_buf[54], recv_buf[55],
 			recv_buf[56]);
 
-	pthread_mutex_lock(&Local.udp_lock);
+    pthread_lock(__FUNCTION__, __LINE__);
 	if (recv_buf[7] == ASK) {
 		for (i = 0; i < UDPSENDMAX; i++) {
 			if (Multi_Udp_Buff[i].isValid == 1) {
@@ -737,7 +739,7 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 			}
 		}
 	}
-	pthread_mutex_unlock(&Local.udp_lock);
+    pthread_unlock(__FUNCTION__, __LINE__);
 }
 //-----------------------------------------------------------------------
 void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {
@@ -843,7 +845,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 		Local.OnlineFlag = 0;
 		Local.CallConfirmFlag = 0;
 
-		pthread_mutex_lock(&Local.udp_lock);
+        pthread_lock(__FUNCTION__, __LINE__);
 		if (recv_buf[7] == REPLY) {
 			for (i = 0; i < UDPSENDMAX; i++) {
 				if (Multi_Udp_Buff[i].isValid == 1) {
@@ -871,7 +873,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 				}
 			}
 		}
-		pthread_mutex_unlock(&Local.udp_lock);
+        pthread_unlock(__FUNCTION__, __LINE__);
 	}
 }
 //-----------------------------------------------------------------------
@@ -935,7 +937,7 @@ void Recv_Open_Lock_Func(unsigned char *recv_buf)
 	int i;
 
 	//锁定互斥锁
-	pthread_mutex_lock (&Local.udp_lock);
+    pthread_lock(__FUNCTION__, __LINE__);
 
     //本机主动
     if(recv_buf[7] == REPLY) {
@@ -959,7 +961,7 @@ void Recv_Open_Lock_Func(unsigned char *recv_buf)
     }
 
 	//打开互斥锁
-	pthread_mutex_unlock (&Local.udp_lock);
+    pthread_unlock(__FUNCTION__, __LINE__);
 }
 
 void ForceIFrame_Func(void) //强制I帧
@@ -971,7 +973,7 @@ void ForceIFrame_Func(void) //强制I帧
 	for (i = 0; i < UDPSENDMAX; i++) {
 		if (Multi_Udp_Buff[i].isValid == 0) {
 			//锁定互斥锁
-			pthread_mutex_lock(&Local.udp_lock);
+            pthread_lock(__FUNCTION__, __LINE__);
 			//只发送一次
 			Multi_Udp_Buff[i].SendNum = 5;
 			Multi_Udp_Buff[i].m_Socket = m_VideoSocket;
@@ -1002,8 +1004,8 @@ void ForceIFrame_Func(void) //强制I帧
 			Multi_Udp_Buff[i].isValid = 1;
 
 			sem_post(&multi_send_sem);
-            //打开互斥锁
-            pthread_mutex_unlock(&Local.udp_lock);
+
+            pthread_unlock(__FUNCTION__, __LINE__);
 			break;
         }
     }
@@ -1027,3 +1029,15 @@ void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {
 	}
 }
 
+
+void pthread_lock(const char * function_name, int line)
+{
+    LOGD("function = %s, line = %d\n", function_name, line);
+    pthread_mutex_lock(&Local.udp_lock);
+}
+
+void pthread_unlock(const char * function_name, int line)
+{
+    LOGD("function = %s, line = %d\n", function_name, line);
+    pthread_mutex_unlock(&Local.udp_lock);
+}
