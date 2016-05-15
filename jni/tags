@@ -572,6 +572,8 @@ padding	TestDemo/h264.h	/^    unsigned char padding:1;        \/**\/\/* expect 0
 payload	TestDemo/h264.h	/^    unsigned char payload:7;        \/**\/\/* RTP_PAYLOAD_RTSP *\/$/;"	m	struct:__anon1
 port	c_include/libqsa_callback.h	/^    int port;		             \/\/发送信息的设备端口号，由默认值或上位服务器提供$/;"	m	struct:_send_info
 port	include/libqsa_callback.h	/^    int port;		             \/\/发送信息的设备端口号，由默认值或上位服务器提供$/;"	m	struct:_send_info
+pthread_lock	udp.c	/^void pthread_lock(const char * function_name, int line)$/;"	f
+pthread_unlock	udp.c	/^void pthread_unlock(const char * function_name, int line)$/;"	f
 qsa_audioFp4	udp.c	/^static FILE* qsa_audioFp4 = NULL;$/;"	v	file:
 qsa_send_audio	talk.c	/^void qsa_send_audio(const char * data, int length, int frame_num, const char * ip) {$/;"	f
 qsa_send_video	talk.c	/^void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {$/;"	f

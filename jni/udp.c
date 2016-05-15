@@ -855,17 +855,14 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 									|| (Multi_Udp_Buff[i].buf[6]
 											== VIDEOTALKTRANS)) {
 								if (Multi_Udp_Buff[i].buf[7] == ASK) {
-									if (Multi_Udp_Buff[i].buf[8] == CALLEND) {
-										if (strcmp(Multi_Udp_Buff[i].RemoteHost,
-												cFromIP) == 0) {
-											Multi_Udp_Buff[i].isValid = 0;
+                                    if (Multi_Udp_Buff[i].buf[8] == CALLEND) {
+                                        Multi_Udp_Buff[i].isValid = 0;
 
-											TalkEnd_ClearStatus();
+                                        TalkEnd_ClearStatus();
 
-                                            LOGD("other reply talk end\n");
-											break;
-										}
-									}
+                                        LOGD("other reply talk end\n");
+                                        break;
+                                    }
 								}
 							}
 						}
@@ -881,17 +878,19 @@ void TalkEnd_ClearStatus(void) {
 
     int Status;
 	DropMultiGroup(m_VideoSocket, NULL);
-	switch (remote_info.Addr[0][0]) {
-	case 'Z':
-	case 'W':
-		remote_info.Addr[0][5] = '\0';
-		break;
-	case 'M':
-		remote_info.Addr[0][8] = '\0';
-		break;
-	case 'S':
-		remote_info.Addr[0][12] = '\0';
-		break;
+    switch (remote_info.Addr[0][0]) {
+        case 'Z':
+        case 'W':
+            remote_info.Addr[0][5] = '\0';
+            break;
+        case 'M':
+            remote_info.Addr[0][8] = '\0';
+            break;
+        case 'S':
+            remote_info.Addr[0][12] = '\0';
+            break;
+        default:
+            break;
 	}
 
     Status = CB_ST_NULL;
@@ -1032,12 +1031,12 @@ void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {
 
 void pthread_lock(const char * function_name, int line)
 {
-    LOGD("function = %s, line = %d\n", function_name, line);
+    LOGD("lock function = %s, line = %d\n", function_name, line);
     pthread_mutex_lock(&Local.udp_lock);
 }
 
 void pthread_unlock(const char * function_name, int line)
 {
-    LOGD("function = %s, line = %d\n", function_name, line);
+    LOGD("unlock function = %s, line = %d\n", function_name, line);
     pthread_mutex_unlock(&Local.udp_lock);
 }
