@@ -245,7 +245,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 
     if (Status > 0) {
 
-        pthread_mutex_lock(&Local.udp_video_send_lock);
+        //pthread_mutex_lock(&Local.udp_video_send_lock);
 
         //头部
         memcpy(mpeg4_out, UdpPackageHead, 6);
@@ -337,7 +337,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
 #endif
         }
 
-        pthread_mutex_unlock(&Local.udp_video_send_lock);
+        //pthread_mutex_unlock(&Local.udp_video_send_lock);
     } else {
         Status = get_device_status();
         cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
@@ -361,7 +361,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     Status = get_device_status();
     if (Status > 0) {
 
-        pthread_mutex_lock(&Local.udp_audio_send_lock);
+        //pthread_mutex_lock(&Local.udp_audio_send_lock);
 #if _REC_FILE
         LOGD("%s: audioFp2: Length = %d \n", __FUNCTION__, length);
         if (audioFp2 == NULL) {
@@ -425,7 +425,7 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
         UdpSendBuff(m_VideoSocket, RemoteHost, RemoteVideoPort, 
                 adpcm_out, 9 + sizeof(struct talkdata1) + length);
 
-        pthread_mutex_unlock(&Local.udp_audio_send_lock);
+        //pthread_mutex_unlock(&Local.udp_audio_send_lock);
     } else {
         Status = get_device_status();
         cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
