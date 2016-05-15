@@ -845,7 +845,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 		Local.OnlineFlag = 0;
 		Local.CallConfirmFlag = 0;
 
-        pthread_lock(__FUNCTION__, __LINE__);
+        //pthread_lock(__FUNCTION__, __LINE__);
 		if (recv_buf[7] == REPLY) {
 			for (i = 0; i < UDPSENDMAX; i++) {
 				if (Multi_Udp_Buff[i].isValid == 1) {
@@ -870,7 +870,7 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 				}
 			}
 		}
-        pthread_unlock(__FUNCTION__, __LINE__);
+        //pthread_unlock(__FUNCTION__, __LINE__);
 	}
 }
 //-----------------------------------------------------------------------
