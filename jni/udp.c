@@ -665,6 +665,11 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 	int i;
     int Status;
 
+    Status = get_device_status();
+    if (Status == CB_ST_NULL) {
+        return;
+    }
+
     pthread_lock(__FUNCTION__, __LINE__);
 	if (recv_buf[7] == ASK) {
 		for (i = 0; i < UDPSENDMAX; i++) {
@@ -700,6 +705,11 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 	char RemoteIP[20];
     int Status;
     int is_opt_ok = 0;
+
+    Status = get_device_status();
+    if (Status == CB_ST_NULL) {
+        return;
+    }
 
 	sprintf(RemoteIP, "%d.%d.%d.%d", recv_buf[53], recv_buf[54], recv_buf[55],
 			recv_buf[56]);
@@ -831,52 +841,54 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
     int Status = 0;
     Status = get_device_status();
 
-	if (((Status == CB_ST_CALLING) || (Status == CB_ST_TALKING)) && (recv_buf[7] == ASK)) {
-        Local.OnlineFlag = 0;
-        Local.CallConfirmFlag = 0;
+    if ((Status == CB_ST_CALLING) || (Status == CB_ST_TALKING)) {
+        if (recv_buf[7] == ASK) {
+            Local.OnlineFlag = 0;
+            Local.CallConfirmFlag = 0;
 
-        memcpy(send_b, recv_buf, 57);
-        send_b[7] = REPLY;
-        sendlength = 57;
+            memcpy(send_b, recv_buf, 57);
+            send_b[7] = REPLY;
+            sendlength = 57;
 
-        RemotePort = RemoteVideoPort;
-        UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
+            RemotePort = RemoteVideoPort;
+            UdpSendBuff(m_VideoSocket, cFromIP, RemotePort, send_b, sendlength);
 
-		TalkEnd_ClearStatus();
+            TalkEnd_ClearStatus();
 #ifdef _DEBUG
-		LOGD("other end talk, %s\n", cFromIP);
+            LOGD("other end talk, %s\n", cFromIP);
 #endif
-	} else {
-		Local.OnlineFlag = 0;
-		Local.CallConfirmFlag = 0;
+        } else {
+            Local.OnlineFlag = 0;
+            Local.CallConfirmFlag = 0;
 
-        pthread_lock(__FUNCTION__, __LINE__);
-		if (recv_buf[7] == REPLY) {
-			for (i = 0; i < UDPSENDMAX; i++) {
-				if (Multi_Udp_Buff[i].isValid == 1) {
-					if (Multi_Udp_Buff[i].m_Socket == m_VideoSocket) {
-						if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
-							if ((Multi_Udp_Buff[i].buf[6] == VIDEOTALK)
-									|| (Multi_Udp_Buff[i].buf[6]
-											== VIDEOTALKTRANS)) {
-								if (Multi_Udp_Buff[i].buf[7] == ASK) {
-                                    if (Multi_Udp_Buff[i].buf[8] == CALLEND) {
-                                        Multi_Udp_Buff[i].isValid = 0;
+            pthread_lock(__FUNCTION__, __LINE__);
+            if (recv_buf[7] == REPLY) {
+                for (i = 0; i < UDPSENDMAX; i++) {
+                    if (Multi_Udp_Buff[i].isValid == 1) {
+                        if (Multi_Udp_Buff[i].m_Socket == m_VideoSocket) {
+                            if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
+                                if ((Multi_Udp_Buff[i].buf[6] == VIDEOTALK)
+                                        || (Multi_Udp_Buff[i].buf[6]
+                                            == VIDEOTALKTRANS)) {
+                                    if (Multi_Udp_Buff[i].buf[7] == ASK) {
+                                        if (Multi_Udp_Buff[i].buf[8] == CALLEND) {
+                                            Multi_Udp_Buff[i].isValid = 0;
 
-                                        TalkEnd_ClearStatus();
+                                            TalkEnd_ClearStatus();
 
-                                        LOGD("other reply talk end\n");
-                                        break;
+                                            LOGD("other reply talk end\n");
+                                            break;
+                                        }
                                     }
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-        pthread_unlock(__FUNCTION__, __LINE__);
-	}
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            pthread_unlock(__FUNCTION__, __LINE__);
+        }
+    }
 }
 //-----------------------------------------------------------------------
 void TalkEnd_ClearStatus(void) {
@@ -1021,6 +1033,11 @@ void RecvForceIFrame_Func(unsigned char *recv_buf, char *cFromIP) {
 	int sendlength;
 	int RemotePort;
     int Status = get_device_status();;
+
+    Status = get_device_status();
+    if (Status == CB_ST_NULL) {
+        return;
+    }
 
 	//本机被动
 	if (recv_buf[7] == ASK) {
