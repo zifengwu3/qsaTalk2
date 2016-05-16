@@ -34,7 +34,6 @@ int init_param_task(struct dev_config * _config) {
     init_local_param_task();
     init_default_remote_task();
 
-    InitArpSocket();
 
     //初始化回调函数
     set_cb_function_default(&cb_opt_function);
@@ -42,6 +41,8 @@ int init_param_task(struct dev_config * _config) {
     //初始化线程
 	Init_Timer();
 	init_udp_task();
+
+    InitArpSocket();
 
 	return (1);
 }

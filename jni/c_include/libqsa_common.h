@@ -16,7 +16,7 @@
 #define _MEPG2 0
 #define _H264  1
 
-#define DIRECTCALLTIME  600 
+#define DIRECTCALLTIME  200 
 
 #define INTRTIME 50       //线程50ms
 #define INTRPERSEC 20       //每秒20次线程

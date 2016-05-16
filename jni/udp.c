@@ -77,7 +77,7 @@ int init_udp_task(void) {
     }
 
     // Send
-    Init_Udp_Send_Task();
+    //Init_Udp_Send_Task();
 
     // Add Multiaddr
 	AddMultiGroup(m_VideoSocket, NSMULTIADDR);  
@@ -136,13 +136,15 @@ void multi_send_thread_func(void) {
         while (HaveDataSend) {
             for (i = 0; i < UDPSENDMAX; i++) {
                 if (Multi_Udp_Buff[i].isValid == 1) {
-                    if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
-                        if (Multi_Udp_Buff[i].SendDelayTime == 0) {
-                            UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
-                                    Multi_Udp_Buff[i].RemoteHost,
-                                    Multi_Udp_Buff[i].RemotePort,
-                                    Multi_Udp_Buff[i].buf,
-                                    Multi_Udp_Buff[i].nlength);
+                    if (Multi_Udp_Buff[i].SendNum  < MAXSENDNUM) {
+                        if (Multi_Udp_Buff[i].m_Socket != ARP_Socket) {
+                            if (Multi_Udp_Buff[i].SendDelayTime == 0) {
+                                UdpSendBuff(Multi_Udp_Buff[i].m_Socket,
+                                        Multi_Udp_Buff[i].RemoteHost,
+                                        Multi_Udp_Buff[i].RemotePort,
+                                        Multi_Udp_Buff[i].buf,
+                                        Multi_Udp_Buff[i].nlength);
+                            }
                         }
 
                         Multi_Udp_Buff[i].SendDelayTime += 100;
@@ -155,36 +157,44 @@ void multi_send_thread_func(void) {
 
                     if (Multi_Udp_Buff[i].SendNum >= MAXSENDNUM) {
                         pthread_lock(__FUNCTION__, __LINE__);
-                        switch (Multi_Udp_Buff[i].buf[6]) {
-                            case VIDEOTALK:
-                                switch (Multi_Udp_Buff[i].buf[8]) {
-                                    case CALL:
-                                        Multi_Udp_Buff[i].isValid = 0;
-                                        Status = get_device_status();
-                                        cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
-                                        LOGD("call fail, %d\n", Multi_Udp_Buff[i].buf[6]);
-                                        break;
-                                    case CALLEND:
-                                        Multi_Udp_Buff[i].isValid = 0;
-                                        Local.OnlineFlag = 0;
-                                        Local.CallConfirmFlag = 0;
-                                        TalkEnd_ClearStatus();
-                                        LOGD("multi_send_thread_func :: TalkEnd_ClearStatus()\n");
-                                        break;
-                                    default:
-                                        Multi_Udp_Buff[i].isValid = 0;
-                                        break;
-                                }
-                                break;
-                            default:
-                                Multi_Udp_Buff[i].isValid = 0;
-                                Status = get_device_status();
-                                cb_opt_function.cb_curr_opt(CB_ACK_TIMEOUT, Status);
+                        if(Multi_Udp_Buff[i].m_Socket == ARP_Socket)
+                        {
+                            Multi_Udp_Buff[i].isValid = 0;
 #ifdef _DEBUG
-                                LOGD("communicate fail 3, %d\n",
-                                        Multi_Udp_Buff[i].buf[6]);
+                            LOGD("Free ARP Send Success\n");
 #endif
-                                break;
+                        } else {
+                            switch (Multi_Udp_Buff[i].buf[6]) {
+                                case VIDEOTALK:
+                                    switch (Multi_Udp_Buff[i].buf[8]) {
+                                        case CALL:
+                                            Multi_Udp_Buff[i].isValid = 0;
+                                            Status = get_device_status();
+                                            cb_opt_function.cb_curr_opt(CB_CALL_FAIL, Status);
+                                            LOGD("call fail, %d\n", Multi_Udp_Buff[i].buf[6]);
+                                            break;
+                                        case CALLEND:
+                                            Multi_Udp_Buff[i].isValid = 0;
+                                            Local.OnlineFlag = 0;
+                                            Local.CallConfirmFlag = 0;
+                                            TalkEnd_ClearStatus();
+                                            LOGD("multi_send_thread_func :: TalkEnd_ClearStatus()\n");
+                                            break;
+                                        default:
+                                            Multi_Udp_Buff[i].isValid = 0;
+                                            break;
+                                    }
+                                    break;
+                                default:
+                                    Multi_Udp_Buff[i].isValid = 0;
+                                    Status = get_device_status();
+                                    cb_opt_function.cb_curr_opt(CB_ACK_TIMEOUT, Status);
+#ifdef _DEBUG
+                                    LOGD("communicate fail 3, %d\n",
+                                            Multi_Udp_Buff[i].buf[6]);
+#endif
+                                    break;
+                            }
                         }
                         pthread_unlock(__FUNCTION__, __LINE__);
                     }
@@ -198,7 +208,7 @@ void multi_send_thread_func(void) {
                     break;
                 }
             }
-            usleep(100*1000);
+            usleep(40*1000);
         }
 	}
 }
@@ -665,11 +675,6 @@ void Recv_Talk_Line_Use_Task(unsigned char *recv_buf, char *cFromIP) {
 	int i;
     int Status;
 
-    Status = get_device_status();
-    if (Status == CB_ST_NULL) {
-        return;
-    }
-
     pthread_lock(__FUNCTION__, __LINE__);
 	if (recv_buf[7] == ASK) {
 		for (i = 0; i < UDPSENDMAX; i++) {
@@ -704,12 +709,6 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 	int i;
 	char RemoteIP[20];
     int Status;
-    int is_opt_ok = 0;
-
-    Status = get_device_status();
-    if (Status == CB_ST_NULL) {
-        return;
-    }
 
 	sprintf(RemoteIP, "%d.%d.%d.%d", recv_buf[53], recv_buf[54], recv_buf[55],
 			recv_buf[56]);
@@ -722,20 +721,20 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 					if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
 						if (Multi_Udp_Buff[i].buf[6] == VIDEOTALK) {
 							if (Multi_Udp_Buff[i].buf[7] == ASK) {
-								if (Multi_Udp_Buff[i].buf[8] == CALL) {
-									if (strcmp(Multi_Udp_Buff[i].RemoteHost,
-											cFromIP) == 0) {
-										if (strcmp(Multi_Udp_Buff[i].RemoteIP,
-												RemoteIP) == 0) {
-											Multi_Udp_Buff[i].isValid = 0;
+                                if (Multi_Udp_Buff[i].buf[8] == CALL) {
+                                    Multi_Udp_Buff[i].isValid = 0;
 
-                                            Status = CB_ST_CALLING;
-                                            set_device_status(Status);
-                                            is_opt_ok = 1;
-											break;
-										}
-									}
-								}
+                                    Status = CB_ST_CALLING;
+                                    set_device_status(Status);
+                                    Local.CallConfirmFlag = 1;
+                                    Local.Timer1Num = 0;
+                                    Local.TimeOut = 0;
+                                    Local.OnlineNum = 0;
+                                    Local.OnlineFlag = 1;
+
+                                    cb_opt_function.cb_curr_opt(CB_CALL_OK, Status);
+                                    break;
+                                }
 							}
 						}
 					}
@@ -745,16 +744,6 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 	}
     pthread_unlock(__FUNCTION__, __LINE__);
 
-    if ( 1 == is_opt_ok) {
-
-        Local.CallConfirmFlag = 1;
-        Local.Timer1Num = 0;
-        Local.TimeOut = 0;
-        Local.OnlineNum = 0;
-        Local.OnlineFlag = 1;
-
-        cb_opt_function.cb_curr_opt(CB_CALL_OK, Status);
-    }
 }
 //-----------------------------------------------------------------------
 void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {

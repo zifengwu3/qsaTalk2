@@ -7,7 +7,7 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
-#define _CROSS_SEND_FLAG 1
+#define _CROSS_SEND_FLAG 0
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
 extern void pthread_lock(const char * function_name, int line);
