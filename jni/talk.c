@@ -328,7 +328,8 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 if (talkdata.Frameno == 1) {
                     usleep(10*1000);
                 } else {
-                    for (i = 50000; i > 0; i++);
+                    usleep(5*1000);
+                    //for (i = 50000; i > 0; i++);
                 }
             } else {
                 for (i = 20000; i > 0; i++);
