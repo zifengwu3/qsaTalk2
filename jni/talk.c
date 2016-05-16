@@ -7,7 +7,7 @@
 #define _LIB_QSA_DEF_H
 #include "libqsa_common.h"
 
-#define _CROSS_SEND_FLAG 0
+#define _CROSS_SEND_FLAG 1
 extern int UdpSendBuff(int m_Socket, char *RemoteHost, int RemotePort,
 		unsigned char *buf, int nlength);
 extern void pthread_lock(const char * function_name, int line);
@@ -328,7 +328,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                 if (talkdata.Frameno == 1) {
                     usleep(10*1000);
                 } else {
-                    usleep(2*1000);
+                    for (i = 50000; i > 0; i++);
                 }
             } else {
                 for (i = 20000; i > 0; i++);
@@ -359,7 +359,6 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
 
     struct timeval tv; uint32_t nowtime;
     int Status;
-    int i;
 
     Status = get_device_status();
     if (Status > 0) {

@@ -77,7 +77,7 @@ int init_udp_task(void) {
     }
 
     // Send
-    //Init_Udp_Send_Task();
+    Init_Udp_Send_Task();
 
     // Add Multiaddr
 	AddMultiGroup(m_VideoSocket, NSMULTIADDR);  
@@ -699,6 +699,7 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 	int i;
 	char RemoteIP[20];
     int Status;
+    int is_opt_ok = 0;
 
 	sprintf(RemoteIP, "%d.%d.%d.%d", recv_buf[53], recv_buf[54], recv_buf[55],
 			recv_buf[56]);
@@ -720,14 +721,7 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 
                                             Status = CB_ST_CALLING;
                                             set_device_status(Status);
-
-											Local.CallConfirmFlag = 1;
-											Local.Timer1Num = 0;
-											Local.TimeOut = 0;
-											Local.OnlineNum = 0;
-											Local.OnlineFlag = 1;
-
-                                            cb_opt_function.cb_curr_opt(CB_CALL_OK, Status);
+                                            is_opt_ok = 1;
 											break;
 										}
 									}
@@ -740,6 +734,17 @@ void Recv_Talk_Call_Answer_Task(unsigned char *recv_buf, char *cFromIP) {
 		}
 	}
     pthread_unlock(__FUNCTION__, __LINE__);
+
+    if ( 1 == is_opt_ok) {
+
+        Local.CallConfirmFlag = 1;
+        Local.Timer1Num = 0;
+        Local.TimeOut = 0;
+        Local.OnlineNum = 0;
+        Local.OnlineFlag = 1;
+
+        cb_opt_function.cb_curr_opt(CB_CALL_OK, Status);
+    }
 }
 //-----------------------------------------------------------------------
 void Recv_Talk_Call_Start_Task(unsigned char *recv_buf, char *cFromIP) {
