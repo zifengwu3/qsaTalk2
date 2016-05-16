@@ -852,23 +852,15 @@ void Recv_Talk_Call_End_Task(unsigned char *recv_buf, char *cFromIP) {
 
             pthread_lock(__FUNCTION__, __LINE__);
             if (recv_buf[7] == REPLY) {
-                LOGD("---------%d------------\n", __LINE__);
                 for (i = 0; i < UDPSENDMAX; i++) {
-                    LOGD("---------%d------------\n", __LINE__);
                     if (Multi_Udp_Buff[i].isValid == 1) {
-                        LOGD("---------%d------------\n", __LINE__);
                         if (Multi_Udp_Buff[i].m_Socket == m_VideoSocket) {
-                            LOGD("---------%d------------\n", __LINE__);
                             if (Multi_Udp_Buff[i].SendNum < MAXSENDNUM) {
-                                LOGD("---------%d------------\n", __LINE__);
                                 if ((Multi_Udp_Buff[i].buf[6] == VIDEOTALK)
                                         || (Multi_Udp_Buff[i].buf[6]
                                             == VIDEOTALKTRANS)) {
-                                    LOGD("---------%d------------\n", __LINE__);
                                     if (Multi_Udp_Buff[i].buf[7] == ASK) {
-                                        LOGD("---------%d------------\n", __LINE__);
                                         if (Multi_Udp_Buff[i].buf[8] == CALLEND) {
-                                            LOGD("---------%d------------\n", __LINE__);
                                             Multi_Udp_Buff[i].isValid = 0;
 
                                             TalkEnd_ClearStatus();
