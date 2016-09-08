@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include <sys/time.h>
 #include <semaphore.h>       //sem_t
 #include <pthread.h>       //sem_t
@@ -221,7 +222,12 @@ void find_ip(const char * addr, int uFlag)
     }
 }
 
-void qsa_send_video(const char * data, int length, int frame_num, int frame_type, const char * ip) {
+#if _REC_FILE
+static char fileName[50];
+#endif
+
+void qsa_send_video(const char * data, int length, int frame_num, int frame_type,
+        const char * ip) {
 
     int i, j;
     int TotalPackage; //总包数
@@ -233,13 +239,14 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
     struct talkdata1 talkdata;
 
     struct timeval tv;
-    uint32_t nowtime;
+    uint32_t nowTime;
     int Status;
 
     //LOGD("发送VIDEO数据：%d\n", length);
 
     gettimeofday(&tv, NULL);
-    nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
+    nowTime = tv.tv_sec *1000 + tv.tv_usec/1000;
+    currTime = nowTime;
 
     Status = get_device_status();
 
@@ -260,7 +267,7 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
         memcpy(talkdata.AssiAddr, remote_info.Addr[0], 20);
         memcpy(talkdata.AssiIP, remote_info.IP[0], 4);
         //时间戳
-        talkdata.timestamp = nowtime;
+        talkdata.timestamp = nowTime;
         //帧序号
         talkdata.Frameno = frame_num;
         //帧数据长度
@@ -329,7 +336,6 @@ void qsa_send_video(const char * data, int length, int frame_num, int frame_type
                     usleep(10*1000);
                 } else {
                     usleep(5*1000);
-                    //for (i = 50000; i > 0; i++);
                 }
             } else {
                 for (i = 20000; i > 0; i++);
@@ -358,17 +364,24 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
     //通话数据结构
     struct talkdata1 talkdata;
 
-    struct timeval tv; uint32_t nowtime;
+    struct timeval tv; uint32_t nowTime;
     int Status;
 
     Status = get_device_status();
     if (Status > 0) {
 
         //pthread_mutex_lock(&Local.udp_audio_send_lock);
+        time(&curr_t);
+        curr_tm_t = localtime(&curr_t);
 #if _REC_FILE
+        sprintf(fileName, "/mnt/sdcard/qsa_audio_send_encoded_%04d_%02d_%02d_%02d_%02d_%02d.pcmu",
+                curr_tm_t->tm_year, curr_tm_t->tm_mon, 
+                curr_tm_t->tm_mday, curr_tm_t->tm_hour, 
+                curr_tm_t->tm_min, curr_tm_t->tm_sec);
+
         LOGD("%s: audioFp2: Length = %d \n", __FUNCTION__, length);
         if (audioFp2 == NULL) {
-            audioFp2 = fopen("/mnt/sdcard/qsa_audio_send_encoded_201602225.pcmu", "wb");
+            audioFp2 = fopen(fileName, "wb");
         }
         if (audioFp2) {
             fwrite(data, 1, length, audioFp2);
@@ -391,8 +404,8 @@ void qsa_send_audio(const char * data, int length, int frame_num, const char * i
 
         //时间戳
         gettimeofday(&tv, NULL);
-        nowtime = tv.tv_sec *1000 + tv.tv_usec/1000;
-        talkdata.timestamp = nowtime;
+        nowTime = tv.tv_sec *1000 + tv.tv_usec/1000;
+        talkdata.timestamp = nowTime;
 
         //数据类型
         talkdata.DataType = 1;

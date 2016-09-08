@@ -77,6 +77,9 @@ void init_local_param_task(void) {
 	RemoteVideoPort = 8302;
 	LocalVideoPort = 8302;
 
+    currTime = 0;
+    prevTime = 0;
+
     Local.TimeOut = 0;
     Local.TalkTimeOut = TALKTIMEOUT;
 

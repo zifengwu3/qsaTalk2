@@ -4,6 +4,7 @@
 #include <pthread.h>       //sem_t
 #include <string.h>
 #include <arpa/inet.h>
+#include <time.h>
 
 #include "libqsa_def.h"
 #include "libqsa_callback.h"
@@ -176,6 +177,12 @@ char currpath[80];   //自定义路径
 char wavPath[80];
 char UdpPackageHead[15];
 
+uint32_t currTime;
+uint32_t prevTime;
+
+struct tm * curr_tm_t;
+time_t curr_t;
+
 //主动命令数据发送线程：终端主动发送命令，如延时一段没收到回应，则多次发送
 //用于UDP和Comm通信
 int multi_send_flag;
@@ -183,6 +190,7 @@ pthread_t multi_send_thread;
 void multi_send_thread_func(void);
 sem_t multi_send_sem;
 struct Multi_Udp_Buff1 Multi_Udp_Buff[UDPSENDMAX]; //10个UDP主动发送缓冲
+
 
 #else
 extern struct _cb_function cb_opt_function;
@@ -213,6 +221,11 @@ extern char sPath[80];
 extern char currpath[80];   //自定义路径
 extern char wavPath[80];
 extern char UdpPackageHead[15];
+
+extern uint32_t currTime;
+extern uint32_t prevTime;
+extern struct tm * curr_tm_t;
+extern time_t curr_t;
 
 //主动命令数据发送线程：终端主动发送命令，如延时一段没收到回应，则多次发送
 //用于UDP通信

@@ -299,6 +299,7 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
 		unsigned char * buf, int nlength) {
 	struct sockaddr_in To;
 	int nSize;
+    struct timeval tv;
 
 	To.sin_family = AF_INET;
 	To.sin_port = htons(RemotePort);
@@ -312,6 +313,13 @@ int UdpSendBuff(int m_Socket, char * RemoteHost, int RemotePort,
                 nSize, nlength, RemoteHost, RemotePort, buf[8]);
     }
 #endif
+
+    if (nSize > 0) {
+        LOGD("currTime = %d, prevTime = %d, c-p = %d\n", 
+                currTime, prevTime, currTime - prevTime);
+        gettimeofday(&tv, NULL);
+        prevTime = tv.tv_sec *1000 + tv.tv_usec/1000;
+    }
 
 	return nSize;
 }
